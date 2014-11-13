@@ -1,0 +1,3 @@
+[zenoss.zenpacks]
+ZenPacks.zenoss.OpenvSwitch = ZenPacks.zenoss.OpenvSwitch
+
