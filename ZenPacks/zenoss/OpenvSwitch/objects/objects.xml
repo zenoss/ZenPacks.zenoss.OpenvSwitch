@@ -1,3 +1,9 @@
 <?xml version="1.0"?>
 <objects>
+<!-- ('', 'zport', 'dmd', 'Devices', 'OpenvSwitch') -->
+<object id='/zport/dmd/Devices/OpenvSwitch' module='Products.ZenModel.DeviceClass' class='DeviceClass'>
+<property visible="True" type="string" id="zPythonClass" >
+ZenPacks.zenoss.OpenvSwitch.OpenvSwitchDevice
+</property>
+</object>
 </objects>
