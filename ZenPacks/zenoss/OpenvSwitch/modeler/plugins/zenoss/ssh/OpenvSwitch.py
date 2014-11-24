@@ -10,17 +10,11 @@
 import logging
 LOG = logging.getLogger('zen.OpenvSwitch')
 
-import re
-import json
-
-from twisted.internet.defer import inlineCallbacks, returnValue
-
 from Products.DataCollector.plugins.CollectorPlugin import CommandPlugin, PythonPlugin
 from Products.DataCollector.plugins.DataMaps import ObjectMap, RelationshipMap
 from Products.ZenUtils.Utils import prepId
-from sshclient import SSHClient
 
-from ZenPacks.zenoss.OpenvSwitch.utils import add_local_lib_path
+from ZenPacks.zenoss.OpenvSwitch.utils import add_local_lib_path, zenpack_path
 add_local_lib_path()
 
 
@@ -46,22 +40,9 @@ class OpenvSwitch(CommandPlugin):
         LOG.info('Trying ovs-vsctl/ip netns on %s', device.id)
 
         command_strings = results.split('__COMMAND__')
+
         # namespaces
         nss = command_strings[0]
-        # database
-        dbs = command_strings[1]
-        dbs = self.__str_to_dict(dbs)
-        # bridges
-        brdgs = command_strings[2]
-        brdgs = self.__str_to_dict(brdgs)
-        # ports
-        prts = command_strings[3]
-        prts = self.__str_to_dict(prts)
-        # interfaces
-        ifaces = command_strings[4]
-        ifaces = self.__str_to_dict(ifaces)
-
-        # namespace
         namespaces = []
         for ns in nss.split('\n'):
             if not ns:
@@ -83,6 +64,8 @@ class OpenvSwitch(CommandPlugin):
             return None
 
         # database
+        dbs = command_strings[1]
+        dbs = self.__str_to_dict(dbs)
         databases = []
         for db in dbs:
             if 'name' in db:
@@ -106,15 +89,20 @@ class OpenvSwitch(CommandPlugin):
             LOG.info('No database found on %s', device.id)
             return None
 
-        # bridge
+        # bridges
+        brdgs = command_strings[2]
+        brdgs = self.__str_to_dict(brdgs)
         bridges = []
         for brdg in brdgs:
+            dbid = [db['_uuid'] for db in dbs \
+                    if brdg['_uuid'] in db['bridges']]
             bridges.append(ObjectMap(
                 modname='ZenPacks.zenoss.OpenvSwitch.Bridge',
                 data={
                 'id':     'bridge-{0}'.format(brdg['_uuid']),
                 'title':  brdg['name'],
                 'bridgeId': brdg['_uuid'],
+                'set_database':'database-{0}'.format(dbid[0]),
                 }))
 
 
@@ -125,8 +113,9 @@ class OpenvSwitch(CommandPlugin):
             return None
 
         # ports
+        prts = command_strings[3]
+        prts = self.__str_to_dict(prts)
         ports = []
-        import pdb;pdb.set_trace()
         for port in prts:
             brdgId = [brdg['_uuid'] for brdg in brdgs \
                        if port['_uuid'] in brdg['ports']]
@@ -137,7 +126,7 @@ class OpenvSwitch(CommandPlugin):
                 'title':  port['name'],
                 'portId': port['_uuid'],
                 'tag_':   port['tag'],
-                # set_bridge='bridge-{0}'.format(brdgId[0]),
+                'set_bridge':'bridge-{0}'.format(brdgId[0]),
                 }))
 
 
@@ -148,33 +137,42 @@ class OpenvSwitch(CommandPlugin):
             return None
 
         # interfaces
+        ifaces = command_strings[4]
+        ifaces = self.__str_to_dict(ifaces)
         interfaces = []
-        for interface in ifaces:
-            if interface['link_speed'] == 10000000000:
-                lspd = '10 GB'
-            elif interface['link_speed'] == 1000000000:
-                lspd = '1 GB'
-            elif interface['link_speed'] == 100000000:
-                lspd = '100 MB'
+        # import pdb;pdb.set_trace()
+        for iface in ifaces:
+            if iface['link_speed'] == 10000000000:
+                lspd = '10 Gb'
+            elif iface['link_speed'] == 1000000000:
+                lspd = '1 Gb'
+            elif iface['link_speed'] == 100000000:
+                lspd = '100 Mb'
             else:
                 lspd = 'unknown'
             amac = ''
-            if 'attached-mac' in interface['external_ids']:
-                amac = interface['external_ids']['attached-mac'].upper()
+            if 'attached-mac' in iface['external_ids']:
+                amac = iface['external_ids']['attached-mac'].upper()
+            prtid = [prt['_uuid'] for prt in prts \
+                    if iface['_uuid'] in prt['interfaces']]
+            brdgId = [brdg['_uuid'] for brdg in brdgs \
+                      if prtid[0] in brdg['ports']]
             interfaces.append(ObjectMap(
                 modname='ZenPacks.zenoss.OpenvSwitch.Interface',
                 data={
-                'id':     'interface-{0}'.format(interface['_uuid']),
-                'title':  interface['name'],
-                'interfaceId': interface['_uuid'],
-                'type_': interface['type'],
-                'mac': interface['mac_in_use'].upper(),
+                'id':     'interface-{0}'.format(iface['_uuid']),
+                'title':  iface['name'],
+                'interfaceId': iface['_uuid'],
+                'type_': iface['type'],
+                'mac': iface['mac_in_use'].upper(),
                 'amac': amac,
-                'lstate': interface['link_state'].upper(),
-                'astate': interface['admin_state'].upper(),
+                'lstate': iface['link_state'].upper(),
+                'astate': iface['admin_state'].upper(),
                 'lspeed': lspd,
-                'mtu': interface['mtu'],
-                'duplex': interface['duplex'],
+                'mtu': iface['mtu'],
+                'duplex': iface['duplex'],
+                'set_bridge':'bridge-{0}'.format(brdgId[0]),
+                'set_port':'port-{0}'.format(prtid[0]),
                 }))
 
 
@@ -235,8 +233,6 @@ class OpenvSwitch(CommandPlugin):
             if text.rindex('}') > text.index('{') + 1:                        # dict not empty
                 # we are looking at something like {'x'="y", 'u'="v", 'a'='5'}
                 content = text.strip('{}')
-                if content.find('external_ids') > -1:
-                    import pdb;pdb.set_trace()
                 if content.find(', ') > -1:
                     clst = content.split(', ')
                     for cl in clst:

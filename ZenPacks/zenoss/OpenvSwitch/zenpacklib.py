@@ -1203,6 +1203,7 @@ class ClassSpec(object):
             else:
                 base_spec = self.zenpack.classes[base]
                 resolved_bases.append(base_spec.model_class)
+                resolved_bases.append(base_spec.model_class)
 
         return tuple(resolved_bases)
 
@@ -1919,7 +1920,6 @@ class ClassPropertySpec(object):
     @property
     def ofs_dict(self):
         """Return OFS _properties dictionary."""
-
         if self.api_only:
             return None
 
@@ -2380,6 +2380,7 @@ def RelationshipLengthProperty(relationship_name):
 def RelationshipGetter(relationship_name):
     """Return getter for id or ids in relationship_name."""
     def getter(self):
+        import pdb;pdb.set_trace()
         try:
             relationship = getattr(self, relationship_name)
             if isinstance(relationship, ToManyRelationship):
@@ -2398,6 +2399,7 @@ def RelationshipGetter(relationship_name):
 def RelationshipSetter(relationship_name):
     """Return setter for id or ides in relationship_name."""
     def setter(self, id_or_ids):
+        import pdb;pdb.set_trace()
         try:
             relationship = getattr(self, relationship_name)
             if isinstance(relationship, ToManyRelationship):

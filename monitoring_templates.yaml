@@ -1,0 +1,141 @@
+/OpenvSwitch/Interface:
+  description: "OpenvSwitch: Interface Monitoring"
+  targetPythonClass: ZenPacks.zenoss.OpenvSwitch.OpenvSwitch
+
+  datasources:
+    interfaceIncomingBytes:
+      commandTemplate: /usr/bin/ovs-vsctl list interface
+      cycletime: 300
+      datapoints:
+        rxBytes:
+          rrdmin: 0
+      parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
+      type: COMMAND
+      usessh: false
+
+    interfaceOutgoingBytes:
+      commandTemplate: /usr/bin/ovs-vsctl list interface
+      cycletime: 300
+      datapoints:
+        txBytes:
+          rrdmin: 0
+      parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
+      type: COMMAND
+      usessh: false
+
+    interfaceIncomingPackets:
+      commandTemplate: /usr/bin/ovs-vsctl list interface
+      cycletime: 300
+      datapoints:
+        rxPackets:
+          rrdmin: 0
+      parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
+      type: COMMAND
+      usessh: false
+
+    interfaceOutgoingPackets:
+      commandTemplate: /usr/bin/ovs-vsctl list interface
+      cycletime: 300
+      datapoints:
+        txPackets:
+          rrdmin: 0
+      parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
+      type: COMMAND
+      usessh: false
+
+    collisions_dropped:
+      commandTemplate: /usr/bin/ovs-vsctl list interface
+      cycletime: 300
+      datapoints:
+        collisions:
+          rrdmin: 0
+        rxDropped:
+          rrdmin: 0
+        txDropped:
+          rrdmin: 0
+      parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
+      type: COMMAND
+      usessh: false
+
+    errors:
+      commandTemplate: /usr/bin/ovs-vsctl list interface
+      cycletime: 300
+      datapoints:
+        rxCRCErr:
+          rrdmin: 0
+        rxErr:
+          rrdmin: 0
+        txErr:
+          rrdmin: 0
+        rxFrameErr:
+          rrdmin: 0
+        rxOverErr:
+          rrdmin: 0
+      parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
+      type: COMMAND
+      usessh: false
+
+  graphs:
+    Interface Bytes:
+      units: count
+      height: 100
+      width: 500
+
+      graphpoints:
+        RX Bytes:
+          dpName: rxBytes
+          format: '%7.0lf'
+        TX Bytes:
+          dpName: txBytes
+          format: '%7.0lf'
+
+    Interface Packets:
+      units: count
+      height: 100
+      width: 500
+
+      graphpoints:
+        RX Packets:
+          dpName: rxPackets
+          format: '%7.0lf'
+        TX Packets:
+          dpName: txPackets
+          format: '%7.0lf'
+
+    Interface Collision Dropped:
+      units: count
+      height: 100
+      width: 500
+
+      graphpoints:
+        RX Dropped:
+          dpName: rxDropped
+          format: '%7.0lf'
+        TX Dropped:
+          dpName: txDropped
+          format: '%7.0lf'
+        TX Collisions:
+          dpName: collisions
+          format: '%7.0lf'
+
+    Interface Errors:
+      units: count
+      height: 100
+      width: 500
+
+      graphpoints:
+        RX Error:
+          dpName: rxErr
+          format: '%7.0lf'
+        TX Error:
+          dpName: txErr
+          format: '%7.0lf'
+        RX CRC Error:
+          dpName: rxCRCErr
+          format: '%7.0lf'
+        RX Frame Error:
+          dpName: rxFrameErr
+          format: '%7.0lf'
+        RX Overrun Error:
+          dpName: rxOverErr
+          format: '%7.0lf'

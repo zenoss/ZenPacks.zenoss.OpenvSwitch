@@ -36,6 +36,10 @@ def zenpack_path(path):
     return os.path.join(os.path.dirname(__file__), path)
 
 
+def zenpack_path(path):
+    return os.path.join(os.path.dirname(__file__), path)
+
+
 def add_local_lib_path():
     '''
     Helper to add the ZenPack's lib directory to sys.path.

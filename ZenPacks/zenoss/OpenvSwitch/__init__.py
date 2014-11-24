@@ -33,7 +33,6 @@ RELATIONSHIPS_YUML = """
 [OVS]++-[Database]
 [OVS]++-[Bridge]
 [Bridge]++-[Port]
-[Bridge]++-[Interface]
 // non-containing 1:M
 [Database]1-.-*[Bridge]
 [Port]1-.-*[Interface]
@@ -78,7 +77,6 @@ CFG = zenpacklib.ZenPackSpec(
         # Component Types ############################################
         'OVS': {
             'base': 'OpenvSwitchComponent',
-            'meta_type': 'OpenvSwitchOVS',
             'filter_display': False,
         },
 
@@ -102,7 +100,7 @@ CFG = zenpacklib.ZenPackSpec(
             'label': 'Database',
             'order': 3,
             'properties': {
-                'databaseId': {'grid_display': False,
+                'databaseId':  {'grid_display': False,
                                 'label': 'Database ID'},                 # 1
                 'DB_version':  {'label': 'DB Version'},
                 'OVS_version': {'label': 'OVS Version'},
