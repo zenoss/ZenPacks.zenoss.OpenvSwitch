@@ -21,10 +21,6 @@ add_local_lib_path()
 class OpenvSwitch(CommandPlugin):
     command = (
         '('
-        'for ns in $(ip netns list) ; do '
-        'echo "$ns" ; '
-        'done ; '
-        'echo "__COMMAND__" ; '
         'ovs-vsctl list Open_vSwitch ; '
         'echo "__COMMAND__" ; '
         'ovs-vsctl list bridge ; '
@@ -41,31 +37,8 @@ class OpenvSwitch(CommandPlugin):
 
         command_strings = results.split('__COMMAND__')
 
-        # namespaces
-        nss = command_strings[0]
-        namespaces = []
-        for ns in nss.split('\n'):
-            if not ns:
-                continue
-
-            ns_id = prepId(ns)
-            namespaces.append(ObjectMap(
-                modname='ZenPacks.zenoss.OpenvSwitch.Namespace',
-                data={
-                'id': ns_id,
-                'title': ns[:ns.index('-')],
-                'namespaceId':ns_id[(ns_id.index('-') + 1):],
-                }))
-
-        if len(namespaces) > 0:
-            LOG.info('Found %d namespaces on %s', len(namespaces), device.id)
-        else:
-            LOG.info('No namespace found on %s', device.id)
-            return None
-
         # database
-        dbs = command_strings[1]
-        dbs = self.__str_to_dict(dbs)
+        dbs = self.__str_to_dict(command_strings[0])
         databases = []
         for db in dbs:
             if 'name' in db:
@@ -90,8 +63,7 @@ class OpenvSwitch(CommandPlugin):
             return None
 
         # bridges
-        brdgs = command_strings[2]
-        brdgs = self.__str_to_dict(brdgs)
+        brdgs = self.__str_to_dict(command_strings[1])
         bridges = []
         for brdg in brdgs:
             dbid = [db['_uuid'] for db in dbs \
@@ -113,12 +85,14 @@ class OpenvSwitch(CommandPlugin):
             return None
 
         # ports
-        prts = command_strings[3]
-        prts = self.__str_to_dict(prts)
+        prts = self.__str_to_dict(command_strings[2])
         ports = []
+        # import pdb;pdb.set_trace()
         for port in prts:
             brdgId = [brdg['_uuid'] for brdg in brdgs \
                        if port['_uuid'] in brdg['ports']]
+            dbid = [db['_uuid'] for db in dbs \
+                    if brdgId[0] in db['bridges']]
             ports.append(ObjectMap(
                 modname='ZenPacks.zenoss.OpenvSwitch.Port',
                 data={
@@ -127,6 +101,7 @@ class OpenvSwitch(CommandPlugin):
                 'portId': port['_uuid'],
                 'tag_':   port['tag'],
                 'set_bridge':'bridge-{0}'.format(brdgId[0]),
+                'set_database':'database-{0}'.format(dbid[0]),
                 }))
 
 
@@ -137,10 +112,8 @@ class OpenvSwitch(CommandPlugin):
             return None
 
         # interfaces
-        ifaces = command_strings[4]
-        ifaces = self.__str_to_dict(ifaces)
+        ifaces = self.__str_to_dict(command_strings[3])
         interfaces = []
-        # import pdb;pdb.set_trace()
         for iface in ifaces:
             if iface['link_speed'] == 10000000000:
                 lspd = '10 Gb'
@@ -155,8 +128,6 @@ class OpenvSwitch(CommandPlugin):
                 amac = iface['external_ids']['attached-mac'].upper()
             prtid = [prt['_uuid'] for prt in prts \
                     if iface['_uuid'] in prt['interfaces']]
-            brdgId = [brdg['_uuid'] for brdg in brdgs \
-                      if prtid[0] in brdg['ports']]
             interfaces.append(ObjectMap(
                 modname='ZenPacks.zenoss.OpenvSwitch.Interface',
                 data={
@@ -171,7 +142,6 @@ class OpenvSwitch(CommandPlugin):
                 'lspeed': lspd,
                 'mtu': iface['mtu'],
                 'duplex': iface['duplex'],
-                'set_bridge':'bridge-{0}'.format(brdgId[0]),
                 'set_port':'port-{0}'.format(prtid[0]),
                 }))
 
@@ -183,7 +153,6 @@ class OpenvSwitch(CommandPlugin):
             return None
 
         objmaps = {
-            'namespaces': namespaces,
             'databases': databases,
             'bridges': bridges,
             'ports': ports,
@@ -192,11 +161,10 @@ class OpenvSwitch(CommandPlugin):
 
         # Apply the objmaps in the right order.
         componentsMap = RelationshipMap(relname='components')
-        for i in ('namespaces', 'databases', 'bridges', 'ports', 'interfaces',):
+        for i in ('databases', 'bridges', 'ports', 'interfaces',):
             for objmap in objmaps[i]:
                 componentsMap.append(objmap)
 
-        # import pdb;pdb.set_trace()
         return componentsMap
 
     def __str_to_dict(self, original):

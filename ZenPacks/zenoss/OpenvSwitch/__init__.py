@@ -29,12 +29,9 @@ CLASS_NAME = {}
 RELATIONSHIPS_YUML = """
 // containing
 [OpenvSwitchDevice]++components-ovsdevice1[OpenvSwitchComponent]
-[OVS]++-[Namespace]
-[OVS]++-[Database]
-[OVS]++-[Bridge]
+[Database]++-[Bridge]
 [Bridge]++-[Port]
 // non-containing 1:M
-[Database]1-.-*[Bridge]
 [Port]1-.-*[Interface]
 // non-containing 1:1
 """
@@ -46,18 +43,6 @@ CFG = zenpacklib.ZenPackSpec(
         'DEFAULTS': {'category': 'OpenvSwitch',
                      'type': 'string'},
         },
-
-    # device_classes={
-    #     '/Server/SSH/Linux': {
-    #         'create': False,
-    #         'remove': False,
-    #         'zProperties': {
-    #             'zCollectorPlugins': [
-    #                 'zenoss.ssh.OpenvSwitch'
-    #             ]
-    #         }
-    #     },
-    # },
 
     classes={
         # Device Types #######################################  ########
@@ -74,26 +59,6 @@ CFG = zenpacklib.ZenPackSpec(
             'filter_display': False,
         },
 
-        # Component Types ############################################
-        'OVS': {
-            'base': 'OpenvSwitchComponent',
-            'filter_display': False,
-        },
-
-        'Namespace': {
-            'base': 'OpenvSwitchComponent',
-            'meta_type': 'OpenvSwitchNamespace',
-            'label': 'Namespace',
-            'order': 3,
-            'properties': {
-                'namespaceId': {'grid_display': False,
-                                'label': 'Namespace ID'},                 # 1
-            },
-            'relationships': {
-                'ovs': {'grid_display': False},
-            },
-        },
-
         'Database': {
             'base': 'OpenvSwitchComponent',
             'meta_type': 'OpenvSwitchDatabase',
@@ -105,9 +70,6 @@ CFG = zenpacklib.ZenPackSpec(
                 'DB_version':  {'label': 'DB Version'},
                 'OVS_version': {'label': 'OVS Version'},
             },
-            'relationships': {
-                'ovs': {'grid_display': False},
-            },
         },
 
         'Bridge': {
@@ -118,9 +80,6 @@ CFG = zenpacklib.ZenPackSpec(
             'properties': {
                 'bridgeId':    {'grid_display': False,
                                 'label': 'Bridge ID'},
-            },
-            'relationships': {
-                'ovs': {'grid_display': False},
             },
         },
 

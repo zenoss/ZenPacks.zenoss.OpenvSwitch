@@ -749,9 +749,7 @@ class ZenPackSpec(object):
             zProperties=None,
             classes=None,
             class_relationships=None):
-        """TODO.
-        :rtype : object
-        """
+        """TODO."""
         self.name = name
 
         # Configuration Properties (zProperties).
@@ -1178,8 +1176,6 @@ class ClassSpec(object):
 
     def create(self):
         """Implement specification."""
-        self.create_model_schema_class()
-
         self.create_model_class()
         self.create_iinfo_class()
         self.create_info_class()
@@ -1202,7 +1198,6 @@ class ClassSpec(object):
                 resolved_bases.append(base)
             else:
                 base_spec = self.zenpack.classes[base]
-                resolved_bases.append(base_spec.model_class)
                 resolved_bases.append(base_spec.model_class)
 
         return tuple(resolved_bases)
@@ -1296,103 +1291,6 @@ class ClassSpec(object):
                 filename=icon_filename)
 
         return '/zport/dmd/img/icons/noicon.png'
-
-    @property
-    def model_schema_class(self):
-        """Return model schema class."""
-        return self.create_model_schema_class()
-
-    def create_model_schema_class(self):
-        """Create and return model schema class."""
-        attributes = {
-            'zenpack_name': self.zenpack.name,
-            'meta_type': self.meta_type,
-            'portal_type': self.meta_type,
-            'icon_url': self.icon_url,
-            'class_label': self.label,
-            'class_plural_label': self.plural_label,
-            'class_short_label': self.short_label,
-            'class_plural_short_label': self.plural_short_label,
-            }
-
-        properties = []
-        relations = []
-        templates = []
-        catalogs = {}
-
-        # First inherit from bases.
-        for base in self.resolved_bases:
-            if hasattr(base, '_properties'):
-                properties.extend(base._properties)
-            if hasattr(base, '_relations'):
-                relations.extend(base._relations)
-            if hasattr(base, '_templates'):
-                templates.extend(base._templates)
-            if hasattr(base, '_catalogs'):
-                catalogs.update(base._catalogs)
-
-        # Add local properties and catalog indexes.
-        for name, spec in self.properties.iteritems():
-            if not hasattr(spec, 'datapoint') or not spec.datapoint:
-                if hasattr(spec, 'default'):
-                    attributes[name] = spec.default or None  # defaults to None
-                else:
-                    attributes[name] = None  # defaults to None
-            else:
-                # Lookup the datapoint and get the value from rrd
-                def datapoint_method(self, default=spec.datapoint_default, cached=spec.datapoint_cached, datapoint=spec.datapoint):
-                    if cached:
-                        r = self.cacheRRDValue(datapoint, default=default)
-                    else:
-                        r = self.getRRDValue(datapoint, default=default)
-
-                    if r is not None:
-                        if not math.isnan(float(r)):
-                            return r
-                    return default
-
-                attributes[name] = datapoint_method
-
-            if spec.ofs_dict:
-                properties.append(spec.ofs_dict)
-
-            pindexes = spec.catalog_indexes
-            if pindexes:
-                if self.name not in catalogs:
-                    catalogs[self.name] = {
-                        'indexes': {
-                            'id': {'type': 'field'},
-                            }
-                    }
-                catalogs[self.name]['indexes'].update(pindexes)
-
-        # Add local relations.
-        for name, spec in self.relationships.iteritems():
-            relations.append(spec.zenrelations_tuple)
-
-            # Add getter and setter to allow modeling. Only for local
-            # relationships because base classes will provide methods
-            # for their relationships.
-            attributes['get_{}'.format(name)] = RelationshipGetter(name)
-            attributes['set_{}'.format(name)] = RelationshipSetter(name)
-
-        # Add local templates.
-        templates.extend(self.monitoring_templates)
-
-        attributes['_properties'] = tuple(properties)
-        attributes['_relations'] = tuple(relations)
-        attributes['_templates'] = tuple(templates)
-        attributes['_catalogs'] = catalogs
-
-        # Add Impact stuff.
-        attributes['impacts'] = self.impacts
-        attributes['impacted_by'] = self.impacted_by
-
-        return create_schema_class(
-            get_symbol_name(self.zenpack.name, 'schema'),
-            self.name,
-            self.resolved_bases,
-            attributes)
 
     @property
     def model_class(self):
@@ -1920,6 +1818,7 @@ class ClassPropertySpec(object):
     @property
     def ofs_dict(self):
         """Return OFS _properties dictionary."""
+
         if self.api_only:
             return None
 
@@ -2380,7 +2279,6 @@ def RelationshipLengthProperty(relationship_name):
 def RelationshipGetter(relationship_name):
     """Return getter for id or ids in relationship_name."""
     def getter(self):
-        import pdb;pdb.set_trace()
         try:
             relationship = getattr(self, relationship_name)
             if isinstance(relationship, ToManyRelationship):
@@ -2399,7 +2297,6 @@ def RelationshipGetter(relationship_name):
 def RelationshipSetter(relationship_name):
     """Return setter for id or ides in relationship_name."""
     def setter(self, id_or_ids):
-        import pdb;pdb.set_trace()
         try:
             relationship = getattr(self, relationship_name)
             if isinstance(relationship, ToManyRelationship):
@@ -2549,34 +2446,25 @@ def create_module(*args):
     return importlib.import_module(module_name)
 
 
-def get_class_factory(klass):
-    """Return class factory for class."""
-    if issubclass(klass, IInfo):
-        return InterfaceClass
-    else:
-        return type
+def create_class(module, schema_module, classname, bases, attributes):
+    """Create and return described class.
 
+    Dynamically add schema class and stub implmentation if needed.
 
-def create_schema_class(schema_module, classname, bases, attributes):
-    """Create and return described schema class."""
+    """
     if isinstance(schema_module, basestring):
         schema_module = create_module(schema_module)
 
-    schema_class = getattr(schema_module, classname, None)
-    if schema_class:
-        return schema_class
+    if issubclass(bases[0], IInfo):
+        class_factory = InterfaceClass
+    else:
+        class_factory = type
 
-    class_factory = get_class_factory(bases[0])
-    schema_class = class_factory(classname, tuple(bases), attributes)
-    schema_class.__module__ = schema_module.__name__
-    setattr(schema_module, classname, schema_class)
+    if not hasattr(schema_module, classname):
+        schema_class = class_factory(classname, tuple(bases), attributes)
+        schema_class.__module__ = schema_module.__name__
+        setattr(schema_module, classname, schema_class)
 
-    return schema_class
-
-
-
-def create_stub_class(module, schema_class, classname):
-    """Create and return described stub class."""
     if isinstance(module, basestring):
         module = create_module(module)
 
@@ -2584,23 +2472,11 @@ def create_stub_class(module, schema_class, classname):
     if concrete_class:
         return concrete_class
 
-    class_factory = get_class_factory(schema_class)
-    stub_class = class_factory(classname, (schema_class,), {})
-    stub_class.__module__ = module.__name__
-    setattr(module, classname, stub_class)
+    concrete_class = class_factory(classname, (schema_class,), {})
+    concrete_class.__module__ = module.__name__
+    setattr(module, classname, concrete_class)
 
-    return stub_class
-
-
-def create_class(module, schema_module, classname, bases, attributes):
-    """Create and return described class."""
-    if isinstance(module, basestring):
-        module = create_module(module)
-
-    schema_class = create_schema_class(
-        schema_module, classname, bases, attributes)
-
-    return create_stub_class(module, schema_class, classname)
+    return concrete_class
 
 
 ## Impact Stuff ##############################################################
