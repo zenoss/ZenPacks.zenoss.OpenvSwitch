@@ -4,76 +4,76 @@
 
   datasources:
     interfaceIncomingBytes:
-      commandTemplate: /usr/bin/ovs-vsctl list interface
+      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
       datapoints:
-        rxBytes:
+        rx_bytes:
           rrdmin: 0
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
       type: COMMAND
-      usessh: false
+      usessh: true
 
     interfaceOutgoingBytes:
-      commandTemplate: /usr/bin/ovs-vsctl list interface
+      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
       datapoints:
-        txBytes:
+        tx_bytes:
           rrdmin: 0
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
       type: COMMAND
-      usessh: false
+      usessh: true
 
     interfaceIncomingPackets:
-      commandTemplate: /usr/bin/ovs-vsctl list interface
+      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
       datapoints:
-        rxPackets:
+        rx_packets:
           rrdmin: 0
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
       type: COMMAND
-      usessh: false
+      usessh: true
 
     interfaceOutgoingPackets:
-      commandTemplate: /usr/bin/ovs-vsctl list interface
+      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
       datapoints:
-        txPackets:
+        tx_packets:
           rrdmin: 0
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
       type: COMMAND
-      usessh: false
+      usessh: true
 
     collisions_dropped:
-      commandTemplate: /usr/bin/ovs-vsctl list interface
+      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
       datapoints:
         collisions:
           rrdmin: 0
-        rxDropped:
+        rx_dropped:
           rrdmin: 0
-        txDropped:
+        tx_dropped:
           rrdmin: 0
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
       type: COMMAND
-      usessh: false
+      usessh: true
 
     errors:
-      commandTemplate: /usr/bin/ovs-vsctl list interface
+      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
       datapoints:
-        rxCRCErr:
+        rx_crc_err:
           rrdmin: 0
-        rxErr:
+        rx_errors:
           rrdmin: 0
-        txErr:
+        tx_errors:
           rrdmin: 0
-        rxFrameErr:
+        rx_frame_err:
           rrdmin: 0
-        rxOverErr:
+        rx_over_err:
           rrdmin: 0
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
       type: COMMAND
-      usessh: false
+      usessh: true
 
   graphs:
     Interface Bytes:
@@ -83,10 +83,10 @@
 
       graphpoints:
         RX Bytes:
-          dpName: rxBytes
+          dpName: rx_bytes
           format: '%7.0lf'
         TX Bytes:
-          dpName: txBytes
+          dpName: tx_bytes
           format: '%7.0lf'
 
     Interface Packets:
@@ -96,10 +96,10 @@
 
       graphpoints:
         RX Packets:
-          dpName: rxPackets
+          dpName: rx_packets
           format: '%7.0lf'
         TX Packets:
-          dpName: txPackets
+          dpName: tx_packets
           format: '%7.0lf'
 
     Interface Collision Dropped:
@@ -109,10 +109,10 @@
 
       graphpoints:
         RX Dropped:
-          dpName: rxDropped
+          dpName: rx_dropped
           format: '%7.0lf'
         TX Dropped:
-          dpName: txDropped
+          dpName: tx_dropped
           format: '%7.0lf'
         TX Collisions:
           dpName: collisions
@@ -125,17 +125,17 @@
 
       graphpoints:
         RX Error:
-          dpName: rxErr
+          dpName: rx_errors
           format: '%7.0lf'
         TX Error:
-          dpName: txErr
+          dpName: tx_errors
           format: '%7.0lf'
         RX CRC Error:
-          dpName: rxCRCErr
+          dpName: rx_crc_err
           format: '%7.0lf'
         RX Frame Error:
-          dpName: rxFrameErr
+          dpName: rx_frame_err
           format: '%7.0lf'
         RX Overrun Error:
-          dpName: rxOverErr
+          dpName: rx_over_err
           format: '%7.0lf'

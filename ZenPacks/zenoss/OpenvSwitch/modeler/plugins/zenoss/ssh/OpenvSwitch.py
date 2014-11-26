@@ -101,7 +101,6 @@ class OpenvSwitch(CommandPlugin):
                 'portId': port['_uuid'],
                 'tag_':   port['tag'],
                 'set_bridge':'bridge-{0}'.format(brdgId[0]),
-                'set_database':'database-{0}'.format(dbid[0]),
                 }))
 
 

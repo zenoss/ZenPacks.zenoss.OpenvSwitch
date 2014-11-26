@@ -60,3 +60,77 @@ def add_local_lib_path():
 
 add_local_lib_path()
 
+def str_to_dict(original):
+    original = original.split('\n')
+    # remove '' from head and tail
+    if not original[0]:
+        del original[0]
+    if not original[-1]:
+        del original[-1]
+
+    rets = []
+    ret = {}
+    for orig in original:
+        # an empty string as an item
+        if not orig:
+            rets.append(ret)
+            ret = {}
+            continue
+
+        if orig.find(':') > -1:           # key-value pair
+            pair = orig.split(':', 1)
+            ret[pair[0].strip()] = localparser(pair[1].strip())
+
+    # add the last item to rets
+    rets.append(ret)
+
+    return rets
+
+def localparser(text):
+    text = text.strip()
+
+    if text.find('{') == 0 and text.find('}') == (len(text) - 1):        # dict
+        ret = {}
+        if text.rindex('}') > text.index('{') + 1:                        # dict not empty
+            # we are looking at something like {'x'="y", 'u'="v", 'a'='5'}
+            content = text.strip('{}')
+            if content.find(', ') > -1:
+                clst = content.split(', ')
+                for cl in clst:
+                    if cl.find('=') > -1:
+                        lst = cl.split('=')
+                        if lst[1].find('"') > -1:
+                            ret[lst[0]] = lst[1].strip('"')
+                        elif str.isdigit(lst[1]):
+                            ret[lst[0]] = int(lst[1])
+                        else:
+                            ret[lst[0]] = lst[1]
+            elif content.find('=') > -1:
+                lst = content.split('=')
+                if lst[1].find('"') > -1:
+                    ret[lst[0]] = lst[1].strip('"')
+                elif str.isdigit(lst[1]):
+                    ret[lst[0]] = int(lst[1])
+                else:
+                    ret[lst[0]] = lst[1]
+            else:
+                ret = content
+    elif text.find('[') == 0 and text.find(']') == (len(text) - 1):        # list
+        ret = []
+        if (text.rindex(']') > text.index('[') + 1):
+            if text.find(', ') > -1:
+                ret = text.strip('[]').split(', ')
+            else:
+                ret.append(text.strip('[]'))
+    elif text.find('"') > -1:        # string
+        ret = text.strip('"')
+    elif str.isdigit(text):
+        ret = int(text)
+    elif text == 'false':
+        ret = False
+    else:
+        ret = text
+
+    return ret
+
+

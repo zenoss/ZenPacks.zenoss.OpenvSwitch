@@ -17,16 +17,18 @@ logger = logging.getLogger('zen.OpenvSwitch.Parser')
 
 from Products.ZenRRD.CommandParser import CommandParser
 
+from ZenPacks.zenoss.OpenvSwitch.utils import str_to_dict
+
 
 class InterfaceStatistics(CommandParser):
     def processResults(self, cmd, result):
-        import pdb;pdb.set_trace()
-        entries = json.loads(cmd.result.output)
+        if len(cmd.result.output) == 0:
+            return
+
+        resps = str_to_dict(cmd.result.output)
         dp_map = dict([(dp.id, dp) for dp in cmd.points])
         for name, dp in dp_map.items():
-            # looking for 'event' and 'perf'
-            clue = name[:name.find('QueueCount')]
-            for entry in entries:
-                if entry[0].find(clue) > -1:
-                    result.values.append((dp, entry[1]))
+            for resp in resps:
+                if name in resp['statistics']:
+                    result.values.append((dp, resp['statistics'][name]))
                     break
