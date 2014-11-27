@@ -14,7 +14,7 @@ from Products.DataCollector.plugins.CollectorPlugin import CommandPlugin, Python
 from Products.DataCollector.plugins.DataMaps import ObjectMap, RelationshipMap
 from Products.ZenUtils.Utils import prepId
 
-from ZenPacks.zenoss.OpenvSwitch.utils import add_local_lib_path, zenpack_path
+from ZenPacks.zenoss.OpenvSwitch.utils import add_local_lib_path, zenpack_path, str_to_dict
 add_local_lib_path()
 
 
@@ -37,44 +37,45 @@ class OpenvSwitch(CommandPlugin):
 
         command_strings = results.split('__COMMAND__')
 
-        # database
-        dbs = self.__str_to_dict(command_strings[0])
-        databases = []
-        for db in dbs:
-            if 'name' in db:
-                db_name = db['name']
+        # OVSs
+        ovss = str_to_dict(command_strings[0])
+        ovses = []
+        # import pdb;pdb.set_trace()
+        for ovs in ovss:
+            if 'name' in ovs:
+                ovs_name = ovs['name']
             else:
-                db_name = 'Open_vSwitch'
-            databases.append(ObjectMap(
-                modname='ZenPacks.zenoss.OpenvSwitch.Database',
+                ovs_name = 'Open_vSwitch'
+            ovses.append(ObjectMap(
+                modname='ZenPacks.zenoss.OpenvSwitch.OVS',
                 data={
-                'id':     'database-{0}'.format(db['_uuid']),
-                'title':  db_name,
-                'databaseId': db['_uuid'],
-                'DB_version': db['db_version'],
-                'OVS_version': db['ovs_version'],
+                'id':     'ovs-{0}'.format(ovs['_uuid']),
+                'title':  ovs_name,
+                'ovsId': ovs['_uuid'],
+                'DB_version': ovs['db_version'],
+                'OVS_version': ovs['ovs_version'],
                 }))
 
 
-        if len(databases) > 0:
-            LOG.info('Found %d databases on %s', len(databases), device.id)
+        if len(ovses) > 0:
+            LOG.info('Found %d ovses on %s', len(ovses), device.id)
         else:
-            LOG.info('No database found on %s', device.id)
+            LOG.info('No ovs found on %s', device.id)
             return None
 
         # bridges
-        brdgs = self.__str_to_dict(command_strings[1])
+        brdgs = str_to_dict(command_strings[1])
         bridges = []
         for brdg in brdgs:
-            dbid = [db['_uuid'] for db in dbs \
-                    if brdg['_uuid'] in db['bridges']]
+            ovsid = [ovs['_uuid'] for ovs in ovss \
+                    if brdg['_uuid'] in ovs['bridges']]
             bridges.append(ObjectMap(
                 modname='ZenPacks.zenoss.OpenvSwitch.Bridge',
                 data={
                 'id':     'bridge-{0}'.format(brdg['_uuid']),
                 'title':  brdg['name'],
                 'bridgeId': brdg['_uuid'],
-                'set_database':'database-{0}'.format(dbid[0]),
+                'set_ovs':'ovs-{0}'.format(ovsid[0]),
                 }))
 
 
@@ -85,14 +86,14 @@ class OpenvSwitch(CommandPlugin):
             return None
 
         # ports
-        prts = self.__str_to_dict(command_strings[2])
+        prts = str_to_dict(command_strings[2])
         ports = []
         # import pdb;pdb.set_trace()
         for port in prts:
             brdgId = [brdg['_uuid'] for brdg in brdgs \
                        if port['_uuid'] in brdg['ports']]
-            dbid = [db['_uuid'] for db in dbs \
-                    if brdgId[0] in db['bridges']]
+            ovsid = [ovs['_uuid'] for ovs in ovss \
+                    if brdgId[0] in ovs['bridges']]
             ports.append(ObjectMap(
                 modname='ZenPacks.zenoss.OpenvSwitch.Port',
                 data={
@@ -111,7 +112,7 @@ class OpenvSwitch(CommandPlugin):
             return None
 
         # interfaces
-        ifaces = self.__str_to_dict(command_strings[3])
+        ifaces = str_to_dict(command_strings[3])
         interfaces = []
         for iface in ifaces:
             if iface['link_speed'] == 10000000000:
@@ -152,7 +153,7 @@ class OpenvSwitch(CommandPlugin):
             return None
 
         objmaps = {
-            'databases': databases,
+            'ovses': ovses,
             'bridges': bridges,
             'ports': ports,
             'interfaces': interfaces,
@@ -160,81 +161,8 @@ class OpenvSwitch(CommandPlugin):
 
         # Apply the objmaps in the right order.
         componentsMap = RelationshipMap(relname='components')
-        for i in ('databases', 'bridges', 'ports', 'interfaces',):
+        for i in ('ovses', 'bridges', 'ports', 'interfaces',):
             for objmap in objmaps[i]:
                 componentsMap.append(objmap)
 
         return componentsMap
-
-    def __str_to_dict(self, original):
-        original = original.split('\n')
-        # remove '' from head and tail
-        if not original[0]:
-            del original[0]
-        if not original[-1]:
-            del original[-1]
-
-        rets = []
-        ret = {}
-        for orig in original:
-            # an empty string as an item
-            if not orig:
-                rets.append(ret)
-                ret = {}
-                continue
-
-            if orig.find(':') > -1:           # key-value pair
-                pair = orig.split(':', 1)
-                ret[pair[0].strip()] = self.__localparser(pair[1].strip())
-
-        # add the last item to rets
-        rets.append(ret)
-
-        return rets
-
-    def __localparser(self, text):
-        text = text.strip()
-
-        if text.find('{') == 0 and text.find('}') == (len(text) - 1):        # dict
-            ret = {}
-            if text.rindex('}') > text.index('{') + 1:                        # dict not empty
-                # we are looking at something like {'x'="y", 'u'="v", 'a'='5'}
-                content = text.strip('{}')
-                if content.find(', ') > -1:
-                    clst = content.split(', ')
-                    for cl in clst:
-                        if cl.find('=') > -1:
-                            lst = cl.split('=')
-                            if lst[1].find('"') > -1:
-                                ret[lst[0]] = lst[1].strip('"')
-                            elif str.isdigit(lst[1]):
-                                ret[lst[0]] = int(lst[1])
-                            else:
-                                ret[lst[0]] = lst[1]
-                elif content.find('=') > -1:
-                    lst = content.split('=')
-                    if lst[1].find('"') > -1:
-                        ret[lst[0]] = lst[1].strip('"')
-                    elif str.isdigit(lst[1]):
-                        ret[lst[0]] = int(lst[1])
-                    else:
-                        ret[lst[0]] = lst[1]
-                else:
-                    ret = content
-        elif text.find('[') == 0 and text.find(']') == (len(text) - 1):        # list
-            ret = []
-            if (text.rindex(']') > text.index('[') + 1):
-                if text.find(', ') > -1:
-                    ret = text.strip('[]').split(', ')
-                else:
-                    ret.append(text.strip('[]'))
-        elif text.find('"') > -1:        # string
-            ret = text.strip('"')
-        elif str.isdigit(text):
-            ret = int(text)
-        elif text == 'false':
-            ret = False
-        else:
-            ret = text
-
-        return ret

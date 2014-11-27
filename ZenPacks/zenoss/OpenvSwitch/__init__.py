@@ -29,7 +29,7 @@ CLASS_NAME = {}
 RELATIONSHIPS_YUML = """
 // containing
 [OpenvSwitchDevice]++components-ovsdevice1[OpenvSwitchComponent]
-[Database]++-[Bridge]
+[OVS]++-[Bridge]
 [Bridge]++-[Port]
 // non-containing 1:M
 [Port]1-.-*[Interface]
@@ -59,14 +59,14 @@ CFG = zenpacklib.ZenPackSpec(
             'filter_display': False,
         },
 
-        'Database': {
+        'OVS': {
             'base': 'OpenvSwitchComponent',
-            'meta_type': 'OpenvSwitchDatabase',
-            'label': 'Database',
-            'order': 3,
+            'meta_type': 'OpenvSwitchOVS',
+            'label': 'Open vSwitch',
+            'order': 1,
             'properties': {
-                'databaseId':  {'grid_display': False,
-                                'label': 'Database ID'},                 # 1
+                'ovsId':       {'grid_display': False,
+                                'label': 'OpenvSwitch ID'},                 # 1
                 'DB_version':  {'label': 'DB Version'},
                 'OVS_version': {'label': 'OVS Version'},
             },
@@ -76,7 +76,7 @@ CFG = zenpacklib.ZenPackSpec(
             'base': 'OpenvSwitchComponent',
             'meta_type': 'OpenvSwitchBridge',
             'label': 'Bridge',
-            'order': 4,
+            'order': 2,
             'properties': {
                 'bridgeId':    {'grid_display': False,
                                 'label': 'Bridge ID'},
@@ -87,11 +87,11 @@ CFG = zenpacklib.ZenPackSpec(
             'base': 'OpenvSwitchComponent',
             'meta_type': 'OpenvSwitchPort',
             'label': 'Port',
-            'order': 5,
+            'order': 3,
             'properties': {
                 'portId':      {'grid_display': False,
                                 'label': 'Port ID'},
-                'tag_':        {'label': 'Tag'},
+                'tag_':        {'label': 'VLAN Tag'},
             },
         },
 
@@ -99,40 +99,40 @@ CFG = zenpacklib.ZenPackSpec(
             'base': 'OpenvSwitchComponent',
             'meta_type': 'OpenvSwitchInterface',
             'label': 'Interface',
-            'order': 6,
+            'order': 4,
             'properties': {
                 'interfaceId': {'grid_display': False,
                                 'label': 'Interface ID'},
                 'type_':       {'label': 'Type',
-                                'order': 6.1,
+                                'order': 4.1,
                                 'label_width': 50,
                                 'content_width': 50},
                 'mac':         {'label': 'MAC',
-                                'order': 6.2,
+                                'order': 4.2,
                                 'label_width': 100,
                                 'content_width': 100},
                 'lspeed':      {'label': 'Link Speed',
-                                'order': 6.3,
+                                'order': 4.3,
                                 'label_width': 50,
                                 'content_width': 50},
                 'lstate':      {'label': 'Link State',
-                                'order': 6.4,
+                                'order': 4.4,
                                 'label_width': 50,
                                 'content_width': 50},
                 'astate':      {'label': 'Admin State',
-                                'order': 6.5,
+                                'order': 4.5,
                                 'label_width': 60,
                                 'content_width': 60},
                 'mtu':         {'label': 'MTU',
-                                'order': 6.6,
+                                'order': 4.6,
                                 'label_width': 40,
                                 'content_width': 40},
                 'amac':         {'label': 'Attached MAC',
-                                 'order': 6.7,
+                                 'order': 4.7,
                                  'label_width': 100,
                                  'content_width': 100},
                 'duplex':      {'label': 'Duplex',
-                                'order': 6.8,
+                                'order': 4.8,
                                 'label_width': 40,
                                 'content_width': 40},
             },
