@@ -330,7 +330,7 @@ True
 0
 </property>
 <tomanycont id='graphPoints'>
-<object id='RX Bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='rx_bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 0
 </property>
@@ -353,13 +353,13 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-rx_bytes
+interfaceIncomingBytes_rx_bytes
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
 </property>
 </object>
-<object id='TX Bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='tx_bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 1
 </property>
@@ -382,7 +382,7 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-tx_bytes
+interfaceOutgoingBytes_tx_bytes
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -419,36 +419,7 @@ True
 2
 </property>
 <tomanycont id='graphPoints'>
-<object id='RX Dropped' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
-<property type="long" id="sequence" mode="w" >
-0
-</property>
-<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
-LINE
-</property>
-<property type="long" id="lineWidth" mode="w" >
-1
-</property>
-<property type="boolean" id="stacked" mode="w" >
-False
-</property>
-<property type="string" id="format" mode="w" >
-%7.0lf
-</property>
-<property type="string" id="legend" mode="w" >
-${graphPoint/id}
-</property>
-<property type="long" id="limit" mode="w" >
--1
-</property>
-<property type="string" id="dpName" mode="w" >
-rx_dropped
-</property>
-<property type="string" id="cFunc" mode="w" >
-AVERAGE
-</property>
-</object>
-<object id='TX Collisions' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='dropped_collisions' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 2
 </property>
@@ -471,13 +442,42 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-collisions_collisions
+collisions_dropped_collisions
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
 </property>
 </object>
-<object id='TX Dropped' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='dropped_rx_dropped' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%7.0lf
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+collisions_dropped_rx_dropped
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='dropped_tx_dropped' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 1
 </property>
@@ -500,7 +500,7 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-tx_dropped
+collisions_dropped_tx_dropped
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -537,7 +537,7 @@ True
 3
 </property>
 <tomanycont id='graphPoints'>
-<object id='RX CRC Error' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='rx_crc_err' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 2
 </property>
@@ -560,13 +560,13 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-rx_crc_err
+errors_rx_crc_err
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
 </property>
 </object>
-<object id='RX Error' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='rx_errors' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 0
 </property>
@@ -589,13 +589,13 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-rx_errors
+errors_rx_errors
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
 </property>
 </object>
-<object id='RX Frame Error' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='rx_frame_err' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 3
 </property>
@@ -618,13 +618,13 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-rx_frame_err
+errors_rx_frame_err
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
 </property>
 </object>
-<object id='RX Overrun Error' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='rx_over_err' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 4
 </property>
@@ -647,13 +647,13 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-rx_over_err
+errors_rx_over_err
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
 </property>
 </object>
-<object id='TX Error' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='tx_errors' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 1
 </property>
@@ -676,7 +676,7 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-tx_errors
+errors_tx_errors
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -713,7 +713,7 @@ True
 1
 </property>
 <tomanycont id='graphPoints'>
-<object id='RX Packets' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='rx_packets' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 0
 </property>
@@ -736,13 +736,13 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-rx_packets
+interfaceIncomingPackets_rx_packets
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
 </property>
 </object>
-<object id='TX Packets' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='tx_packets' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 1
 </property>
@@ -765,7 +765,7 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-tx_packets
+interfaceOutgoingPackets_tx_packets
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE

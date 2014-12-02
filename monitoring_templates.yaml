@@ -11,6 +11,7 @@
           rrdmin: 0
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
       type: COMMAND
+      component: ${here/id}
       usessh: true
 
     interfaceOutgoingBytes:
@@ -21,6 +22,7 @@
           rrdmin: 0
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
       type: COMMAND
+      component: ${here/id}
       usessh: true
 
     interfaceIncomingPackets:
@@ -31,6 +33,7 @@
           rrdmin: 0
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
       type: COMMAND
+      component: ${here/id}
       usessh: true
 
     interfaceOutgoingPackets:
@@ -41,6 +44,7 @@
           rrdmin: 0
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
       type: COMMAND
+      component: ${here/id}
       usessh: true
 
     collisions_dropped:
@@ -55,6 +59,7 @@
           rrdmin: 0
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
       type: COMMAND
+      component: ${here/id}
       usessh: true
 
     errors:
@@ -73,6 +78,7 @@
           rrdmin: 0
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
       type: COMMAND
+      component: ${here/id}
       usessh: true
 
   graphs:
@@ -82,11 +88,11 @@
       width: 500
 
       graphpoints:
-        RX Bytes:
-          dpName: rx_bytes
+        rx_bytes:
+          dpName: interfaceIncomingBytes_rx_bytes
           format: '%7.0lf'
-        TX Bytes:
-          dpName: tx_bytes
+        tx_bytes:
+          dpName: interfaceOutgoingBytes_tx_bytes
           format: '%7.0lf'
 
     Interface Packets:
@@ -95,11 +101,11 @@
       width: 500
 
       graphpoints:
-        RX Packets:
-          dpName: rx_packets
+        rx_packets:
+          dpName: interfaceIncomingPackets_rx_packets
           format: '%7.0lf'
-        TX Packets:
-          dpName: tx_packets
+        tx_packets:
+          dpName: interfaceOutgoingPackets_tx_packets
           format: '%7.0lf'
 
     Interface Collision Dropped:
@@ -108,14 +114,14 @@
       width: 500
 
       graphpoints:
-        RX Dropped:
-          dpName: rx_dropped
+        dropped_rx_dropped:
+          dpName: collisions_dropped_rx_dropped
           format: '%7.0lf'
-        TX Dropped:
-          dpName: tx_dropped
+        dropped_tx_dropped:
+          dpName: collisions_dropped_tx_dropped
           format: '%7.0lf'
-        TX Collisions:
-          dpName: collisions
+        dropped_collisions:
+          dpName: collisions_dropped_collisions
           format: '%7.0lf'
 
     Interface Errors:
@@ -124,18 +130,18 @@
       width: 500
 
       graphpoints:
-        RX Error:
-          dpName: rx_errors
+        rx_errors:
+          dpName: errors_rx_errors
           format: '%7.0lf'
-        TX Error:
-          dpName: tx_errors
+        tx_errors:
+          dpName: errors_tx_errors
           format: '%7.0lf'
-        RX CRC Error:
-          dpName: rx_crc_err
+        rx_crc_err:
+          dpName: errors_rx_crc_err
           format: '%7.0lf'
-        RX Frame Error:
-          dpName: rx_frame_err
+        rx_frame_err:
+          dpName: errors_rx_frame_err
           format: '%7.0lf'
-        RX Overrun Error:
-          dpName: rx_over_err
+        rx_over_err:
+          dpName: errors_rx_over_err
           format: '%7.0lf'
