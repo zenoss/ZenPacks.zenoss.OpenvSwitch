@@ -24,6 +24,9 @@ COMMAND
 <property type="boolean" id="enabled" mode="w" >
 True
 </property>
+<property type="string" id="component" mode="w" >
+${here/id}
+</property>
 <property type="string" id="eventClass" mode="w" >
 /Cmd/Fail
 </property>
@@ -31,13 +34,13 @@ True
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/ovs-vsctl list interface
+/usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
 </property>
 <property type="boolean" id="usessh" mode="w" >
-False
+True
 </property>
 <property type="string" id="parser" mode="w" >
 ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
@@ -51,7 +54,7 @@ GAUGE
 True
 </property>
 </object>
-<object id='rxDropped' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<object id='rx_dropped' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
 GAUGE
 </property>
@@ -59,7 +62,7 @@ GAUGE
 True
 </property>
 </object>
-<object id='txDropped' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<object id='tx_dropped' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
 GAUGE
 </property>
@@ -76,6 +79,9 @@ COMMAND
 <property type="boolean" id="enabled" mode="w" >
 True
 </property>
+<property type="string" id="component" mode="w" >
+${here/id}
+</property>
 <property type="string" id="eventClass" mode="w" >
 /Cmd/Fail
 </property>
@@ -83,19 +89,19 @@ True
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/ovs-vsctl list interface
+/usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
 </property>
 <property type="boolean" id="usessh" mode="w" >
-False
+True
 </property>
 <property type="string" id="parser" mode="w" >
 ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
 </property>
 <tomanycont id='datapoints'>
-<object id='rxCRCErr' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<object id='rx_crc_err' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
 GAUGE
 </property>
@@ -103,7 +109,7 @@ GAUGE
 True
 </property>
 </object>
-<object id='rxErr' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<object id='rx_errors' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
 GAUGE
 </property>
@@ -111,7 +117,7 @@ GAUGE
 True
 </property>
 </object>
-<object id='rxFrameErr' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<object id='rx_frame_err' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
 GAUGE
 </property>
@@ -119,7 +125,7 @@ GAUGE
 True
 </property>
 </object>
-<object id='rxOverErr' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<object id='rx_over_err' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
 GAUGE
 </property>
@@ -127,7 +133,7 @@ GAUGE
 True
 </property>
 </object>
-<object id='txErr' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<object id='tx_errors' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
 GAUGE
 </property>
@@ -144,6 +150,9 @@ COMMAND
 <property type="boolean" id="enabled" mode="w" >
 True
 </property>
+<property type="string" id="component" mode="w" >
+${here/id}
+</property>
 <property type="string" id="eventClass" mode="w" >
 /Cmd/Fail
 </property>
@@ -151,19 +160,19 @@ True
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/ovs-vsctl list interface
+/usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
 </property>
 <property type="boolean" id="usessh" mode="w" >
-False
+True
 </property>
 <property type="string" id="parser" mode="w" >
 ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
 </property>
 <tomanycont id='datapoints'>
-<object id='rxBytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<object id='rx_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
 GAUGE
 </property>
@@ -180,6 +189,9 @@ COMMAND
 <property type="boolean" id="enabled" mode="w" >
 True
 </property>
+<property type="string" id="component" mode="w" >
+${here/id}
+</property>
 <property type="string" id="eventClass" mode="w" >
 /Cmd/Fail
 </property>
@@ -187,19 +199,19 @@ True
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/ovs-vsctl list interface
+/usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
 </property>
 <property type="boolean" id="usessh" mode="w" >
-False
+True
 </property>
 <property type="string" id="parser" mode="w" >
 ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
 </property>
 <tomanycont id='datapoints'>
-<object id='rxPackets' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<object id='rx_packets' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
 GAUGE
 </property>
@@ -216,6 +228,9 @@ COMMAND
 <property type="boolean" id="enabled" mode="w" >
 True
 </property>
+<property type="string" id="component" mode="w" >
+${here/id}
+</property>
 <property type="string" id="eventClass" mode="w" >
 /Cmd/Fail
 </property>
@@ -223,19 +238,19 @@ True
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/ovs-vsctl list interface
+/usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
 </property>
 <property type="boolean" id="usessh" mode="w" >
-False
+True
 </property>
 <property type="string" id="parser" mode="w" >
 ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
 </property>
 <tomanycont id='datapoints'>
-<object id='txBytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<object id='tx_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
 GAUGE
 </property>
@@ -252,6 +267,9 @@ COMMAND
 <property type="boolean" id="enabled" mode="w" >
 True
 </property>
+<property type="string" id="component" mode="w" >
+${here/id}
+</property>
 <property type="string" id="eventClass" mode="w" >
 /Cmd/Fail
 </property>
@@ -259,19 +277,19 @@ True
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/ovs-vsctl list interface
+/usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
 </property>
 <property type="boolean" id="usessh" mode="w" >
-False
+True
 </property>
 <property type="string" id="parser" mode="w" >
 ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
 </property>
 <tomanycont id='datapoints'>
-<object id='txPackets' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<object id='tx_packets' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
 GAUGE
 </property>
@@ -312,7 +330,7 @@ True
 0
 </property>
 <tomanycont id='graphPoints'>
-<object id='Incoming' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='RX Bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 0
 </property>
@@ -335,13 +353,13 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-rxBytes_rxBytes
+rx_bytes
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
 </property>
 </object>
-<object id='Outgoing' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='TX Bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 1
 </property>
@@ -364,7 +382,7 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-txBytes_txBytes
+tx_bytes
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -401,7 +419,7 @@ True
 2
 </property>
 <tomanycont id='graphPoints'>
-<object id='Incoming' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='RX Dropped' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 0
 </property>
@@ -424,13 +442,42 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-rxDropped_rxDropped
+rx_dropped
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
 </property>
 </object>
-<object id='Outgoing' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='TX Collisions' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+2
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%7.0lf
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+collisions_collisions
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='TX Dropped' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 1
 </property>
@@ -453,7 +500,7 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-collisions_collisions
+tx_dropped
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -490,7 +537,36 @@ True
 3
 </property>
 <tomanycont id='graphPoints'>
-<object id='Incoming' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='RX CRC Error' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+2
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%7.0lf
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+rx_crc_err
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='RX Error' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 0
 </property>
@@ -513,13 +589,71 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-rxErr_rxErr
+rx_errors
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
 </property>
 </object>
-<object id='Outgoing' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='RX Frame Error' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+3
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%7.0lf
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+rx_frame_err
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='RX Overrun Error' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+4
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%7.0lf
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+rx_over_err
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='TX Error' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 1
 </property>
@@ -542,7 +676,7 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-rxOverErr_rxOverErr
+tx_errors
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -579,7 +713,7 @@ True
 1
 </property>
 <tomanycont id='graphPoints'>
-<object id='Incoming' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='RX Packets' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 0
 </property>
@@ -602,13 +736,13 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-rxPackets_rxPackets
+rx_packets
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
 </property>
 </object>
-<object id='Outgoing' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='TX Packets' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 1
 </property>
@@ -631,7 +765,7 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-txPackets_txPackets
+tx_packets
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE

@@ -26,9 +26,13 @@ class InterfaceStatistics(CommandParser):
             return
 
         resps = str_to_dict(cmd.result.output)
-        dp_map = dict([(dp.id, dp) for dp in cmd.points])
-        for name, dp in dp_map.items():
-            for resp in resps:
+
+        for resp in resps:
+            if cmd.component.find(resp['_uuid']) == -1:
+                continue
+
+            dp_map = dict([(dp.id, dp) for dp in cmd.points])
+            for name, dp in dp_map.items():
                 if name in resp['statistics']:
                     result.values.append((dp, resp['statistics'][name]))
-                    break
+
