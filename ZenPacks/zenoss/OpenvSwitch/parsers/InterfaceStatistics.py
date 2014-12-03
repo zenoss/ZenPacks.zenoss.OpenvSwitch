@@ -11,7 +11,6 @@
 #
 ###########################################################################
 
-import json
 import logging
 logger = logging.getLogger('zen.OpenvSwitch.Parser')
 
@@ -28,6 +27,7 @@ class InterfaceStatistics(CommandParser):
         resps = str_to_dict(cmd.result.output)
 
         for resp in resps:
+            # is this resp relevant to cmd.component?
             if cmd.component.find(resp['_uuid']) == -1:
                 continue
 
