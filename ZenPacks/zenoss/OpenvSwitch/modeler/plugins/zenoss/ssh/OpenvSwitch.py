@@ -33,7 +33,7 @@ class OpenvSwitch(CommandPlugin):
         )
 
     def process(self, device, results, unused):
-        LOG.info('Trying ovs-vsctl/ip netns on %s', device.id)
+        LOG.info('Processing plugin results on %s', device.id)
 
         command_strings = results.split('__COMMAND__')
 

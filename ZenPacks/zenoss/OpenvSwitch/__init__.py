@@ -39,14 +39,8 @@ RELATIONSHIPS_YUML = """
 CFG = zenpacklib.ZenPackSpec(
     name=__name__,     # evaluated to 'ZenPacks.zenoss.OpenvSwitch'
 
-    zProperties={
-        'DEFAULTS': {'category': 'OpenvSwitch',
-                     'type': 'string'},
-        },
-
     classes={
-        # Device Types #######################################  ########
-
+        # Device Types ###############################################
         'OpenvSwitchDevice': {
             'base': zenpacklib.Device,
             'meta_type': 'OpenvSwitchDevice',
@@ -66,7 +60,7 @@ CFG = zenpacklib.ZenPackSpec(
             'order': 1,
             'properties': {
                 'ovsId':       {'grid_display': False,
-                                'label': 'OpenvSwitch ID'},                 # 1
+                                'label': 'OpenvSwitch ID'},
                 'DB_version':  {'label': 'DB Version'},
                 'OVS_version': {'label': 'OVS Version'},
             },
@@ -145,3 +139,9 @@ CFG = zenpacklib.ZenPackSpec(
     )
 
 CFG.create()
+
+from Products.ZenUtils.Utils import unused
+
+# Patch last to avoid import recursion problems.
+from ZenPacks.zenoss.OpenvSwitch import patches
+unused(patches)
