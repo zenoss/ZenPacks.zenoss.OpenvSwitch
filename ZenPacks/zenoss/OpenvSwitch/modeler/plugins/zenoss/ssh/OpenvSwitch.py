@@ -10,22 +10,21 @@
 import logging
 LOG = logging.getLogger('zen.OpenvSwitch')
 
-from Products.DataCollector.plugins.CollectorPlugin import CommandPlugin, PythonPlugin
+from Products.DataCollector.plugins.CollectorPlugin import CommandPlugin
 from Products.DataCollector.plugins.DataMaps import ObjectMap, RelationshipMap
-from Products.ZenUtils.Utils import prepId
 
-from ZenPacks.zenoss.OpenvSwitch.utils import add_local_lib_path, zenpack_path, str_to_dict
+from ZenPacks.zenoss.OpenvSwitch.utils import add_local_lib_path, str_to_dict
 add_local_lib_path()
 
 
 class OpenvSwitch(CommandPlugin):
     command = (
         '('
-        'ovs-vsctl list Open_vSwitch ; '
+        'ovs-vsctl --columns=_uuid,statistics,external_ids,db_version,ovs_version,bridges list Open_vSwitch ; '
         'echo "__COMMAND__" ; '
-        'ovs-vsctl list bridge ; '
+        'ovs-vsctl --columns=_uuid,name,external_ids,ports,datapath_id,datapath_type,flood_vlans,flow_tables,status list bridge ; '
         'echo "__COMMAND__" ; '
-        'ovs-vsctl list port ; '
+        'ovs-vsctl --columns=_uuid,name,mac,lacp,external_ids,interfaces,tag,trunks,vlan_mode,status,statistics list port ; '
         'echo "__COMMAND__" ; '
         'ovs-vsctl list interface ; '
         'echo "__COMMAND__" ; '
@@ -40,7 +39,6 @@ class OpenvSwitch(CommandPlugin):
         # OVSs
         ovss = str_to_dict(command_strings[0])
         ovses = []
-        # import pdb;pdb.set_trace()
         for ovs in ovss:
             if 'name' in ovs:
                 ovs_name = ovs['name']
@@ -49,10 +47,10 @@ class OpenvSwitch(CommandPlugin):
             ovses.append(ObjectMap(
                 modname='ZenPacks.zenoss.OpenvSwitch.OVS',
                 data={
-                'id':     'ovs-{0}'.format(ovs['_uuid']),
-                'title':  ovs_name,
-                'ovsId': ovs['_uuid'],
-                'DB_version': ovs['db_version'],
+                'id':          'ovs-{0}'.format(ovs['_uuid']),
+                'title':       ovs_name,
+                'ovsId':       ovs['_uuid'],
+                'DB_version':  ovs['db_version'],
                 'OVS_version': ovs['ovs_version'],
                 }))
 
@@ -72,10 +70,10 @@ class OpenvSwitch(CommandPlugin):
             bridges.append(ObjectMap(
                 modname='ZenPacks.zenoss.OpenvSwitch.Bridge',
                 data={
-                'id':     'bridge-{0}'.format(brdg['_uuid']),
-                'title':  brdg['name'],
+                'id':       'bridge-{0}'.format(brdg['_uuid']),
+                'title':    brdg['name'],
                 'bridgeId': brdg['_uuid'],
-                'set_ovs':'ovs-{0}'.format(ovsid[0]),
+                'set_ovs':  'ovs-{0}'.format(ovsid[0]),
                 }))
 
 
@@ -88,20 +86,17 @@ class OpenvSwitch(CommandPlugin):
         # ports
         prts = str_to_dict(command_strings[2])
         ports = []
-        # import pdb;pdb.set_trace()
         for port in prts:
             brdgId = [brdg['_uuid'] for brdg in brdgs \
                        if port['_uuid'] in brdg['ports']]
-            ovsid = [ovs['_uuid'] for ovs in ovss \
-                    if brdgId[0] in ovs['bridges']]
             ports.append(ObjectMap(
                 modname='ZenPacks.zenoss.OpenvSwitch.Port',
                 data={
-                'id':     'port-{0}'.format(port['_uuid']),
-                'title':  port['name'],
-                'portId': port['_uuid'],
-                'tag_':   port['tag'],
-                'set_bridge':'bridge-{0}'.format(brdgId[0]),
+                'id':         'port-{0}'.format(port['_uuid']),
+                'title':      port['name'],
+                'portId':     port['_uuid'],
+                'tag_':       port['tag'],
+                'set_bridge': 'bridge-{0}'.format(brdgId[0]),
                 }))
 
 
@@ -131,18 +126,18 @@ class OpenvSwitch(CommandPlugin):
             interfaces.append(ObjectMap(
                 modname='ZenPacks.zenoss.OpenvSwitch.Interface',
                 data={
-                'id':     'interface-{0}'.format(iface['_uuid']),
-                'title':  iface['name'],
+                'id':          'interface-{0}'.format(iface['_uuid']),
+                'title':       iface['name'],
                 'interfaceId': iface['_uuid'],
-                'type_': iface['type'],
-                'mac': iface['mac_in_use'].upper(),
-                'amac': amac,
-                'lstate': iface['link_state'].upper(),
-                'astate': iface['admin_state'].upper(),
-                'lspeed': lspd,
-                'mtu': iface['mtu'],
-                'duplex': iface['duplex'],
-                'set_port':'port-{0}'.format(prtid[0]),
+                'type_':       iface['type'],
+                'mac':         iface['mac_in_use'].upper(),
+                'amac':        amac,
+                'lstate':      iface['link_state'].upper(),
+                'astate':      iface['admin_state'].upper(),
+                'lspeed':      lspd,
+                'mtu':         iface['mtu'],
+                'duplex':      iface['duplex'],
+                'set_port':    'port-{0}'.format(prtid[0]),
                 }))
 
 
