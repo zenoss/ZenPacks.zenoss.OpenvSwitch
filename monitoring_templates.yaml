@@ -1,0 +1,147 @@
+/OpenvSwitch/Interface:
+  description: "OpenvSwitch: Interface Monitoring"
+  targetPythonClass: ZenPacks.zenoss.OpenvSwitch.OpenvSwitch
+
+  datasources:
+    interfaceIncomingBytes:
+      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+      cycletime: 300
+      datapoints:
+        rx_bytes:
+          rrdmin: 0
+      parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
+      type: COMMAND
+      component: ${here/id}
+      usessh: true
+
+    interfaceOutgoingBytes:
+      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+      cycletime: 300
+      datapoints:
+        tx_bytes:
+          rrdmin: 0
+      parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
+      type: COMMAND
+      component: ${here/id}
+      usessh: true
+
+    interfaceIncomingPackets:
+      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+      cycletime: 300
+      datapoints:
+        rx_packets:
+          rrdmin: 0
+      parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
+      type: COMMAND
+      component: ${here/id}
+      usessh: true
+
+    interfaceOutgoingPackets:
+      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+      cycletime: 300
+      datapoints:
+        tx_packets:
+          rrdmin: 0
+      parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
+      type: COMMAND
+      component: ${here/id}
+      usessh: true
+
+    collisions_dropped:
+      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+      cycletime: 300
+      datapoints:
+        collisions:
+          rrdmin: 0
+        rx_dropped:
+          rrdmin: 0
+        tx_dropped:
+          rrdmin: 0
+      parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
+      type: COMMAND
+      component: ${here/id}
+      usessh: true
+
+    errors:
+      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+      cycletime: 300
+      datapoints:
+        rx_crc_err:
+          rrdmin: 0
+        rx_errors:
+          rrdmin: 0
+        tx_errors:
+          rrdmin: 0
+        rx_frame_err:
+          rrdmin: 0
+        rx_over_err:
+          rrdmin: 0
+      parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
+      type: COMMAND
+      component: ${here/id}
+      usessh: true
+
+  graphs:
+    Interface Bytes:
+      units: count
+      height: 100
+      width: 500
+
+      graphpoints:
+        rx_bytes:
+          dpName: interfaceIncomingBytes_rx_bytes
+          format: '%7.0lf'
+        tx_bytes:
+          dpName: interfaceOutgoingBytes_tx_bytes
+          format: '%7.0lf'
+
+    Interface Packets:
+      units: count
+      height: 100
+      width: 500
+
+      graphpoints:
+        rx_packets:
+          dpName: interfaceIncomingPackets_rx_packets
+          format: '%7.0lf'
+        tx_packets:
+          dpName: interfaceOutgoingPackets_tx_packets
+          format: '%7.0lf'
+
+    Interface Collision Dropped:
+      units: count
+      height: 100
+      width: 500
+
+      graphpoints:
+        dropped_rx_dropped:
+          dpName: collisions_dropped_rx_dropped
+          format: '%7.0lf'
+        dropped_tx_dropped:
+          dpName: collisions_dropped_tx_dropped
+          format: '%7.0lf'
+        dropped_collisions:
+          dpName: collisions_dropped_collisions
+          format: '%7.0lf'
+
+    Interface Errors:
+      units: count
+      height: 100
+      width: 500
+
+      graphpoints:
+        rx_errors:
+          dpName: errors_rx_errors
+          format: '%7.0lf'
+        tx_errors:
+          dpName: errors_tx_errors
+          format: '%7.0lf'
+        rx_crc_err:
+          dpName: errors_rx_crc_err
+          format: '%7.0lf'
+        rx_frame_err:
+          dpName: errors_rx_frame_err
+          format: '%7.0lf'
+        rx_over_err:
+          dpName: errors_rx_over_err
+          format: '%7.0lf'
