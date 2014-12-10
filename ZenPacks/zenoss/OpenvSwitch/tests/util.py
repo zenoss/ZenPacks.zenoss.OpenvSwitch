@@ -10,3 +10,11 @@
 # For complete information please visit: http://www.zenoss.com/oss/
 #
 ###########################################################################
+
+import os.path
+
+
+def loadData(filename):
+    with open(os.path.join(os.path.dirname(__file__), 'data', filename), 'r') as f:
+        data = f.read()
+    return data

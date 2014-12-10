@@ -34,6 +34,15 @@ class OpenvSwitch(CommandPlugin):
     def process(self, device, results, unused):
         LOG.info('Processing plugin results on %s', device.id)
 
+        if results.find('command not found') > -1:
+            LOG.error('ovs-vsctl not found on %s', device.id)
+            return None
+
+        if  results.find('database connection failed') > -1 and \
+            results.find('No such file or directory') > -1:
+            LOG.error('service openvswitch not running on %s', device.id)
+            return None
+
         command_strings = results.split('__COMMAND__')
 
         # OVSs

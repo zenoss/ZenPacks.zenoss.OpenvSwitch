@@ -1,0 +1,55 @@
+_uuid               : 6228b836-b028-4c4e-a8ee-3bd6457801a7
+admin_state         : up
+cfm_fault           : []
+cfm_fault_status    : []
+cfm_health          : []
+cfm_mpid            : []
+cfm_remote_mpids    : []
+cfm_remote_opstate  : []
+duplex              : []
+external_ids        : {}
+ingress_policing_burst: 0
+ingress_policing_rate: 0
+lacp_current        : []
+link_resets         : 0
+link_speed          : []
+link_state          : up
+mac                 : []
+mac_in_use          : "ae:ec:21:89:70:43"
+mtu                 : 1500
+name                : br-ex
+ofport              : 65534
+ofport_request      : []
+options             : {}
+other_config        : {}
+statistics          : {collisions=0, rx_bytes=468, rx_crc_err=0, rx_dropped=0, rx_errors=0, rx_frame_err=0, rx_over_err=0, rx_packets=6, tx_bytes=594, tx_dropped=0, tx_errors=0, tx_packets=9}
+status              : {driver_name=openvswitch}
+type                : internal
+
+_uuid               : 6898492f-2d2e-439e-9370-a0073a0669f8
+admin_state         : up
+cfm_fault           : []
+cfm_fault_status    : []
+cfm_health          : []
+cfm_mpid            : []
+cfm_remote_mpids    : []
+cfm_remote_opstate  : []
+duplex              : full
+external_ids        : {attached-mac="fa:16:3e:b9:3a:e9", iface-id="acadae3c-c300-4ca7-a03c-3961acffd3b6", iface-status=active}
+ingress_policing_burst: 0
+ingress_policing_rate: 0
+lacp_current        : []
+link_resets         : 0
+link_speed          : 10000000000
+link_state          : up
+mac                 : []
+mac_in_use          : "4e:0c:a5:e4:8a:51"
+mtu                 : 1500
+name                : "tapacadae3c-c3"
+ofport              : 5
+ofport_request      : []
+options             : {}
+other_config        : {}
+statistics          : {collisions=0, rx_bytes=468, rx_crc_err=0, rx_dropped=0, rx_errors=0, rx_frame_err=0, rx_over_err=0, rx_packets=6, tx_bytes=272, tx_dropped=0, tx_errors=0, tx_packets=4}
+status              : {driver_name=veth, driver_version="1.0", firmware_version="N/A"}
+type                : ""

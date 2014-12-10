@@ -1,0 +1,2 @@
+2014-12-09T20:57:10Z|00001|reconnect|WARN|unix:/var/run/openvswitch/db.sock: connection attempt failed (No such file or directory)
+ovs-vsctl: unix:/var/run/openvswitch/db.sock: database connection failed (No such file or directory)
