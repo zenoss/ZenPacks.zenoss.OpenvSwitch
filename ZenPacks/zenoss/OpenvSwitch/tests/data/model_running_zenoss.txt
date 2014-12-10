@@ -1,0 +1,96 @@
+_uuid               : 451cccba-35f8-4952-9efe-fbdee4fe4e3d
+statistics          : {}
+external_ids        : {system-id="bcfe05c1-91b2-4d9a-9faf-b99b23858618"}
+db_version          : "7.1.0"
+ovs_version         : "1.11.0"
+bridges             : [8921ecae-f377-4370-9e74-de2c24d7a6a5]
+__COMMAND__
+_uuid               : 8921ecae-f377-4370-9e74-de2c24d7a6a5
+name                : br-ex
+external_ids        : {}
+ports               : [1074d480-c9ba-4d8e-9bf4-8812b48f593a, 25a09ae6-421a-4dca-80a4-5e40886c2f5e]
+datapath_id         : "0000aeec21897043"
+datapath_type       : ""
+flood_vlans         : []
+flow_tables         : {}
+status              : {}
+__COMMAND__
+_uuid               : 1074d480-c9ba-4d8e-9bf4-8812b48f593a
+name                : br-ex
+mac                 : []
+lacp                : []
+external_ids        : {}
+interfaces          : [6228b836-b028-4c4e-a8ee-3bd6457801a7]
+tag                 : []
+trunks              : []
+vlan_mode           : []
+status              : {}
+statistics          : {}
+
+_uuid               : 25a09ae6-421a-4dca-80a4-5e40886c2f5e
+name                : "tap70f86603-f0"
+mac                 : []
+lacp                : []
+external_ids        : {}
+interfaces          : [83a75842-6033-4480-b8c5-d4268501bf8c]
+tag                 : []
+trunks              : []
+vlan_mode           : []
+status              : {}
+statistics          : {}
+__COMMAND__
+_uuid               : 83a75842-6033-4480-b8c5-d4268501bf8c
+admin_state         : up
+cfm_fault           : []
+cfm_fault_status    : []
+cfm_health          : []
+cfm_mpid            : []
+cfm_remote_mpids    : []
+cfm_remote_opstate  : []
+duplex              : full
+external_ids        : {attached-mac="fa:16:3e:66:cc:a9", iface-id="70f86603-f04e-446c-8199-e95e8515c702", iface-status=active}
+ingress_policing_burst: 0
+ingress_policing_rate: 0
+lacp_current        : []
+link_resets         : 1
+link_speed          : 10000000000
+link_state          : up
+mac                 : []
+mac_in_use          : "4a:fb:91:0a:1b:da"
+mtu                 : 1500
+name                : "tap70f86603-f0"
+ofport              : 1
+ofport_request      : []
+options             : {}
+other_config        : {}
+statistics          : {collisions=0, rx_bytes=594, rx_crc_err=0, rx_dropped=0, rx_errors=0, rx_frame_err=0, rx_over_err=0, rx_packets=9, tx_bytes=0, tx_dropped=0, tx_errors=0, tx_packets=0}
+status              : {driver_name=veth, driver_version="1.0", firmware_version="N/A"}
+type                : ""
+
+_uuid               : 6228b836-b028-4c4e-a8ee-3bd6457801a7
+admin_state         : up
+cfm_fault           : []
+cfm_fault_status    : []
+cfm_health          : []
+cfm_mpid            : []
+cfm_remote_mpids    : []
+cfm_remote_opstate  : []
+duplex              : []
+external_ids        : {}
+ingress_policing_burst: 0
+ingress_policing_rate: 0
+lacp_current        : []
+link_resets         : 2
+link_speed          : []
+link_state          : up
+mac                 : []
+mac_in_use          : "ae:ec:21:89:70:43"
+mtu                 : 1500
+name                : br-ex
+ofport              : 65534
+ofport_request      : []
+options             : {}
+other_config        : {}
+statistics          : {collisions=0, rx_bytes=468, rx_crc_err=0, rx_dropped=0, rx_errors=0, rx_frame_err=0, rx_over_err=0, rx_packets=6, tx_bytes=594, tx_dropped=0, tx_errors=0, tx_packets=9}
+status              : {driver_name=openvswitch}
+type                : internal
