@@ -123,10 +123,7 @@ CFG = zenpacklib.ZenPackSpec(
                 # 'packets':      {'label': 'Packets',
                 #                  'order': 4.5},
             },
-            'relationships': {
-                'bridge':       {'grid_display': False},
-                },
-            },
+        },
 
         'Interface': {
             'base': 'OpenvSwitchComponent',

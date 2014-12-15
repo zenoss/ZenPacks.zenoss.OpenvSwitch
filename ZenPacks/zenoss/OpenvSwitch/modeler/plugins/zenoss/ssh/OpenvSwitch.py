@@ -127,6 +127,8 @@ class OpenvSwitch(CommandPlugin):
         flws = bridge_flow_data_to_dict(command_strings[3].split('\n')[1:-1])
         flows = []
         for key in flws.keys():
+            brdgId = [brdg['_uuid'] for brdg in brdgs \
+                      if key == brdg['name']]
             for flow in flws[key]:
                 priority = None
                 if 'priority' in flow:
@@ -161,14 +163,14 @@ class OpenvSwitch(CommandPlugin):
                         'nwsrc':    nwsrc,
                         'nwdst':    nwdst,
                         'action':   flow['actions'],
-                        }))
+                        'set_bridge': 'bridge-{0}'.format(brdgId[0]),
+                    }))
 
 
         if len(flows) > 0:
             LOG.info('Found %d flows on %s', len(flows), device.id)
         else:
             LOG.info('No flow found on %s', device.id)
-        # import pdb;pdb.set_trace()
 
         # interfaces
         ifaces = str_to_dict(command_strings[4])
