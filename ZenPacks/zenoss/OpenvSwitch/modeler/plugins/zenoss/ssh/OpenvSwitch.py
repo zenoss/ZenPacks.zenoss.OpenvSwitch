@@ -12,8 +12,11 @@ LOG = logging.getLogger('zen.OpenvSwitch')
 
 from Products.DataCollector.plugins.CollectorPlugin import CommandPlugin
 from Products.DataCollector.plugins.DataMaps import ObjectMap, RelationshipMap
+from Products.ZenUtils.guid.guid import generate
 
-from ZenPacks.zenoss.OpenvSwitch.utils import add_local_lib_path, str_to_dict
+from ZenPacks.zenoss.OpenvSwitch.utils import add_local_lib_path, \
+                                              str_to_dict, \
+                                              bridge_flow_data_to_dict
 add_local_lib_path()
 
 
@@ -25,9 +28,12 @@ class OpenvSwitch(CommandPlugin):
         'ovs-vsctl --columns=_uuid,name,external_ids,ports,datapath_id,datapath_type,flood_vlans,flow_tables,status list bridge ; '
         'echo "__COMMAND__" ; '
         'ovs-vsctl --columns=_uuid,name,mac,lacp,external_ids,interfaces,tag,trunks,vlan_mode,status,statistics list port ; '
+        # 'echo "__COMMAND__" ; '
+        # 'for x in $(ovs-vsctl --columns=name list bridge); do if [ $x != \'name\' ] && [ $x != \':\' ] ; then  echo $x; ovs-ofctl dump-aggregate $x; fi; done ; '
+        'echo "__COMMAND__" ; '
+        'for x in $(ovs-vsctl --columns=name list bridge); do if [ $x != \'name\' ] && [ $x != \':\' ] ; then  echo $x; ovs-ofctl dump-flows $x; fi; done ; '
         'echo "__COMMAND__" ; '
         'ovs-vsctl list interface ; '
-        'echo "__COMMAND__" ; '
         ')'
         )
 
@@ -72,6 +78,7 @@ class OpenvSwitch(CommandPlugin):
 
         # bridges
         brdgs = str_to_dict(command_strings[1])
+        # brdgAggs = bridge_flow_data_to_dict(command_strings[5].split('\n')[1:-1])
         bridges = []
         for brdg in brdgs:
             ovsid = [ovs['_uuid'] for ovs in ovss \
@@ -82,6 +89,9 @@ class OpenvSwitch(CommandPlugin):
                 'id':       'bridge-{0}'.format(brdg['_uuid']),
                 'title':    brdg['name'],
                 'bridgeId': brdg['_uuid'],
+                # 'flow_count': brdgAggs[brdg['name']][0]['flow_count'],
+                # 'byte_count': brdgAggs[brdg['name']][0]['byte_count'],
+                # 'packet_count': brdgAggs[brdg['name']][0]['packet_count'],
                 'set_ovs':  'ovs-{0}'.format(ovsid[0]),
                 }))
 
@@ -90,7 +100,6 @@ class OpenvSwitch(CommandPlugin):
             LOG.info('Found %d bridges on %s', len(bridges), device.id)
         else:
             LOG.info('No bridge found on %s', device.id)
-            return None
 
         # ports
         prts = str_to_dict(command_strings[2])
@@ -113,11 +122,58 @@ class OpenvSwitch(CommandPlugin):
             LOG.info('Found %d ports on %s', len(ports), device.id)
         else:
             LOG.info('No port found on %s', device.id)
-            return None
+
+        # flows
+        flws = bridge_flow_data_to_dict(command_strings[3].split('\n')[1:-1])
+        flows = []
+        for key in flws.keys():
+            for flow in flws[key]:
+                priority = None
+                if 'priority' in flow:
+                    priority = flow['priority']
+                protoname = None
+                if 'proto' in flow:
+                    protoname = flow['proto']
+                inport = None
+                if 'in_port' in flow:
+                    inport = flow['in_port']
+                nwsrc = None
+                if 'nw_src' in flow:
+                    nwsrc = flow['nw_src']
+                nwdst = None
+                if 'nw_dst' in flow:
+                    nwdst = flow['nw_dst']
+
+                fid = generate()
+                flows.append(ObjectMap(
+                    modname='ZenPacks.zenoss.OpenvSwitch.Flow',
+                    data={
+                        'id':       'flow-{0}'.format(fid),
+                        'flowId':    fid,
+                        'title':    'flow-{0}'.format(fid),
+                        'table':    flow['table'],
+                        # 'flow_count': brdgAggs[brdg['name']][0]['flow_count'],
+                        # 'byte_count': brdgAggs[brdg['name']][0]['byte_count'],
+                        # 'packet_count': brdgAggs[brdg['name']][0]['packet_count'],
+                        'priority': priority,
+                        'protocol': protoname,
+                        'inport':   inport,
+                        'nwsrc':    nwsrc,
+                        'nwdst':    nwdst,
+                        'action':   flow['actions'],
+                        }))
+
+
+        if len(flows) > 0:
+            LOG.info('Found %d flows on %s', len(flows), device.id)
+        else:
+            LOG.info('No flow found on %s', device.id)
+        # import pdb;pdb.set_trace()
 
         # interfaces
-        ifaces = str_to_dict(command_strings[3])
+        ifaces = str_to_dict(command_strings[4])
         interfaces = []
+        # import pdb;pdb.set_trace()
         for iface in ifaces:
             if iface['link_speed'] == 10000000000:
                 lspd = '10 Gb'
@@ -141,6 +197,7 @@ class OpenvSwitch(CommandPlugin):
                 'type_':       iface['type'],
                 'mac':         iface['mac_in_use'].upper(),
                 'amac':        amac,
+                'ofport':      iface['ofport'],
                 'lstate':      iface['link_state'].upper(),
                 'astate':      iface['admin_state'].upper(),
                 'lspeed':      lspd,
@@ -154,19 +211,20 @@ class OpenvSwitch(CommandPlugin):
             LOG.info('Found %d interfaces on %s', len(interfaces), device.id)
         else:
             LOG.info('No interface found on %s', device.id)
-            return None
 
         objmaps = {
             'ovses': ovses,
             'bridges': bridges,
             'ports': ports,
+            'flows': flows,
             'interfaces': interfaces,
             }
 
         # Apply the objmaps in the right order.
         componentsMap = RelationshipMap(relname='components')
-        for i in ('ovses', 'bridges', 'ports', 'interfaces',):
+        for i in ('ovses', 'bridges', 'ports', 'flows', 'interfaces',):
             for objmap in objmaps[i]:
                 componentsMap.append(objmap)
 
+#        import pdb;pdb.set_trace()
         return componentsMap
