@@ -60,6 +60,9 @@ def add_local_lib_path():
 
 add_local_lib_path()
 
+# The following methods are used to parse strings from SSH commands
+# If the code is confusing to you, here is FYI that the coder himself
+# is not exactly proud of it himself.
 def str_to_dict(original):
     original = original.split('\n')
     # remove '' from head and tail
@@ -133,4 +136,102 @@ def localparser(text):
 
     return ret
 
+def bridge_flow_data_to_dict(flow_data_list):
+    # convert ovs-ofctl dump-flows data to dict
+    # it looks something like this:
+    # cookie=0x0, duration=1167.96s, table=0, n_packets=0, n_bytes=0,
+    # idle_age=1167, ip,in_port=1,nw_src=192.168.56.121 actions=output:3,output:4
 
+    # here we collect table number; priority; action, bytes, and packets
+
+    flow_dct = {}
+    for entry in flow_data_list:
+        if entry.find('NXST_AGGREGATE') > -1:
+            dct = {}
+            statlst = entry[entry.index(':') + 1:].strip().split(' ')
+            for stat in statlst:
+                if stat.find('packet_count=') > -1:
+                    dct['packet_count'] = int(stat[stat.index('=') + 1:])
+                elif stat.find('byte_count=') > -1:
+                    dct['byte_count'] = int(stat[stat.index('=') + 1:])
+                elif stat.find('flow_count=') > -1:
+                    dct['flow_count'] = int(stat[stat.index('=') + 1:])
+
+            flow_dct[bridge_name].append(dct)
+
+        elif entry.find('cookie=') > -1:
+            # flow table entries
+            dct = {}
+            statlst = entry.strip().split(',')
+            for stat in statlst:
+                # skip these
+                if  stat.find('cookie=') > -1 or \
+                    stat.find('duration=') > -1 or \
+                    stat.find('idle_age=') > -1:
+                    continue
+
+                # no ', ' separating from action ???
+                elif stat.find(' actions=') > -1:
+                    statlstlst = stat.strip().split(' ')
+                    keyname = statlstlst[0][:statlstlst[0].index('=')]
+                    dct[keyname] = statlstlst[0][statlstlst[0].index('=') + 1:]
+
+                    dct['actions'] = statlstlst[1][statlstlst[1].index('=') + 1:]
+                    for i in range(statlst.index(stat) + 1, len(statlst)):
+                        dct['actions'] += ',' + statlst[i]
+                    break
+                elif stat.find('priority=') > -1:
+                    dct['priority'] = int(stat[stat.index('=') + 1:].strip())
+                elif stat.find('table=') > -1:
+                    dct['table'] = int(stat[stat.index('=') + 1:].strip())
+                elif stat.find('n_bytes=') > -1:
+                    dct['bytes'] = int(stat[stat.index('=') + 1:].strip())
+                elif stat.find('n_packets=') > -1:
+                    dct['packets'] = int(stat[stat.index('=') + 1:].strip())
+                elif stat.find('in_port=') > -1:
+                    dct['in_port'] = int(stat[stat.index('=') + 1:])
+                elif stat.find('nw_src=') > -1:
+                    dct['nw_src'] = stat[stat.index('=') + 1:].strip()
+                elif stat.find('nw_dst=') > -1:
+                    dct['nw_dst'] = stat[stat.index('=') + 1:].strip()
+                elif stat.find('=') == -1 and len(stat.strip()) > 0:
+                    dct['proto'] = stat.strip()
+
+            flow_dct[bridge_name].append(dct)
+
+        elif  entry.find('NXST_FLOW') == -1 and \
+                        entry.find('cookie=') == -1:
+            bridge_name = entry.strip()
+            flow_dct[bridge_name] = []
+
+    return flow_dct
+
+def bridge_stats_data_to_dict(bridge_stats):
+    # convert ovs-ofctl dump-aggregate data to dict
+    flowstats_dct = {}
+    bridgestatslst = bridge_stats.split('\n')
+    name = ''                                      # used to identify stats
+    for bstat in bridgestatslst:
+        if len(bstat) == 0:
+            continue
+
+        elif bstat.find('name') > -1:              # bridge name
+            bridgename = bstat[bstat.index(':') + 1:].strip()
+            if bridgename not in flowstats_dct:    # a new bridge name
+                flowstats_dct[bridgename] = {}
+                name = bridgename                  # update bridge name
+        elif bstat.find('_uuid') > -1:             # bridge uuid
+            flowstats_dct[name]['uuid'] = bstat[bstat.index(':') + 1:].strip()
+        elif bstat.strip() in flowstats_dct:       # update bridge name
+            name = bstat.strip()
+        elif bstat.find('NXST_AGGREGATE') > -1:    # aggregate data
+            countlst = bstat[bstat.index(':') + 1:].split(' ')
+            for count in countlst:
+                if len(count.strip()) == 0:
+                    continue
+
+                flowstats_dct[name][count.split('=')[0]] = int(count.split('=')[1])
+        else:                                      # nothing interesting to see
+            continue
+
+    return flowstats_dct

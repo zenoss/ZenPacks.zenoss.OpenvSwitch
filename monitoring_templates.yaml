@@ -1,6 +1,6 @@
-/OpenvSwitch/Interface:
+/Network/OpenvSwitch/Interface:
   description: "OpenvSwitch: Interface Monitoring"
-  targetPythonClass: ZenPacks.zenoss.OpenvSwitch.OpenvSwitch
+  targetPythonClass: ZenPacks.zenoss.OpenvSwitch.Interface
 
   datasources:
     interfaceIncomingBytes:
@@ -144,4 +144,41 @@
           format: '%7.0lf'
         rx_over_err:
           dpName: errors_rx_over_err
+          format: '%7.0lf'
+
+/Network/OpenvSwitch/Bridge:
+  description: "OpenvSwitch: Bridge Monitoring"
+  targetPythonClass: ZenPacks.zenoss.OpenvSwitch.Bridge
+
+  datasources:
+    bridgeFlowCount:
+      commandTemplate: /usr/bin/ovs-vsctl --columns=name,_uuid list bridge; for txt in $$(/usr/bin/ovs-vsctl --columns=name list bridge); do if [ $$txt != 'name' ] && [ $$txt != ':' ] ; then echo $$txt; /usr/bin/ovs-ofctl dump-aggregate $$txt; fi; done;
+      cycletime: 300
+      datapoints:
+        flow_count:
+          rrdmin: 0
+        byte_count:
+          rrdmin: 0
+        packet_count:
+          rrdmin: 0
+      parser: ZenPacks.zenoss.OpenvSwitch.parsers.BridgeStatistics
+      type: COMMAND
+      component: ${here/id}
+      usessh: true
+
+  graphs:
+    Bridge Statistics:
+      units: count
+      height: 100
+      width: 500
+
+      graphpoints:
+        flow_count:
+          dpName: bridgeFlowCount_flow_count
+          format: '%7.0lf'
+        byte_count:
+          dpName: bridgeFlowCount_byte_count
+          format: '%7.0lf'
+        packet_count:
+          dpName: bridgeFlowCount_packet_count
           format: '%7.0lf'
