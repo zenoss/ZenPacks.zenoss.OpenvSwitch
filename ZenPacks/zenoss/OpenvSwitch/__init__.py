@@ -180,6 +180,7 @@ CFG = zenpacklib.ZenPackSpec(
 
 CFG.create()
 
+# patches
 from Products.ZenUtils.Utils import unused
 
 # Patch last to avoid import recursion problems.

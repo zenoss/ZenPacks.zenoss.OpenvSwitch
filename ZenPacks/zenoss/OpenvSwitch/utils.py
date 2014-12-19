@@ -205,3 +205,33 @@ def bridge_flow_data_to_dict(flow_data_list):
             flow_dct[bridge_name] = []
 
     return flow_dct
+
+def bridge_stats_data_to_dict(bridge_stats):
+    # convert ovs-ofctl dump-aggregate data to dict
+    flowstats_dct = {}
+    bridgestatslst = bridge_stats.split('\n')
+    name = ''                                      # used to identify stats
+    for bstat in bridgestatslst:
+        if len(bstat) == 0:
+            continue
+
+        elif bstat.find('name') > -1:              # bridge name
+            bridgename = bstat[bstat.index(':') + 1:].strip()
+            if bridgename not in flowstats_dct:    # a new bridge name
+                flowstats_dct[bridgename] = {}
+                name = bridgename                  # update bridge name
+        elif bstat.find('_uuid') > -1:             # bridge uuid
+            flowstats_dct[name]['uuid'] = bstat[bstat.index(':') + 1:].strip()
+        elif bstat.strip() in flowstats_dct:       # update bridge name
+            name = bstat.strip()
+        elif bstat.find('NXST_AGGREGATE') > -1:    # aggregate data
+            countlst = bstat[bstat.index(':') + 1:].split(' ')
+            for count in countlst:
+                if len(count.strip()) == 0:
+                    continue
+
+                flowstats_dct[name][count.split('=')[0]] = int(count.split('=')[1])
+        else:                                      # nothing interesting to see
+            continue
+
+    return flowstats_dct
