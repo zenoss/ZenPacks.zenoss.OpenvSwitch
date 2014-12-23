@@ -6,7 +6,7 @@
 
 # Mappings of interfaces (interfaces.py) to concrete classes and the factory
 # (these info adapter classes) used to create info objects for them are managed
-# in the configure.zcml file.
+# in the configure.zcml.original file.
 
 from zope.component import adapts
 from zope.interface import implements

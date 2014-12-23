@@ -40,6 +40,18 @@ RELATIONSHIPS_YUML = """
 CFG = zenpacklib.ZenPackSpec(
     name=__name__,     # evaluated to 'ZenPacks.zenoss.OpenvSwitch'
 
+    device_classes={
+        '/Network/OpenvSwitch': {
+            'create': True,
+            'remove': False,
+            'zProperties': {
+                'zCollectorPlugins': [
+                    'zenoss.ssh.OpenvSwitch'
+                ]
+            }
+        }
+    },
+
     classes={
         # Device Types ###############################################
         'OpenvSwitchDevice': {
@@ -65,6 +77,7 @@ CFG = zenpacklib.ZenPackSpec(
                 'DB_version':  {'label': 'DB Version'},
                 'OVS_version': {'label': 'OVS Version'},
             },
+            # 'impacts': ['bridge'],
         },
 
         'Bridge': {
@@ -75,13 +88,10 @@ CFG = zenpacklib.ZenPackSpec(
             'properties': {
                 'bridgeId':    {'grid_display': False,
                                 'label': 'Bridge ID'},
-                # 'flow_count':  {'label': 'Flow Count',
-                #                 'order': 2.1},
-                # 'byte_count':  {'label': 'Byte Count',
-                #                  'order': 2.2},
-                # 'packet_count':{'label': 'Packet Count',
-                #                  'order': 2.3},
             },
+            # 'impacts': ['port'],
+            # 'impacts': ['flow'],
+            # 'impacted_by': ['ovs'],
         },
 
         'Port': {
@@ -94,6 +104,8 @@ CFG = zenpacklib.ZenPackSpec(
                                 'label': 'Port ID'},
                 'tag_':        {'label': 'VLAN Tag'},
             },
+            # 'impacts': ['interface'],
+            # 'impacted_by': ['bridge'],
         },
 
         'Flow': {
@@ -118,11 +130,8 @@ CFG = zenpacklib.ZenPackSpec(
                                  'order': 4.6},
                 'action':       {'label': 'Action',
                                  'order': 4.7},
-                # 'bytes':        {'label': 'Bytes',
-                #                  'order': 4.4},
-                # 'packets':      {'label': 'Packets',
-                #                  'order': 4.5},
             },
+            # 'impacted_by': ['bridge'],
         },
 
         'Interface': {
@@ -170,6 +179,7 @@ CFG = zenpacklib.ZenPackSpec(
                                 'label_width': 40,
                                 'content_width': 40},
             },
+            # 'impacted_by': ['port'],
         },
 
 

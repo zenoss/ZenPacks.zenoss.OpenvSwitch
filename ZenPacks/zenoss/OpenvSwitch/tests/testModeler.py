@@ -32,12 +32,12 @@ class TestModeler(BaseTestCase):
         self.applyDataMap = ApplyDataMap()._applyDataMap
 
         # Required to prevent erroring out when trying to define viewlets in
-        # ../browser/configure.zcml.
+        # ../browser/configure.zcml.original.
         import zope.viewlet
         zcml.load_config('meta.zcml', zope.viewlet)
 
         import ZenPacks.zenoss.OpenvSwitch
-        zcml.load_config('configure.zcml', ZenPacks.zenoss.OpenvSwitch)
+        zcml.load_config('configure.zcml.original', ZenPacks.zenoss.OpenvSwitch)
 
     def testOvsVsctlNotFound(self):
         modeler = OpenvSwitchModeler()
