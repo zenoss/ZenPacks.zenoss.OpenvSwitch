@@ -15,9 +15,8 @@ from ZenPacks.zenoss.Impact.impactd.relations import ImpactEdge
 from ZenPacks.zenoss.Impact.impactd.interfaces import IRelationshipDataProvider
 
 from Products.ZenModel.Device import Device
-from Products.ZenModel.OSProcess import OSProcess
 
-ZENPACK_NAME = 'ZenPacks.zenoss.OpenStackInfrastructure'
+ZENPACK_NAME = 'ZenPacks.zenoss.OpenvSwitch'
 
 
 class BaseRelationshipDataProvider(object):
@@ -80,33 +79,31 @@ class BaseRelationshipDataProvider(object):
             yield IGlobalIdentifier(r).getGUID()
 
 
-class HostDeviceRelationsProvider(BaseRelationshipDataProvider):
+class OVSDeviceRelationsProvider(BaseRelationshipDataProvider):
     adapts(Device)
 
-    # A linux device that is also an openstack host impacts that host component.
-    impacts = ['openstack_hostComponent']
+#    impacts = ['openvSwitchBridge']
 
 
-class OSProcessRelationsProvider(BaseRelationshipDataProvider):
-    adapts(OSProcess)
-
-    def getEdges(self):
-        for base_edge in BaseRelationshipDataProvider.getEdges(self):
-            yield base_edge
-
-        host = self.adapted.device().openstack_hostComponent()
-        if host:
-            for software in host.hostedSoftware():
-                if software.binary == self.adapted.osProcessClass().id:
-                    # impact the corresponding software software component
-                    yield ImpactEdge(
-                        IGlobalIdentifier(self.adapted).getGUID(),
-                        IGlobalIdentifier(software).getGUID(),
-                        self.relationship_provider
-                    )
-
-
-class GuestDeviceRelationsProvider(BaseRelationshipDataProvider):
+class BridgeDeviceRelationsProvider(BaseRelationshipDataProvider):
     adapts(Device)
 
-    impacted_by = ['openstackInstance']
+#    impacted_by = ['openvSwitchOVS']
+#    impacts = ['openvSwitchPort', 'openvSwitchFlow']
+
+class PortDeviceRelationsProvider(BaseRelationshipDataProvider):
+    adapts(Device)
+
+#    impacted_by = ['openvSwitchBridge']
+#    impacts = ['openvSwitchInterface']
+
+class FlowDeviceRelationsProvider(BaseRelationshipDataProvider):
+    adapts(Device)
+
+#    impacted_by = ['openvSwitchBridge']
+
+class InterfaceDeviceRelationsProvider(BaseRelationshipDataProvider):
+    adapts(Device)
+
+#    impacted_by = ['openvSwitchPort']
+

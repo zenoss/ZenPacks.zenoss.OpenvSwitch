@@ -178,6 +178,7 @@ def addDevice(self, *args, **kwargs):
     return r
 
 
+
 @monkeypatch('Products.ZenModel.PerformanceConf.PerformanceConf')
 def findDevice(self, deviceName):
     """
@@ -188,9 +189,23 @@ def findDevice(self, deviceName):
     @return: device corresponding to the name with 'Network' and 'OpenvSwitch' in its getPath()
     @rtype: device object
     """
+
+    # Make sure this patch only applies to OpenvSwitch device
+    zpname = None
+    device = self.dmd.Devices.findDevice(deviceName)
+
+    if device is None or not hasattr(device, 'zenpack_name'):
+        # original is injected by monkeypatch decorator.
+        return original(self, deviceName)
+
+    zpname = device.zenpack_name.split('.')[-1]
+    if zpname is None or zpname.find('OpenvSwitch') == -1:
+        return original(self, deviceName)
+
     brains = self.dmd.Devices._findDevice(deviceName)
     for brain in brains:
         if  brain.getPath().find('Network') > -1 and \
             brain.getPath().find('OpenvSwitch') > -1:
             return brain.getObject()
+
     return None
