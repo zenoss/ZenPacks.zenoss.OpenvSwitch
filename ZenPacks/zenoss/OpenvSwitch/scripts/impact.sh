@@ -47,10 +47,6 @@ add_standard_global_polices() {
     zenoss_add_policy "global" "$node_uid" AVAILABILITY 100 policyPercentageTrigger DOWN DOWN \"$meta_list\"
 }
 
-# clean up first
-zenoss_delete_node "/zport/dmd/DynamicServices/Dashboard"
-zenoss_delete_node "/zport/dmd/DynamicServices/OVS - Application"
-
 # Define device variables
 device_root="/zport/dmd/Devices/Network/OpenvSwitch/devices"
 ovs_device=$device_root/192.168.56.122
@@ -84,11 +80,19 @@ iface_qvo_43758471=$component_root/interface-5867fc9e-5fd5-480a-97e0-a6be9f4c07c
 
 # Create service organizers
 ovs_org=$(zenoss_add_service_organizer "/" "OVS - Application")
+echo -n "ovs_org: "; echo $ovs_org
 
 dashboard_org=$(zenoss_add_service_organizer "/" "Dashboard")
+echo -n "dashboard_org: "; echo $dashboard_org
 
 # Create external bridge service nodes for Openv Switch
 bridge_external=$(zenoss_add_service "$ovs_org" "Bridge - External")
+echo -n "bridge_external: "; echo $bridge_external
+echo -n "port_bridge_ex: "; echo $port_bridge_ex
+echo -n "flow_bridge_ex: "; echo $flow_bridge_ex
+echo -n "iface_tap_70f86603: "; echo $iface_tap_70f86603
+exit
+
 add_to_service "$bridge_external" "$port_bridge_ex" $port_tap_70f86603 "$flow_bridge_ex" "$iface_bridge_ex" "$iface_tap_70f86603"
 
 # Create integration bridge service nodes for Openv Switch
