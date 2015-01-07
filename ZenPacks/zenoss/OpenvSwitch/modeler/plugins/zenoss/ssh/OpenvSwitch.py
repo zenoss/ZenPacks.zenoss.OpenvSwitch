@@ -105,7 +105,7 @@ class OpenvSwitch(CommandPlugin):
                 modname='ZenPacks.zenoss.OpenvSwitch.Port',
                 data={
                 'id':         'port-{0}'.format(port['_uuid']),
-                'title':      port['name'],
+                'title':      'Port-' + port['name'],
                 'portId':     port['_uuid'],
                 'tag_':       port['tag'],
                 'set_bridge': 'bridge-{0}'.format(brdgId[0]),
@@ -184,7 +184,7 @@ class OpenvSwitch(CommandPlugin):
                 modname='ZenPacks.zenoss.OpenvSwitch.Interface',
                 data={
                 'id':          'interface-{0}'.format(iface['_uuid']),
-                'title':       iface['name'],
+                'title':       'Interface-' + iface['name'],
                 'interfaceId': iface['_uuid'],
                 'type_':       iface['type'],
                 'mac':         iface['mac_in_use'].upper(),
