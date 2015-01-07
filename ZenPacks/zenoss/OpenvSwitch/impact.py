@@ -1,132 +1,109 @@
+##############################################################################
+#
+# Copyright (C) Zenoss, Inc. 2014, all rights reserved.
+#
+# This content is made available according to terms specified in
+# License.zenoss under the directory where your Zenoss product is installed.
+#
+##############################################################################
+
 from zope.component import adapts
 from zope.interface import implements
 
 from Products.ZenUtils.guid.interfaces import IGlobalIdentifier
-
-from ZenPacks.zenoss.Impact.impactd import Trigger
-from ZenPacks.zenoss.Impact.stated.interfaces import IStateProvider
 from ZenPacks.zenoss.Impact.impactd.relations import ImpactEdge
-from ZenPacks.zenoss.Impact.impactd.interfaces \
-    import IRelationshipDataProvider, INodeTriggers
+from ZenPacks.zenoss.Impact.impactd.interfaces import IRelationshipDataProvider
 
-from .ExampleDevice import ExampleDevice
-from .ExampleComponent import ExampleComponent
+from Products.ZenModel.Device import Device
 
-
-def getRedundancyTriggers(guid, format):
-    """
-    Helper method for generating a good general redunancy set of triggers.
-    """
-
-    availability = 'AVAILABILITY'
-    percent = 'policyPercentageTrigger'
-    threshold = 'policyThresholdTrigger'
-
-    return (
-        Trigger(guid, format % 'DOWN', percent, availability, dict(
-            state='DOWN', dependentState='DOWN', threshold='100',
-        )),
-        Trigger(guid, format % 'DEGRADED', threshold, availability, dict(
-            state='DEGRADED', dependentState='DEGRADED', threshold='1',
-        )),
-        Trigger(guid, format % 'ATRISK_1', threshold, availability, dict(
-            state='ATRISK', dependentState='DOWN', threshold='1',
-        )),
-        Trigger(guid, format % 'ATRISK_2', threshold, availability, dict(
-            state='ATRISK', dependentState='ATRISK', threshold='1',
-        )),
-    )
+ZENPACK_NAME = 'ZenPacks.zenoss.OpenvSwitch'
 
 
-class ExampleDeviceRelationsProvider(object):
+class BaseRelationshipDataProvider(object):
+    '''
+    Abstract base for IRelationshipDataProvider adapter factories.
+    '''
     implements(IRelationshipDataProvider)
-    adapts(ExampleDevice)
 
-    relationship_provider = "ExampleImpact"
+    relationship_provider = ZENPACK_NAME
+
+    impacts = None
+    impacted_by = None
 
     def __init__(self, adapted):
-        self._object = adapted
+        self.adapted = adapted
 
     def belongsInImpactGraph(self):
+        """Return True so generated edges will show in impact graph.
+
+        Required by IRelationshipDataProvider.
+
+        """
         return True
 
     def getEdges(self):
+        """Generate ImpactEdge instances for adapted object.
+
+        Required by IRelationshipDataProvider.
+
         """
-        An ExampleDevice impacts all of its ExampleComponents.
-        """
-        guid = IGlobalIdentifier(self._object).getGUID()
+        provider = self.relationship_provider
+        myguid = IGlobalIdentifier(self.adapted).getGUID()
 
-        for exampleComponent in self._object.exampleComponents():
-            c_guid = IGlobalIdentifier(exampleComponent).getGUID()
-            yield ImpactEdge(guid, c_guid, self.relationship_provider)
+        if self.impacted_by:
+            for methodname in self.impacted_by:
+                for impactor_guid in self.get_remote_guids(methodname):
+                    yield ImpactEdge(impactor_guid, myguid, provider)
 
+        if self.impacts:
+            for methodname in self.impacts:
+                for impactee_guid in self.get_remote_guids(methodname):
+                    yield ImpactEdge(myguid, impactee_guid, provider)
 
-class ExampleComponentRelationsProvider(object):
-    implements(IRelationshipDataProvider)
-    adapts(ExampleComponent)
+    def get_remote_guids(self, methodname):
+        """Generate object GUIDs returned by adapted.methodname()."""
 
-    relationship_provider = "ExampleImpact"
+        method = getattr(self.adapted, methodname, None)
+        if not method or not callable(method):
+            return
 
-    def __init__(self, adapted):
-        self._object = adapted
+        r = method()
+        if not r:
+            return
 
-    def belongsInImpactGraph(self):
-        return True
+        try:
+            for obj in r:
+                yield IGlobalIdentifier(obj).getGUID()
 
-    def getEdges(self):
-        """
-        An ExampleComponent is impacted by its ExampleDevice.
-        """
-        guid = IGlobalIdentifier(self._object).getGUID()
-
-        d_guid = IGlobalIdentifier(self._object.exampleDevice())
-        yield ImpactEdge(d_guid, guid, self.relationship_provider)
-
-
-class ExampleComponentStateProvider(object):
-    implements(IStateProvider)
-
-    def __init__(self, adapted):
-        self._object = adapted
-
-    @property
-    def eventClasses(self):
-        return ('/Status/',)
-
-    @property
-    def excludeClasses(self):
-        return None
-
-    @property
-    def eventHandlerType(self):
-        return "WORST"
-
-    @property
-    def stateType(self):
-        return 'AVAILABILITY'
-
-    def calcState(self, events):
-        status = None
-        if self._object.attributeOne < 1:
-            return 'DOWN'
-        else:
-            return 'UP'
-
-        cause = None
-        if status == 'DOWN' and events:
-            cause = events[0]
-
-        return status, cause
+        except TypeError:
+            yield IGlobalIdentifier(r).getGUID()
 
 
-class ExampleComponentTriggers(object):
-    implements(INodeTriggers)
+class OVSDeviceRelationsProvider(BaseRelationshipDataProvider):
+    adapts(Device)
 
-    def __init__(self, adapted):
-        self._object = adapted
+#    impacts = ['openvSwitchBridge']
 
-    def get_triggers(self):
-        return getRedundancyTriggers(
-            IGlobalIdentifier(self._object).getGUID(),
-            'DEFAULT_EXAMPLECOMPONENT_TRIGGER_ID_%s',
-        )
+
+class BridgeDeviceRelationsProvider(BaseRelationshipDataProvider):
+    adapts(Device)
+
+#    impacted_by = ['openvSwitchOVS']
+#    impacts = ['openvSwitchPort', 'openvSwitchFlow']
+
+class PortDeviceRelationsProvider(BaseRelationshipDataProvider):
+    adapts(Device)
+
+#    impacted_by = ['openvSwitchBridge']
+#    impacts = ['openvSwitchInterface']
+
+class FlowDeviceRelationsProvider(BaseRelationshipDataProvider):
+    adapts(Device)
+
+#    impacted_by = ['openvSwitchBridge']
+
+class InterfaceDeviceRelationsProvider(BaseRelationshipDataProvider):
+    adapts(Device)
+
+#    impacted_by = ['openvSwitchPort']
+

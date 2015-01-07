@@ -31,6 +31,7 @@ RELATIONSHIPS_YUML = """
 [OpenvSwitchDevice]++components-ovsdevice1[OpenvSwitchComponent]
 [OVS]++-[Bridge]
 [Bridge]++-[Port]
+[Bridge]++-[Flow]
 // non-containing 1:M
 [Port]1-.-*[Interface]
 // non-containing 1:1
@@ -38,6 +39,18 @@ RELATIONSHIPS_YUML = """
 
 CFG = zenpacklib.ZenPackSpec(
     name=__name__,     # evaluated to 'ZenPacks.zenoss.OpenvSwitch'
+
+    device_classes={
+        '/Network/OpenvSwitch': {
+            'create': True,
+            'remove': False,
+            'zProperties': {
+                'zCollectorPlugins': [
+                    'zenoss.ssh.OpenvSwitch'
+                ]
+            }
+        }
+    },
 
     classes={
         # Device Types ###############################################
@@ -64,6 +77,7 @@ CFG = zenpacklib.ZenPackSpec(
                 'DB_version':  {'label': 'DB Version'},
                 'OVS_version': {'label': 'OVS Version'},
             },
+            'impacted_by': ['bridges'],
         },
 
         'Bridge': {
@@ -75,6 +89,10 @@ CFG = zenpacklib.ZenPackSpec(
                 'bridgeId':    {'grid_display': False,
                                 'label': 'Bridge ID'},
             },
+            'impacted_by': ['ports',
+                            'flows',
+                       ],
+            'impacts': ['oVS'],
         },
 
         'Port': {
@@ -87,49 +105,82 @@ CFG = zenpacklib.ZenPackSpec(
                                 'label': 'Port ID'},
                 'tag_':        {'label': 'VLAN Tag'},
             },
+            'impacted_by': ['interfaces'],
+            'impacts': ['bridge'],
+        },
+
+        'Flow': {
+            'base': 'OpenvSwitchComponent',
+            'meta_type': 'OpenvSwitchFlow',
+            'label': 'Flow',
+            'order': 4,
+            'properties': {
+                'flowId':       {'grid_display': False,
+                                'label': 'Flow ID'},
+                'table':        {'label': 'Table',
+                                 'order': 4.1},
+                'priority':     {'label': 'Priority',
+                                 'order': 4.2},
+                'protocol':     {'label': 'Protocol',
+                                 'order': 4.3},
+                'inport':       {'label': 'In Port',
+                                 'order': 4.4},
+                'nwsrc':        {'label': 'Source',
+                                 'order': 4.5},
+                'nwdst':        {'label': 'Destination',
+                                 'order': 4.6},
+                'action':       {'label': 'Action',
+                                 'order': 4.7},
+            },
+            'impacts': ['bridge'],
         },
 
         'Interface': {
             'base': 'OpenvSwitchComponent',
             'meta_type': 'OpenvSwitchInterface',
             'label': 'Interface',
-            'order': 4,
+            'order': 5,
             'properties': {
                 'interfaceId': {'grid_display': False,
                                 'label': 'Interface ID'},
                 'type_':       {'label': 'Type',
-                                'order': 4.1,
+                                'order': 5.1,
                                 'label_width': 50,
                                 'content_width': 50},
                 'mac':         {'label': 'MAC in use',
-                                'order': 4.2,
+                                'order': 5.2,
                                 'label_width': 100,
                                 'content_width': 100},
                 'amac':        {'label': 'Attached MAC',
-                                'order': 4.3,
+                                'order': 5.3,
                                 'label_width': 100,
                                 'content_width': 100},
+                'ofport':      {'label': 'OF Port',
+                                'order': 5.4,
+                                'label_width': 50,
+                                'content_width': 50},
                 'lspeed':      {'label': 'Link Speed',
-                                'order': 4.4,
+                                'order': 5.5,
                                 'label_width': 50,
                                 'content_width': 50},
                 'lstate':      {'label': 'Link State',
-                                'order': 4.5,
+                                'order': 5.6,
                                 'label_width': 50,
                                 'content_width': 50},
                 'astate':      {'label': 'Admin State',
-                                'order': 4.6,
+                                'order': 5.7,
                                 'label_width': 60,
                                 'content_width': 60},
                 'mtu':         {'label': 'MTU',
-                                'order': 4.7,
+                                'order': 5.8,
                                 'label_width': 40,
                                 'content_width': 40},
                 'duplex':      {'label': 'Duplex',
-                                'order': 4.8,
+                                'order': 5.9,
                                 'label_width': 40,
                                 'content_width': 40},
             },
+            'impacts': ['port'],
         },
 
 
@@ -140,6 +191,7 @@ CFG = zenpacklib.ZenPackSpec(
 
 CFG.create()
 
+# patches
 from Products.ZenUtils.Utils import unused
 
 # Patch last to avoid import recursion problems.
