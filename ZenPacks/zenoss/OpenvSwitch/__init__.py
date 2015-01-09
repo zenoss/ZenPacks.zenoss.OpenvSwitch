@@ -92,7 +92,7 @@ CFG = zenpacklib.ZenPackSpec(
             'impacted_by': ['ports',
                             'flows',
                        ],
-            'impacts': ['oVS'],
+            'impacts': ['ovs'],
         },
 
         'Port': {
