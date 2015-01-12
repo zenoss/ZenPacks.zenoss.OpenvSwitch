@@ -77,7 +77,7 @@ CFG = zenpacklib.ZenPackSpec(
                 'DB_version':  {'label': 'DB Version'},
                 'OVS_version': {'label': 'OVS Version'},
             },
-            'impacted_by': ['bridges'],
+            'impacts': ['bridges'],
         },
 
         'Bridge': {
@@ -89,10 +89,10 @@ CFG = zenpacklib.ZenPackSpec(
                 'bridgeId':    {'grid_display': False,
                                 'label': 'Bridge ID'},
             },
-            'impacted_by': ['ports',
-                            'flows',
+            'impacts': ['ports',
+                        'flows',
                        ],
-            'impacts': ['ovs'],
+            'impacted_by': ['ovs'],
         },
 
         'Port': {
@@ -105,8 +105,8 @@ CFG = zenpacklib.ZenPackSpec(
                                 'label': 'Port ID'},
                 'tag_':        {'label': 'VLAN Tag'},
             },
-            'impacted_by': ['interfaces'],
-            'impacts': ['bridge'],
+            'impacts': ['interfaces'],
+            'impacted_by': ['bridge'],
         },
 
         'Flow': {
@@ -132,7 +132,7 @@ CFG = zenpacklib.ZenPackSpec(
                 'action':       {'label': 'Action',
                                  'order': 4.7},
             },
-            'impacts': ['bridge'],
+            'impacted_by': ['bridge'],
         },
 
         'Interface': {
@@ -180,7 +180,7 @@ CFG = zenpacklib.ZenPackSpec(
                                 'label_width': 40,
                                 'content_width': 40},
             },
-            'impacts': ['port'],
+            'impacted_by': ['port'],
         },
 
 

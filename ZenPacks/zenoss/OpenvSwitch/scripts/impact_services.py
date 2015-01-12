@@ -127,7 +127,10 @@ def get_node_data(url, username, password, deviceip):
 
             items[port_name]['interfaces'] = []
             for iface in ifaces:
-                items[port_name]['interfaces'].append(iface)
+                item = {}
+                iface_id = iface[iface.rindex('/') + 1:]
+                item['id'] = iface_id
+                items[port_name]['interfaces'].append(item)
 
             nodes[bridge_name]['ports'].append(items)
 
@@ -136,7 +139,10 @@ def get_node_data(url, username, password, deviceip):
 
         nodes[bridge_name]['flows'] = []
         for flow in flows:
-            nodes[bridge_name]['flows'].append(flow)
+            item = {}
+            flow_id = flow[flow.rindex('/') + 1:]
+            item['id'] = flow_id
+            nodes[bridge_name]['flows'].append(item)
 
     return nodes
 
@@ -176,26 +182,27 @@ if __name__ == '__main__':
     # Create dashboard organizers
     dashboard_org = add_service_organizer("/", "Dashboard")
 
-    # Create external bridge service nodes for Openv Switch
-    # nodes.keys() contain bridge ids
+    ovs_svc = None
     for nkey in nodes.keys():
-        svc_node = add_to_service(ovs_org, nkey)
-        add_global_polices(svc_node, 'DynamicService')
+        # nkey is the bridge name
+        for flow in nodes[nkey]['flows']:
+            # add flow to OVS_Application organizer
+            flow_node = add_to_service(ovs_org, flow['id'])
+            # add policy to flow node
+            add_global_polices(flow_node, 'DynamicService')
+            # add dynamic service nodes to flow node
+            add_to_dynamic_service(flow_node, nodes[nkey]['id'])
+
+            if ovs_svc is None:
+                ovs_svc = add_to_service(dashboard_org, "OVS_Service")
+            add_to_dynamic_service(ovs_svc, flow_node)
 
         for port in nodes[nkey]['ports']:
             for pkey in port.keys():
-                add_to_dynamic_service(svc_node, port[pkey]['id'])
                 for iface in port[pkey]['interfaces']:
-                    add_to_dynamic_service(svc_node, iface)
+                    iface_node = add_to_service(ovs_org, iface['id'])
+                    add_global_polices(iface_node, 'DynamicService')
+                    add_to_dynamic_service(iface_node, port[pkey]['id'])
 
-        for flow in nodes[nkey]['flows']:
-            add_to_dynamic_service(svc_node, flow)
+                    add_to_dynamic_service(ovs_svc, iface_node)
 
-    # Create Open vSwitch service node
-    open_vSwitch = add_to_service(ovs_org, "Open_vSwitch")
-    add_global_polices(open_vSwitch, 'DynamicService')
-    for nkey in nodes.keys():
-        add_to_dynamic_service(open_vSwitch, nodes[nkey]['id'])
-
-    ovs_svc = add_to_service(dashboard_org, "OVS_Service")
-    add_to_dynamic_service(ovs_svc, open_vSwitch)
