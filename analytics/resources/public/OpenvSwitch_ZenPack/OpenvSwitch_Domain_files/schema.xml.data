@@ -1,0 +1,1229 @@
+<?xml version='1.0' encoding='utf-8'?>
+<schema version="1.0" xmlns="http://www.jaspersoft.com/2007/SL/XMLSchema">
+  <itemGroups>
+    <itemGroup resourceId="JoinTree_1" label="OpenvSwitchDevices" id="set_open_vswitch" description="">
+      <itemGroups>
+        <itemGroup resourceId="JoinTree_1" label="Measures" id="set_open_vswitch_measures" description="">
+          <itemGroups/>
+          <items/>
+        </itemGroup>
+      </itemGroups>
+      <items>
+        <item resourceId="JoinTree_1.dim_open_vswitch.device_name" dimensionOrMeasure="Dimension" id="dim_open_vswitch_device_name" label="Device Name"/>
+        <item resourceId="JoinTree_1.dim_open_vswitch.device_manage_ip" dimensionOrMeasure="Dimension" id="dim_open_vswitch_device_manage_ip" label="Management IP Address"/>
+        <item resourceId="JoinTree_1.dim_open_vswitch.device_hw_manufacturer" dimensionOrMeasure="Dimension" id="dim_open_vswitch_device_hw_manufacturer" label="Hardware Manufacturer"/>
+        <item resourceId="JoinTree_1.dim_open_vswitch.device_hw_product" dimensionOrMeasure="Dimension" id="dim_open_vswitch_device_hw_product" label="Hardware Model"/>
+        <item resourceId="JoinTree_1.dim_open_vswitch.device_hw_serial_number" dimensionOrMeasure="Dimension" id="dim_open_vswitch_device_hw_serial_number" label="Hardware Serial Number"/>
+      </items>
+    </itemGroup>
+    <itemGroup resourceId="JoinTree_1" label="Open vSwitchs" id="set_openvswitch_ovs" description="">
+      <itemGroups>
+        <itemGroup resourceId="JoinTree_1" label="Measures" id="set_openvswitch_ovs_measures" description="">
+          <itemGroups/>
+          <items/>
+        </itemGroup>
+      </itemGroups>
+      <items>
+        <item resourceId="JoinTree_1.dim_openvswitch_ovs.openvswitch_ovs_name" dimensionOrMeasure="Dimension" id="dim_openvswitch_ovs_openvswitch_ovs_name" label="Open vSwitch Name"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_ovs.DB_version" dimensionOrMeasure="Dimension" id="dim_openvswitch_ovs_DB_version" label="DB Version"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_ovs.ovsId" dimensionOrMeasure="Dimension" id="dim_openvswitch_ovs_ovsId" label="OpenvSwitch ID"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_ovs.OVS_version" dimensionOrMeasure="Dimension" id="dim_openvswitch_ovs_OVS_version" label="OVS Version"/>
+      </items>
+    </itemGroup>
+    <itemGroup resourceId="JoinTree_1" label="Bridges" id="set_openvswitch_bridge" description="">
+      <itemGroups>
+        <itemGroup resourceId="JoinTree_1" label="Measures" id="set_openvswitch_bridge_measures" description="">
+          <itemGroups/>
+          <items>
+            <item resourceId="JoinTree_1.daily_byte_count.fct_ts" dimensionOrMeasure="Dimension" id="daily_byte_count_fct_ts" label="byte_count / daily / TS"/>
+            <item resourceId="JoinTree_1.daily_byte_count.fct_ts_gmt" dimensionOrMeasure="Dimension" id="daily_byte_count_fct_ts_gmt" label="byte_count / daily / TS GMT"/>
+            <item resourceId="JoinTree_1.daily_byte_count.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_byte_count_fct_avg" label="byte_count / daily / Average"/>
+            <item resourceId="JoinTree_1.daily_byte_count.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_byte_count_fct_max" label="byte_count / daily / Highest"/>
+            <item resourceId="JoinTree_1.daily_byte_count.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_byte_count_fct_min" label="byte_count / daily / Lowest"/>
+            <item resourceId="JoinTree_1.hourly_byte_count.fct_ts" dimensionOrMeasure="Dimension" id="hourly_byte_count_fct_ts" label="byte_count / hourly / TS"/>
+            <item resourceId="JoinTree_1.hourly_byte_count.fct_ts_gmt" dimensionOrMeasure="Dimension" id="hourly_byte_count_fct_ts_gmt" label="byte_count / hourly / TS GMT"/>
+            <item resourceId="JoinTree_1.hourly_byte_count.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_byte_count_fct_avg" label="byte_count / hourly / Average"/>
+            <item resourceId="JoinTree_1.hourly_byte_count.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_byte_count_fct_max" label="byte_count / hourly / Highest"/>
+            <item resourceId="JoinTree_1.hourly_byte_count.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_byte_count_fct_min" label="byte_count / hourly / Lowest"/>
+            <item resourceId="JoinTree_1.daily_flow_count.fct_ts" dimensionOrMeasure="Dimension" id="daily_flow_count_fct_ts" label="flow_count / daily / TS"/>
+            <item resourceId="JoinTree_1.daily_flow_count.fct_ts_gmt" dimensionOrMeasure="Dimension" id="daily_flow_count_fct_ts_gmt" label="flow_count / daily / TS GMT"/>
+            <item resourceId="JoinTree_1.daily_flow_count.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_flow_count_fct_avg" label="flow_count / daily / Average"/>
+            <item resourceId="JoinTree_1.daily_flow_count.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_flow_count_fct_max" label="flow_count / daily / Highest"/>
+            <item resourceId="JoinTree_1.daily_flow_count.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_flow_count_fct_min" label="flow_count / daily / Lowest"/>
+            <item resourceId="JoinTree_1.hourly_flow_count.fct_ts" dimensionOrMeasure="Dimension" id="hourly_flow_count_fct_ts" label="flow_count / hourly / TS"/>
+            <item resourceId="JoinTree_1.hourly_flow_count.fct_ts_gmt" dimensionOrMeasure="Dimension" id="hourly_flow_count_fct_ts_gmt" label="flow_count / hourly / TS GMT"/>
+            <item resourceId="JoinTree_1.hourly_flow_count.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_flow_count_fct_avg" label="flow_count / hourly / Average"/>
+            <item resourceId="JoinTree_1.hourly_flow_count.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_flow_count_fct_max" label="flow_count / hourly / Highest"/>
+            <item resourceId="JoinTree_1.hourly_flow_count.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_flow_count_fct_min" label="flow_count / hourly / Lowest"/>
+            <item resourceId="JoinTree_1.daily_packet_count.fct_ts" dimensionOrMeasure="Dimension" id="daily_packet_count_fct_ts" label="packet_count / daily / TS"/>
+            <item resourceId="JoinTree_1.daily_packet_count.fct_ts_gmt" dimensionOrMeasure="Dimension" id="daily_packet_count_fct_ts_gmt" label="packet_count / daily / TS GMT"/>
+            <item resourceId="JoinTree_1.daily_packet_count.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_packet_count_fct_avg" label="packet_count / daily / Average"/>
+            <item resourceId="JoinTree_1.daily_packet_count.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_packet_count_fct_max" label="packet_count / daily / Highest"/>
+            <item resourceId="JoinTree_1.daily_packet_count.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_packet_count_fct_min" label="packet_count / daily / Lowest"/>
+            <item resourceId="JoinTree_1.hourly_packet_count.fct_ts" dimensionOrMeasure="Dimension" id="hourly_packet_count_fct_ts" label="packet_count / hourly / TS"/>
+            <item resourceId="JoinTree_1.hourly_packet_count.fct_ts_gmt" dimensionOrMeasure="Dimension" id="hourly_packet_count_fct_ts_gmt" label="packet_count / hourly / TS GMT"/>
+            <item resourceId="JoinTree_1.hourly_packet_count.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_packet_count_fct_avg" label="packet_count / hourly / Average"/>
+            <item resourceId="JoinTree_1.hourly_packet_count.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_packet_count_fct_max" label="packet_count / hourly / Highest"/>
+            <item resourceId="JoinTree_1.hourly_packet_count.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_packet_count_fct_min" label="packet_count / hourly / Lowest"/>
+          </items>
+        </itemGroup>
+      </itemGroups>
+      <items>
+        <item resourceId="JoinTree_1.dim_openvswitch_bridge.openvswitch_bridge_name" dimensionOrMeasure="Dimension" id="dim_openvswitch_bridge_openvswitch_bridge_name" label="Bridge Name"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_bridge.bridgeId" dimensionOrMeasure="Dimension" id="dim_openvswitch_bridge_bridgeId" label="Bridge ID"/>
+      </items>
+    </itemGroup>
+    <itemGroup resourceId="JoinTree_1" label="Ports" id="set_openvswitch_port" description="">
+      <itemGroups>
+        <itemGroup resourceId="JoinTree_1" label="Measures" id="set_openvswitch_port_measures" description="">
+          <itemGroups/>
+          <items/>
+        </itemGroup>
+      </itemGroups>
+      <items>
+        <item resourceId="JoinTree_1.dim_openvswitch_port.openvswitch_port_name" dimensionOrMeasure="Dimension" id="dim_openvswitch_port_openvswitch_port_name" label="Port Name"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_port.tag_" dimensionOrMeasure="Dimension" id="dim_openvswitch_port_tag_" label="VLAN Tag"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_port.portId" dimensionOrMeasure="Dimension" id="dim_openvswitch_port_portId" label="Port ID"/>
+      </items>
+    </itemGroup>
+    <itemGroup resourceId="JoinTree_1" label="Flows" id="set_openvswitch_flow" description="">
+      <itemGroups>
+        <itemGroup resourceId="JoinTree_1" label="Measures" id="set_openvswitch_flow_measures" description="">
+          <itemGroups/>
+          <items/>
+        </itemGroup>
+      </itemGroups>
+      <items>
+        <item resourceId="JoinTree_1.dim_openvswitch_flow.openvswitch_flow_name" dimensionOrMeasure="Dimension" id="dim_openvswitch_flow_openvswitch_flow_name" label="Flow Name"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_flow.protocol" dimensionOrMeasure="Dimension" id="dim_openvswitch_flow_protocol" label="Protocol"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_flow.inport" dimensionOrMeasure="Dimension" id="dim_openvswitch_flow_inport" label="In Port"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_flow.nwdst" dimensionOrMeasure="Dimension" id="dim_openvswitch_flow_nwdst" label="Destination"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_flow.priority" dimensionOrMeasure="Dimension" id="dim_openvswitch_flow_priority" label="Priority"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_flow.flowId" dimensionOrMeasure="Dimension" id="dim_openvswitch_flow_flowId" label="Flow ID"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_flow.action" dimensionOrMeasure="Dimension" id="dim_openvswitch_flow_action" label="Action"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_flow.table" dimensionOrMeasure="Dimension" id="dim_openvswitch_flow_table" label="Table"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_flow.nwsrc" dimensionOrMeasure="Dimension" id="dim_openvswitch_flow_nwsrc" label="Source"/>
+      </items>
+    </itemGroup>
+    <itemGroup resourceId="JoinTree_1" label="Interfaces" id="set_openvswitch_interface" description="">
+      <itemGroups>
+        <itemGroup resourceId="JoinTree_1" label="Measures" id="set_openvswitch_interface_measures" description="">
+          <itemGroups/>
+          <items>
+            <item resourceId="JoinTree_1.daily_collisions.fct_ts" dimensionOrMeasure="Dimension" id="daily_collisions_fct_ts" label="collisions / daily / TS"/>
+            <item resourceId="JoinTree_1.daily_collisions.fct_ts_gmt" dimensionOrMeasure="Dimension" id="daily_collisions_fct_ts_gmt" label="collisions / daily / TS GMT"/>
+            <item resourceId="JoinTree_1.daily_collisions.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_collisions_fct_avg" label="collisions / daily / Average"/>
+            <item resourceId="JoinTree_1.daily_collisions.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_collisions_fct_max" label="collisions / daily / Highest"/>
+            <item resourceId="JoinTree_1.daily_collisions.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_collisions_fct_min" label="collisions / daily / Lowest"/>
+            <item resourceId="JoinTree_1.hourly_collisions.fct_ts" dimensionOrMeasure="Dimension" id="hourly_collisions_fct_ts" label="collisions / hourly / TS"/>
+            <item resourceId="JoinTree_1.hourly_collisions.fct_ts_gmt" dimensionOrMeasure="Dimension" id="hourly_collisions_fct_ts_gmt" label="collisions / hourly / TS GMT"/>
+            <item resourceId="JoinTree_1.hourly_collisions.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_collisions_fct_avg" label="collisions / hourly / Average"/>
+            <item resourceId="JoinTree_1.hourly_collisions.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_collisions_fct_max" label="collisions / hourly / Highest"/>
+            <item resourceId="JoinTree_1.hourly_collisions.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_collisions_fct_min" label="collisions / hourly / Lowest"/>
+            <item resourceId="JoinTree_1.daily_incoming_packets_dropped.fct_ts" dimensionOrMeasure="Dimension" id="daily_incoming_packets_dropped_fct_ts" label="incoming_packets_dropped / daily / TS"/>
+            <item resourceId="JoinTree_1.daily_incoming_packets_dropped.fct_ts_gmt" dimensionOrMeasure="Dimension" id="daily_incoming_packets_dropped_fct_ts_gmt" label="incoming_packets_dropped / daily / TS GMT"/>
+            <item resourceId="JoinTree_1.daily_incoming_packets_dropped.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_packets_dropped_fct_avg" label="incoming_packets_dropped / daily / Average"/>
+            <item resourceId="JoinTree_1.daily_incoming_packets_dropped.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_packets_dropped_fct_max" label="incoming_packets_dropped / daily / Highest"/>
+            <item resourceId="JoinTree_1.daily_incoming_packets_dropped.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_packets_dropped_fct_min" label="incoming_packets_dropped / daily / Lowest"/>
+            <item resourceId="JoinTree_1.hourly_incoming_packets_dropped.fct_ts" dimensionOrMeasure="Dimension" id="hourly_incoming_packets_dropped_fct_ts" label="incoming_packets_dropped / hourly / TS"/>
+            <item resourceId="JoinTree_1.hourly_incoming_packets_dropped.fct_ts_gmt" dimensionOrMeasure="Dimension" id="hourly_incoming_packets_dropped_fct_ts_gmt" label="incoming_packets_dropped / hourly / TS GMT"/>
+            <item resourceId="JoinTree_1.hourly_incoming_packets_dropped.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_packets_dropped_fct_avg" label="incoming_packets_dropped / hourly / Average"/>
+            <item resourceId="JoinTree_1.hourly_incoming_packets_dropped.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_packets_dropped_fct_max" label="incoming_packets_dropped / hourly / Highest"/>
+            <item resourceId="JoinTree_1.hourly_incoming_packets_dropped.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_packets_dropped_fct_min" label="incoming_packets_dropped / hourly / Lowest"/>
+            <item resourceId="JoinTree_1.daily_outgoing_packets_dropped.fct_ts" dimensionOrMeasure="Dimension" id="daily_outgoing_packets_dropped_fct_ts" label="outgoing_packets_dropped / daily / TS"/>
+            <item resourceId="JoinTree_1.daily_outgoing_packets_dropped.fct_ts_gmt" dimensionOrMeasure="Dimension" id="daily_outgoing_packets_dropped_fct_ts_gmt" label="outgoing_packets_dropped / daily / TS GMT"/>
+            <item resourceId="JoinTree_1.daily_outgoing_packets_dropped.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_outgoing_packets_dropped_fct_avg" label="outgoing_packets_dropped / daily / Average"/>
+            <item resourceId="JoinTree_1.daily_outgoing_packets_dropped.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_outgoing_packets_dropped_fct_max" label="outgoing_packets_dropped / daily / Highest"/>
+            <item resourceId="JoinTree_1.daily_outgoing_packets_dropped.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_outgoing_packets_dropped_fct_min" label="outgoing_packets_dropped / daily / Lowest"/>
+            <item resourceId="JoinTree_1.hourly_outgoing_packets_dropped.fct_ts" dimensionOrMeasure="Dimension" id="hourly_outgoing_packets_dropped_fct_ts" label="outgoing_packets_dropped / hourly / TS"/>
+            <item resourceId="JoinTree_1.hourly_outgoing_packets_dropped.fct_ts_gmt" dimensionOrMeasure="Dimension" id="hourly_outgoing_packets_dropped_fct_ts_gmt" label="outgoing_packets_dropped / hourly / TS GMT"/>
+            <item resourceId="JoinTree_1.hourly_outgoing_packets_dropped.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_outgoing_packets_dropped_fct_avg" label="outgoing_packets_dropped / hourly / Average"/>
+            <item resourceId="JoinTree_1.hourly_outgoing_packets_dropped.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_outgoing_packets_dropped_fct_max" label="outgoing_packets_dropped / hourly / Highest"/>
+            <item resourceId="JoinTree_1.hourly_outgoing_packets_dropped.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_outgoing_packets_dropped_fct_min" label="outgoing_packets_dropped / hourly / Lowest"/>
+            <item resourceId="JoinTree_1.daily_incoming_packets_CRC_error.fct_ts" dimensionOrMeasure="Dimension" id="daily_incoming_packets_CRC_error_fct_ts" label="incoming_packets_CRC_error / daily / TS"/>
+            <item resourceId="JoinTree_1.daily_incoming_packets_CRC_error.fct_ts_gmt" dimensionOrMeasure="Dimension" id="daily_incoming_packets_CRC_error_fct_ts_gmt" label="incoming_packets_CRC_error / daily / TS GMT"/>
+            <item resourceId="JoinTree_1.daily_incoming_packets_CRC_error.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_packets_CRC_error_fct_avg" label="incoming_packets_CRC_error / daily / Average"/>
+            <item resourceId="JoinTree_1.daily_incoming_packets_CRC_error.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_packets_CRC_error_fct_max" label="incoming_packets_CRC_error / daily / Highest"/>
+            <item resourceId="JoinTree_1.daily_incoming_packets_CRC_error.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_packets_CRC_error_fct_min" label="incoming_packets_CRC_error / daily / Lowest"/>
+            <item resourceId="JoinTree_1.hourly_incoming_packets_CRC_error.fct_ts" dimensionOrMeasure="Dimension" id="hourly_incoming_packets_CRC_error_fct_ts" label="incoming_packets_CRC_error / hourly / TS"/>
+            <item resourceId="JoinTree_1.hourly_incoming_packets_CRC_error.fct_ts_gmt" dimensionOrMeasure="Dimension" id="hourly_incoming_packets_CRC_error_fct_ts_gmt" label="incoming_packets_CRC_error / hourly / TS GMT"/>
+            <item resourceId="JoinTree_1.hourly_incoming_packets_CRC_error.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_packets_CRC_error_fct_avg" label="incoming_packets_CRC_error / hourly / Average"/>
+            <item resourceId="JoinTree_1.hourly_incoming_packets_CRC_error.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_packets_CRC_error_fct_max" label="incoming_packets_CRC_error / hourly / Highest"/>
+            <item resourceId="JoinTree_1.hourly_incoming_packets_CRC_error.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_packets_CRC_error_fct_min" label="incoming_packets_CRC_error / hourly / Lowest"/>
+            <item resourceId="JoinTree_1.daily_incoming_packets_error.fct_ts" dimensionOrMeasure="Dimension" id="daily_incoming_packets_error_fct_ts" label="incoming_packets_error / daily / TS"/>
+            <item resourceId="JoinTree_1.daily_incoming_packets_error.fct_ts_gmt" dimensionOrMeasure="Dimension" id="daily_incoming_packets_error_fct_ts_gmt" label="incoming_packets_error / daily / TS GMT"/>
+            <item resourceId="JoinTree_1.daily_incoming_packets_error.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_packets_error_fct_avg" label="incoming_packets_error / daily / Average"/>
+            <item resourceId="JoinTree_1.daily_incoming_packets_error.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_packets_error_fct_max" label="incoming_packets_error / daily / Highest"/>
+            <item resourceId="JoinTree_1.daily_incoming_packets_error.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_packets_error_fct_min" label="incoming_packets_error / daily / Lowest"/>
+            <item resourceId="JoinTree_1.hourly_incoming_packets_error.fct_ts" dimensionOrMeasure="Dimension" id="hourly_incoming_packets_error_fct_ts" label="incoming_packets_error / hourly / TS"/>
+            <item resourceId="JoinTree_1.hourly_incoming_packets_error.fct_ts_gmt" dimensionOrMeasure="Dimension" id="hourly_incoming_packets_error_fct_ts_gmt" label="incoming_packets_error / hourly / TS GMT"/>
+            <item resourceId="JoinTree_1.hourly_incoming_packets_error.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_packets_error_fct_avg" label="incoming_packets_error / hourly / Average"/>
+            <item resourceId="JoinTree_1.hourly_incoming_packets_error.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_packets_error_fct_max" label="incoming_packets_error / hourly / Highest"/>
+            <item resourceId="JoinTree_1.hourly_incoming_packets_error.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_packets_error_fct_min" label="incoming_packets_error / hourly / Lowest"/>
+            <item resourceId="JoinTree_1.daily_incoming_frame_error.fct_ts" dimensionOrMeasure="Dimension" id="daily_incoming_frame_error_fct_ts" label="incoming_frame_error / daily / TS"/>
+            <item resourceId="JoinTree_1.daily_incoming_frame_error.fct_ts_gmt" dimensionOrMeasure="Dimension" id="daily_incoming_frame_error_fct_ts_gmt" label="incoming_frame_error / daily / TS GMT"/>
+            <item resourceId="JoinTree_1.daily_incoming_frame_error.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_frame_error_fct_avg" label="incoming_frame_error / daily / Average"/>
+            <item resourceId="JoinTree_1.daily_incoming_frame_error.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_frame_error_fct_max" label="incoming_frame_error / daily / Highest"/>
+            <item resourceId="JoinTree_1.daily_incoming_frame_error.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_frame_error_fct_min" label="incoming_frame_error / daily / Lowest"/>
+            <item resourceId="JoinTree_1.hourly_incoming_frame_error.fct_ts" dimensionOrMeasure="Dimension" id="hourly_incoming_frame_error_fct_ts" label="incoming_frame_error / hourly / TS"/>
+            <item resourceId="JoinTree_1.hourly_incoming_frame_error.fct_ts_gmt" dimensionOrMeasure="Dimension" id="hourly_incoming_frame_error_fct_ts_gmt" label="incoming_frame_error / hourly / TS GMT"/>
+            <item resourceId="JoinTree_1.hourly_incoming_frame_error.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_frame_error_fct_avg" label="incoming_frame_error / hourly / Average"/>
+            <item resourceId="JoinTree_1.hourly_incoming_frame_error.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_frame_error_fct_max" label="incoming_frame_error / hourly / Highest"/>
+            <item resourceId="JoinTree_1.hourly_incoming_frame_error.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_frame_error_fct_min" label="incoming_frame_error / hourly / Lowest"/>
+            <item resourceId="JoinTree_1.daily_incoming_buffer_overrun_error.fct_ts" dimensionOrMeasure="Dimension" id="daily_incoming_buffer_overrun_error_fct_ts" label="incoming_buffer_overrun_error / daily / TS"/>
+            <item resourceId="JoinTree_1.daily_incoming_buffer_overrun_error.fct_ts_gmt" dimensionOrMeasure="Dimension" id="daily_incoming_buffer_overrun_error_fct_ts_gmt" label="incoming_buffer_overrun_error / daily / TS GMT"/>
+            <item resourceId="JoinTree_1.daily_incoming_buffer_overrun_error.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_buffer_overrun_error_fct_avg" label="incoming_buffer_overrun_error / daily / Average"/>
+            <item resourceId="JoinTree_1.daily_incoming_buffer_overrun_error.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_buffer_overrun_error_fct_max" label="incoming_buffer_overrun_error / daily / Highest"/>
+            <item resourceId="JoinTree_1.daily_incoming_buffer_overrun_error.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_buffer_overrun_error_fct_min" label="incoming_buffer_overrun_error / daily / Lowest"/>
+            <item resourceId="JoinTree_1.hourly_incoming_buffer_overrun_error.fct_ts" dimensionOrMeasure="Dimension" id="hourly_incoming_buffer_overrun_error_fct_ts" label="incoming_buffer_overrun_error / hourly / TS"/>
+            <item resourceId="JoinTree_1.hourly_incoming_buffer_overrun_error.fct_ts_gmt" dimensionOrMeasure="Dimension" id="hourly_incoming_buffer_overrun_error_fct_ts_gmt" label="incoming_buffer_overrun_error / hourly / TS GMT"/>
+            <item resourceId="JoinTree_1.hourly_incoming_buffer_overrun_error.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_buffer_overrun_error_fct_avg" label="incoming_buffer_overrun_error / hourly / Average"/>
+            <item resourceId="JoinTree_1.hourly_incoming_buffer_overrun_error.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_buffer_overrun_error_fct_max" label="incoming_buffer_overrun_error / hourly / Highest"/>
+            <item resourceId="JoinTree_1.hourly_incoming_buffer_overrun_error.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_buffer_overrun_error_fct_min" label="incoming_buffer_overrun_error / hourly / Lowest"/>
+            <item resourceId="JoinTree_1.daily_outgoing_packets_error.fct_ts" dimensionOrMeasure="Dimension" id="daily_outgoing_packets_error_fct_ts" label="outgoing_packets_error / daily / TS"/>
+            <item resourceId="JoinTree_1.daily_outgoing_packets_error.fct_ts_gmt" dimensionOrMeasure="Dimension" id="daily_outgoing_packets_error_fct_ts_gmt" label="outgoing_packets_error / daily / TS GMT"/>
+            <item resourceId="JoinTree_1.daily_outgoing_packets_error.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_outgoing_packets_error_fct_avg" label="outgoing_packets_error / daily / Average"/>
+            <item resourceId="JoinTree_1.daily_outgoing_packets_error.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_outgoing_packets_error_fct_max" label="outgoing_packets_error / daily / Highest"/>
+            <item resourceId="JoinTree_1.daily_outgoing_packets_error.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_outgoing_packets_error_fct_min" label="outgoing_packets_error / daily / Lowest"/>
+            <item resourceId="JoinTree_1.hourly_outgoing_packets_error.fct_ts" dimensionOrMeasure="Dimension" id="hourly_outgoing_packets_error_fct_ts" label="outgoing_packets_error / hourly / TS"/>
+            <item resourceId="JoinTree_1.hourly_outgoing_packets_error.fct_ts_gmt" dimensionOrMeasure="Dimension" id="hourly_outgoing_packets_error_fct_ts_gmt" label="outgoing_packets_error / hourly / TS GMT"/>
+            <item resourceId="JoinTree_1.hourly_outgoing_packets_error.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_outgoing_packets_error_fct_avg" label="outgoing_packets_error / hourly / Average"/>
+            <item resourceId="JoinTree_1.hourly_outgoing_packets_error.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_outgoing_packets_error_fct_max" label="outgoing_packets_error / hourly / Highest"/>
+            <item resourceId="JoinTree_1.hourly_outgoing_packets_error.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_outgoing_packets_error_fct_min" label="outgoing_packets_error / hourly / Lowest"/>
+            <item resourceId="JoinTree_1.daily_incoming_bytes.fct_ts" dimensionOrMeasure="Dimension" id="daily_incoming_bytes_fct_ts" label="incoming_bytes / daily / TS"/>
+            <item resourceId="JoinTree_1.daily_incoming_bytes.fct_ts_gmt" dimensionOrMeasure="Dimension" id="daily_incoming_bytes_fct_ts_gmt" label="incoming_bytes / daily / TS GMT"/>
+            <item resourceId="JoinTree_1.daily_incoming_bytes.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_bytes_fct_avg" label="incoming_bytes / daily / Average"/>
+            <item resourceId="JoinTree_1.daily_incoming_bytes.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_bytes_fct_max" label="incoming_bytes / daily / Highest"/>
+            <item resourceId="JoinTree_1.daily_incoming_bytes.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_bytes_fct_min" label="incoming_bytes / daily / Lowest"/>
+            <item resourceId="JoinTree_1.hourly_incoming_bytes.fct_ts" dimensionOrMeasure="Dimension" id="hourly_incoming_bytes_fct_ts" label="incoming_bytes / hourly / TS"/>
+            <item resourceId="JoinTree_1.hourly_incoming_bytes.fct_ts_gmt" dimensionOrMeasure="Dimension" id="hourly_incoming_bytes_fct_ts_gmt" label="incoming_bytes / hourly / TS GMT"/>
+            <item resourceId="JoinTree_1.hourly_incoming_bytes.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_bytes_fct_avg" label="incoming_bytes / hourly / Average"/>
+            <item resourceId="JoinTree_1.hourly_incoming_bytes.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_bytes_fct_max" label="incoming_bytes / hourly / Highest"/>
+            <item resourceId="JoinTree_1.hourly_incoming_bytes.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_bytes_fct_min" label="incoming_bytes / hourly / Lowest"/>
+            <item resourceId="JoinTree_1.daily_incoming_packets.fct_ts" dimensionOrMeasure="Dimension" id="daily_incoming_packets_fct_ts" label="incoming_packets / daily / TS"/>
+            <item resourceId="JoinTree_1.daily_incoming_packets.fct_ts_gmt" dimensionOrMeasure="Dimension" id="daily_incoming_packets_fct_ts_gmt" label="incoming_packets / daily / TS GMT"/>
+            <item resourceId="JoinTree_1.daily_incoming_packets.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_packets_fct_avg" label="incoming_packets / daily / Average"/>
+            <item resourceId="JoinTree_1.daily_incoming_packets.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_packets_fct_max" label="incoming_packets / daily / Highest"/>
+            <item resourceId="JoinTree_1.daily_incoming_packets.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_incoming_packets_fct_min" label="incoming_packets / daily / Lowest"/>
+            <item resourceId="JoinTree_1.hourly_incoming_packets.fct_ts" dimensionOrMeasure="Dimension" id="hourly_incoming_packets_fct_ts" label="incoming_packets / hourly / TS"/>
+            <item resourceId="JoinTree_1.hourly_incoming_packets.fct_ts_gmt" dimensionOrMeasure="Dimension" id="hourly_incoming_packets_fct_ts_gmt" label="incoming_packets / hourly / TS GMT"/>
+            <item resourceId="JoinTree_1.hourly_incoming_packets.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_packets_fct_avg" label="incoming_packets / hourly / Average"/>
+            <item resourceId="JoinTree_1.hourly_incoming_packets.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_packets_fct_max" label="incoming_packets / hourly / Highest"/>
+            <item resourceId="JoinTree_1.hourly_incoming_packets.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_incoming_packets_fct_min" label="incoming_packets / hourly / Lowest"/>
+            <item resourceId="JoinTree_1.daily_outgoing_bytes.fct_ts" dimensionOrMeasure="Dimension" id="daily_outgoing_bytes_fct_ts" label="outgoing_bytes / daily / TS"/>
+            <item resourceId="JoinTree_1.daily_outgoing_bytes.fct_ts_gmt" dimensionOrMeasure="Dimension" id="daily_outgoing_bytes_fct_ts_gmt" label="outgoing_bytes / daily / TS GMT"/>
+            <item resourceId="JoinTree_1.daily_outgoing_bytes.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_outgoing_bytes_fct_avg" label="outgoing_bytes / daily / Average"/>
+            <item resourceId="JoinTree_1.daily_outgoing_bytes.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_outgoing_bytes_fct_max" label="outgoing_bytes / daily / Highest"/>
+            <item resourceId="JoinTree_1.daily_outgoing_bytes.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_outgoing_bytes_fct_min" label="outgoing_bytes / daily / Lowest"/>
+            <item resourceId="JoinTree_1.hourly_outgoing_bytes.fct_ts" dimensionOrMeasure="Dimension" id="hourly_outgoing_bytes_fct_ts" label="outgoing_bytes / hourly / TS"/>
+            <item resourceId="JoinTree_1.hourly_outgoing_bytes.fct_ts_gmt" dimensionOrMeasure="Dimension" id="hourly_outgoing_bytes_fct_ts_gmt" label="outgoing_bytes / hourly / TS GMT"/>
+            <item resourceId="JoinTree_1.hourly_outgoing_bytes.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_outgoing_bytes_fct_avg" label="outgoing_bytes / hourly / Average"/>
+            <item resourceId="JoinTree_1.hourly_outgoing_bytes.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_outgoing_bytes_fct_max" label="outgoing_bytes / hourly / Highest"/>
+            <item resourceId="JoinTree_1.hourly_outgoing_bytes.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_outgoing_bytes_fct_min" label="outgoing_bytes / hourly / Lowest"/>
+            <item resourceId="JoinTree_1.daily_outgoing_packets.fct_ts" dimensionOrMeasure="Dimension" id="daily_outgoing_packets_fct_ts" label="outgoing_packets / daily / TS"/>
+            <item resourceId="JoinTree_1.daily_outgoing_packets.fct_ts_gmt" dimensionOrMeasure="Dimension" id="daily_outgoing_packets_fct_ts_gmt" label="outgoing_packets / daily / TS GMT"/>
+            <item resourceId="JoinTree_1.daily_outgoing_packets.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_outgoing_packets_fct_avg" label="outgoing_packets / daily / Average"/>
+            <item resourceId="JoinTree_1.daily_outgoing_packets.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_outgoing_packets_fct_max" label="outgoing_packets / daily / Highest"/>
+            <item resourceId="JoinTree_1.daily_outgoing_packets.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="daily_outgoing_packets_fct_min" label="outgoing_packets / daily / Lowest"/>
+            <item resourceId="JoinTree_1.hourly_outgoing_packets.fct_ts" dimensionOrMeasure="Dimension" id="hourly_outgoing_packets_fct_ts" label="outgoing_packets / hourly / TS"/>
+            <item resourceId="JoinTree_1.hourly_outgoing_packets.fct_ts_gmt" dimensionOrMeasure="Dimension" id="hourly_outgoing_packets_fct_ts_gmt" label="outgoing_packets / hourly / TS GMT"/>
+            <item resourceId="JoinTree_1.hourly_outgoing_packets.fct_avg" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_outgoing_packets_fct_avg" label="outgoing_packets / hourly / Average"/>
+            <item resourceId="JoinTree_1.hourly_outgoing_packets.fct_max" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_outgoing_packets_fct_max" label="outgoing_packets / hourly / Highest"/>
+            <item resourceId="JoinTree_1.hourly_outgoing_packets.fct_min" dimensionOrMeasure="Measure" defaultAgg="Average" id="hourly_outgoing_packets_fct_min" label="outgoing_packets / hourly / Lowest"/>
+          </items>
+        </itemGroup>
+      </itemGroups>
+      <items>
+        <item resourceId="JoinTree_1.dim_openvswitch_interface.openvswitch_interface_name" dimensionOrMeasure="Dimension" id="dim_openvswitch_interface_openvswitch_interface_name" label="Interface Name"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_interface.ofport" dimensionOrMeasure="Dimension" id="dim_openvswitch_interface_ofport" label="OF Port"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_interface.interfaceId" dimensionOrMeasure="Dimension" id="dim_openvswitch_interface_interfaceId" label="Interface ID"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_interface.lspeed" dimensionOrMeasure="Dimension" id="dim_openvswitch_interface_lspeed" label="Link Speed"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_interface.lstate" dimensionOrMeasure="Dimension" id="dim_openvswitch_interface_lstate" label="Link State"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_interface.amac" dimensionOrMeasure="Dimension" id="dim_openvswitch_interface_amac" label="Attached MAC"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_interface.duplex" dimensionOrMeasure="Dimension" id="dim_openvswitch_interface_duplex" label="Duplex"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_interface.mac" dimensionOrMeasure="Dimension" id="dim_openvswitch_interface_mac" label="MAC in use"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_interface.mtu" dimensionOrMeasure="Dimension" id="dim_openvswitch_interface_mtu" label="MTU"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_interface.type_" dimensionOrMeasure="Dimension" id="dim_openvswitch_interface_type_" label="Type"/>
+        <item resourceId="JoinTree_1.dim_openvswitch_interface.astate" dimensionOrMeasure="Dimension" id="dim_openvswitch_interface_astate" label="Admin State"/>
+      </items>
+    </itemGroup>
+  </itemGroups>
+  <items>
+    <item resourceId="JoinTree_1.dim_date.date_date" dimensionOrMeasure="Dimension" id="dim_date_date_date" label="Date"/>
+  </items>
+  <resources>
+    <jdbcTable tableName="dim_open_vswitch" datasourceId="zenoss_reporting" id="dim_open_vswitch">
+      <fieldList>
+        <field type="java.lang.Integer" id="open_vswitch_key"/>
+        <field type="java.sql.Timestamp" id="open_vswitch_deleted_at" dataSetExpression="if(open_vswitch_deleted_at,null,0,1)"/>
+        <field type="java.lang.String" id="device_name"/>
+        <field type="java.lang.String" id="device_manage_ip"/>
+        <field type="java.lang.String" id="device_comments"/>
+        <field type="java.lang.String" id="device_uid"/>
+        <field type="java.lang.Double" id="device_production_state"/>
+        <field type="java.lang.String" id="device_production_state_name"/>
+        <field type="java.lang.String" id="device_class"/>
+        <field type="java.lang.String" id="device_collector"/>
+        <field type="java.lang.String" id="device_hw_manufacturer"/>
+        <field type="java.lang.String" id="device_hw_product"/>
+        <field type="java.lang.String" id="device_hw_serial_number"/>
+        <field type="java.lang.String" id="device_hw_asset_tag"/>
+        <field type="java.lang.Double" id="device_total_swap"/>
+        <field type="java.lang.Double" id="device_total_memory"/>
+        <field type="java.lang.String" id="device_os_manufacturer"/>
+        <field type="java.lang.String" id="device_os_product"/>
+        <field type="java.lang.String" id="device_os_uname"/>
+        <field type="java.lang.Double" id="device_os_uptime"/>
+        <field type="java.lang.String" id="device_availability"/>
+        <field type="java.util.Date" id="device_first_seen"/>
+        <field type="java.util.Date" id="device_last_change"/>
+        <field type="java.util.Date" id="device_last_model"/>
+        <field type="java.lang.String" id="device_rack_slot"/>
+        <field type="java.lang.String" id="device_sys_object_id"/>
+        <field type="java.lang.String" id="device_sys_descr"/>
+        <field type="java.lang.String" id="device_sys_name"/>
+        <field type="java.lang.String" id="device_sys_location"/>
+        <field type="java.lang.Boolean" id="device_is_monitored"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="dim_date" datasourceId="zenoss_reporting" id="dim_date">
+      <fieldList>
+        <field type="java.lang.Integer" id="date_key"/>
+        <field type="java.util.Date" id="date_date"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="dim_openvswitch_ovs" datasourceId="zenoss_reporting" id="dim_openvswitch_ovs">
+      <fieldList>
+        <field type="java.lang.Integer" id="openvswitch_ovs_key"/>
+        <field type="java.sql.Timestamp" id="openvswitch_ovs_deleted_at" dataSetExpression="if(openvswitch_ovs_deleted_at,null,0,1)"/>
+        <field type="java.lang.String" id="openvswitch_ovs_name"/>
+        <field type="java.lang.String" id="snmpindex"/>
+        <field type="java.lang.Boolean" id="monitor"/>
+        <field type="java.lang.String" id="productionState"/>
+        <field type="java.lang.String" id="preMWProductionState"/>
+        <field type="java.lang.String" id="DB_version"/>
+        <field type="java.lang.String" id="ovsId"/>
+        <field type="java.lang.String" id="OVS_version"/>
+        <field type="java.lang.Integer" id="ovsdevice_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="openvswitch_key"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="dim_openvswitch_bridge" datasourceId="zenoss_reporting" id="dim_openvswitch_bridge">
+      <fieldList>
+        <field type="java.lang.Integer" id="openvswitch_bridge_key"/>
+        <field type="java.sql.Timestamp" id="openvswitch_bridge_deleted_at" dataSetExpression="if(openvswitch_bridge_deleted_at,null,0,1)"/>
+        <field type="java.lang.String" id="openvswitch_bridge_name"/>
+        <field type="java.lang.String" id="snmpindex"/>
+        <field type="java.lang.Boolean" id="monitor"/>
+        <field type="java.lang.String" id="productionState"/>
+        <field type="java.lang.String" id="preMWProductionState"/>
+        <field type="java.lang.String" id="bridgeId"/>
+        <field type="java.lang.Integer" id="ovsdevice_key"/>
+        <field type="java.lang.Integer" id="ovs_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="openvswitch_key"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="daily_byte_count" datasourceId="zenoss_reporting" id="daily_byte_count">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="hourly_byte_count" datasourceId="zenoss_reporting" id="hourly_byte_count">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="daily_flow_count" datasourceId="zenoss_reporting" id="daily_flow_count">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="hourly_flow_count" datasourceId="zenoss_reporting" id="hourly_flow_count">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="daily_packet_count" datasourceId="zenoss_reporting" id="daily_packet_count">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="hourly_packet_count" datasourceId="zenoss_reporting" id="hourly_packet_count">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="dim_openvswitch_port" datasourceId="zenoss_reporting" id="dim_openvswitch_port">
+      <fieldList>
+        <field type="java.lang.Integer" id="openvswitch_port_key"/>
+        <field type="java.sql.Timestamp" id="openvswitch_port_deleted_at" dataSetExpression="if(openvswitch_port_deleted_at,null,0,1)"/>
+        <field type="java.lang.String" id="openvswitch_port_name"/>
+        <field type="java.lang.String" id="snmpindex"/>
+        <field type="java.lang.Boolean" id="monitor"/>
+        <field type="java.lang.String" id="productionState"/>
+        <field type="java.lang.String" id="preMWProductionState"/>
+        <field type="java.lang.String" id="tag_"/>
+        <field type="java.lang.String" id="portId"/>
+        <field type="java.lang.Integer" id="ovsdevice_key"/>
+        <field type="java.lang.Integer" id="bridge_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="openvswitch_key"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="dim_openvswitch_flow" datasourceId="zenoss_reporting" id="dim_openvswitch_flow">
+      <fieldList>
+        <field type="java.lang.Integer" id="openvswitch_flow_key"/>
+        <field type="java.sql.Timestamp" id="openvswitch_flow_deleted_at" dataSetExpression="if(openvswitch_flow_deleted_at,null,0,1)"/>
+        <field type="java.lang.String" id="openvswitch_flow_name"/>
+        <field type="java.lang.String" id="snmpindex"/>
+        <field type="java.lang.Boolean" id="monitor"/>
+        <field type="java.lang.String" id="productionState"/>
+        <field type="java.lang.String" id="preMWProductionState"/>
+        <field type="java.lang.String" id="protocol"/>
+        <field type="java.lang.String" id="inport"/>
+        <field type="java.lang.String" id="nwdst"/>
+        <field type="java.lang.String" id="priority"/>
+        <field type="java.lang.String" id="flowId"/>
+        <field type="java.lang.String" id="action"/>
+        <field type="java.lang.String" id="table"/>
+        <field type="java.lang.String" id="nwsrc"/>
+        <field type="java.lang.Integer" id="ovsdevice_key"/>
+        <field type="java.lang.Integer" id="bridge_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="openvswitch_key"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="dim_openvswitch_interface" datasourceId="zenoss_reporting" id="dim_openvswitch_interface">
+      <fieldList>
+        <field type="java.lang.Integer" id="openvswitch_interface_key"/>
+        <field type="java.sql.Timestamp" id="openvswitch_interface_deleted_at" dataSetExpression="if(openvswitch_interface_deleted_at,null,0,1)"/>
+        <field type="java.lang.String" id="openvswitch_interface_name"/>
+        <field type="java.lang.String" id="snmpindex"/>
+        <field type="java.lang.Boolean" id="monitor"/>
+        <field type="java.lang.String" id="productionState"/>
+        <field type="java.lang.String" id="preMWProductionState"/>
+        <field type="java.lang.String" id="ofport"/>
+        <field type="java.lang.String" id="interfaceId"/>
+        <field type="java.lang.String" id="lspeed"/>
+        <field type="java.lang.String" id="lstate"/>
+        <field type="java.lang.String" id="amac"/>
+        <field type="java.lang.String" id="duplex"/>
+        <field type="java.lang.String" id="mac"/>
+        <field type="java.lang.String" id="mtu"/>
+        <field type="java.lang.String" id="type_"/>
+        <field type="java.lang.String" id="astate"/>
+        <field type="java.lang.Integer" id="ovsdevice_key"/>
+        <field type="java.lang.Integer" id="port_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="openvswitch_key"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="daily_collisions" datasourceId="zenoss_reporting" id="daily_collisions">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="hourly_collisions" datasourceId="zenoss_reporting" id="hourly_collisions">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="daily_incoming_packets_dropped" datasourceId="zenoss_reporting" id="daily_incoming_packets_dropped">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="hourly_incoming_packets_dropped" datasourceId="zenoss_reporting" id="hourly_incoming_packets_dropped">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="daily_outgoing_packets_dropped" datasourceId="zenoss_reporting" id="daily_outgoing_packets_dropped">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="hourly_outgoing_packets_dropped" datasourceId="zenoss_reporting" id="hourly_outgoing_packets_dropped">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="daily_incoming_packets_CRC_error" datasourceId="zenoss_reporting" id="daily_incoming_packets_CRC_error">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="hourly_incoming_packets_CRC_error" datasourceId="zenoss_reporting" id="hourly_incoming_packets_CRC_error">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="daily_incoming_packets_error" datasourceId="zenoss_reporting" id="daily_incoming_packets_error">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="hourly_incoming_packets_error" datasourceId="zenoss_reporting" id="hourly_incoming_packets_error">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="daily_incoming_frame_error" datasourceId="zenoss_reporting" id="daily_incoming_frame_error">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="hourly_incoming_frame_error" datasourceId="zenoss_reporting" id="hourly_incoming_frame_error">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="daily_incoming_buffer_overrun_error" datasourceId="zenoss_reporting" id="daily_incoming_buffer_overrun_error">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="hourly_incoming_buffer_overrun_error" datasourceId="zenoss_reporting" id="hourly_incoming_buffer_overrun_error">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="daily_outgoing_packets_error" datasourceId="zenoss_reporting" id="daily_outgoing_packets_error">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="hourly_outgoing_packets_error" datasourceId="zenoss_reporting" id="hourly_outgoing_packets_error">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="daily_incoming_bytes" datasourceId="zenoss_reporting" id="daily_incoming_bytes">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="hourly_incoming_bytes" datasourceId="zenoss_reporting" id="hourly_incoming_bytes">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="daily_incoming_packets" datasourceId="zenoss_reporting" id="daily_incoming_packets">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="hourly_incoming_packets" datasourceId="zenoss_reporting" id="hourly_incoming_packets">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="daily_outgoing_bytes" datasourceId="zenoss_reporting" id="daily_outgoing_bytes">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="hourly_outgoing_bytes" datasourceId="zenoss_reporting" id="hourly_outgoing_bytes">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="daily_outgoing_packets" datasourceId="zenoss_reporting" id="daily_outgoing_packets">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="hourly_outgoing_packets" datasourceId="zenoss_reporting" id="hourly_outgoing_packets">
+      <fieldList>
+        <field type="java.lang.Integer" id="device_key"/>
+        <field type="java.lang.Integer" id="component_key"/>
+        <field type="java.util.Date" id="date_key"/>
+        <field type="java.sql.Timestamp" id="fct_ts"/>
+        <field type="java.sql.Timestamp" id="fct_ts_gmt"/>
+        <field type="java.lang.Double" id="fct_avg"/>
+        <field type="java.lang.Double" id="fct_max"/>
+        <field type="java.lang.Double" id="fct_min"/>
+      </fieldList>
+    </jdbcTable>
+    <jdbcTable tableName="dim_open_vswitch" datasourceId="zenoss_reporting" id="JoinTree_1">
+      <fieldList>
+        <field type="java.lang.Integer" id="dim_date.date_key"/>
+        <field type="java.util.Date" id="dim_date.date_date"/>
+        <field type="java.lang.Integer" id="dim_open_vswitch.open_vswitch_key"/>
+        <field type="open_vswitch_deleted_at" id="dim_open_vswitch.open_vswitch_deleted_at" dataSetExpression="if(dim_open_vswitch.open_vswitch_deleted_at,null,0,1)"/>
+        <field type="java.lang.String" id="dim_open_vswitch.device_name"/>
+        <field type="java.lang.String" id="dim_open_vswitch.device_manage_ip"/>
+        <field type="java.lang.String" id="dim_open_vswitch.device_comments"/>
+        <field type="java.lang.String" id="dim_open_vswitch.device_uid"/>
+        <field type="java.lang.Double" id="dim_open_vswitch.device_production_state"/>
+        <field type="java.lang.String" id="dim_open_vswitch.device_production_state_name"/>
+        <field type="java.lang.String" id="dim_open_vswitch.device_class"/>
+        <field type="java.lang.String" id="dim_open_vswitch.device_collector"/>
+        <field type="java.lang.String" id="dim_open_vswitch.device_hw_manufacturer"/>
+        <field type="java.lang.String" id="dim_open_vswitch.device_hw_product"/>
+        <field type="java.lang.String" id="dim_open_vswitch.device_hw_serial_number"/>
+        <field type="java.lang.String" id="dim_open_vswitch.device_hw_asset_tag"/>
+        <field type="java.lang.Double" id="dim_open_vswitch.device_total_swap"/>
+        <field type="java.lang.Double" id="dim_open_vswitch.device_total_memory"/>
+        <field type="java.lang.String" id="dim_open_vswitch.device_os_manufacturer"/>
+        <field type="java.lang.String" id="dim_open_vswitch.device_os_product"/>
+        <field type="java.lang.String" id="dim_open_vswitch.device_os_uname"/>
+        <field type="java.lang.Double" id="dim_open_vswitch.device_os_uptime"/>
+        <field type="java.lang.String" id="dim_open_vswitch.device_availability"/>
+        <field type="java.util.Date" id="dim_open_vswitch.device_first_seen"/>
+        <field type="java.util.Date" id="dim_open_vswitch.device_last_change"/>
+        <field type="java.util.Date" id="dim_open_vswitch.device_last_model"/>
+        <field type="java.lang.String" id="dim_open_vswitch.device_rack_slot"/>
+        <field type="java.lang.String" id="dim_open_vswitch.device_sys_object_id"/>
+        <field type="java.lang.String" id="dim_open_vswitch.device_sys_descr"/>
+        <field type="java.lang.String" id="dim_open_vswitch.device_sys_name"/>
+        <field type="java.lang.String" id="dim_open_vswitch.device_sys_location"/>
+        <field type="java.lang.Boolean" id="dim_open_vswitch.device_is_monitored"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_ovs.openvswitch_ovs_key"/>
+        <field type="openvswitch_ovs_deleted_at" id="dim_openvswitch_ovs.openvswitch_ovs_deleted_at" dataSetExpression="if(dim_openvswitch_ovs.openvswitch_ovs_deleted_at,null,0,1)"/>
+        <field type="java.lang.String" id="dim_openvswitch_ovs.openvswitch_ovs_name"/>
+        <field type="java.lang.String" id="dim_openvswitch_ovs.snmpindex"/>
+        <field type="java.lang.Boolean" id="dim_openvswitch_ovs.monitor"/>
+        <field type="java.lang.String" id="dim_openvswitch_ovs.productionState"/>
+        <field type="java.lang.String" id="dim_openvswitch_ovs.preMWProductionState"/>
+        <field type="java.lang.String" id="dim_openvswitch_ovs.DB_version"/>
+        <field type="java.lang.String" id="dim_openvswitch_ovs.ovsId"/>
+        <field type="java.lang.String" id="dim_openvswitch_ovs.OVS_version"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_ovs.ovsdevice_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_ovs.component_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_ovs.device_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_ovs.openvswitch_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_bridge.openvswitch_bridge_key"/>
+        <field type="openvswitch_bridge_deleted_at" id="dim_openvswitch_bridge.openvswitch_bridge_deleted_at" dataSetExpression="if(dim_openvswitch_bridge.openvswitch_bridge_deleted_at,null,0,1)"/>
+        <field type="java.lang.String" id="dim_openvswitch_bridge.openvswitch_bridge_name"/>
+        <field type="java.lang.String" id="dim_openvswitch_bridge.snmpindex"/>
+        <field type="java.lang.Boolean" id="dim_openvswitch_bridge.monitor"/>
+        <field type="java.lang.String" id="dim_openvswitch_bridge.productionState"/>
+        <field type="java.lang.String" id="dim_openvswitch_bridge.preMWProductionState"/>
+        <field type="java.lang.String" id="dim_openvswitch_bridge.bridgeId"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_bridge.ovsdevice_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_bridge.ovs_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_bridge.component_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_bridge.device_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_bridge.openvswitch_key"/>
+        <field type="java.lang.Integer" id="daily_byte_count.device_key"/>
+        <field type="java.lang.Integer" id="daily_byte_count.component_key"/>
+        <field type="java.util.Date" id="daily_byte_count.date_key"/>
+        <field type="java.sql.Timestamp" id="daily_byte_count.fct_ts"/>
+        <field type="java.sql.Timestamp" id="daily_byte_count.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="daily_byte_count.fct_avg"/>
+        <field type="java.lang.Double" id="daily_byte_count.fct_max"/>
+        <field type="java.lang.Double" id="daily_byte_count.fct_min"/>
+        <field type="java.lang.Integer" id="hourly_byte_count.device_key"/>
+        <field type="java.lang.Integer" id="hourly_byte_count.component_key"/>
+        <field type="java.util.Date" id="hourly_byte_count.date_key"/>
+        <field type="java.sql.Timestamp" id="hourly_byte_count.fct_ts"/>
+        <field type="java.sql.Timestamp" id="hourly_byte_count.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="hourly_byte_count.fct_avg"/>
+        <field type="java.lang.Double" id="hourly_byte_count.fct_max"/>
+        <field type="java.lang.Double" id="hourly_byte_count.fct_min"/>
+        <field type="java.lang.Integer" id="daily_flow_count.device_key"/>
+        <field type="java.lang.Integer" id="daily_flow_count.component_key"/>
+        <field type="java.util.Date" id="daily_flow_count.date_key"/>
+        <field type="java.sql.Timestamp" id="daily_flow_count.fct_ts"/>
+        <field type="java.sql.Timestamp" id="daily_flow_count.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="daily_flow_count.fct_avg"/>
+        <field type="java.lang.Double" id="daily_flow_count.fct_max"/>
+        <field type="java.lang.Double" id="daily_flow_count.fct_min"/>
+        <field type="java.lang.Integer" id="hourly_flow_count.device_key"/>
+        <field type="java.lang.Integer" id="hourly_flow_count.component_key"/>
+        <field type="java.util.Date" id="hourly_flow_count.date_key"/>
+        <field type="java.sql.Timestamp" id="hourly_flow_count.fct_ts"/>
+        <field type="java.sql.Timestamp" id="hourly_flow_count.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="hourly_flow_count.fct_avg"/>
+        <field type="java.lang.Double" id="hourly_flow_count.fct_max"/>
+        <field type="java.lang.Double" id="hourly_flow_count.fct_min"/>
+        <field type="java.lang.Integer" id="daily_packet_count.device_key"/>
+        <field type="java.lang.Integer" id="daily_packet_count.component_key"/>
+        <field type="java.util.Date" id="daily_packet_count.date_key"/>
+        <field type="java.sql.Timestamp" id="daily_packet_count.fct_ts"/>
+        <field type="java.sql.Timestamp" id="daily_packet_count.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="daily_packet_count.fct_avg"/>
+        <field type="java.lang.Double" id="daily_packet_count.fct_max"/>
+        <field type="java.lang.Double" id="daily_packet_count.fct_min"/>
+        <field type="java.lang.Integer" id="hourly_packet_count.device_key"/>
+        <field type="java.lang.Integer" id="hourly_packet_count.component_key"/>
+        <field type="java.util.Date" id="hourly_packet_count.date_key"/>
+        <field type="java.sql.Timestamp" id="hourly_packet_count.fct_ts"/>
+        <field type="java.sql.Timestamp" id="hourly_packet_count.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="hourly_packet_count.fct_avg"/>
+        <field type="java.lang.Double" id="hourly_packet_count.fct_max"/>
+        <field type="java.lang.Double" id="hourly_packet_count.fct_min"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_port.openvswitch_port_key"/>
+        <field type="openvswitch_port_deleted_at" id="dim_openvswitch_port.openvswitch_port_deleted_at" dataSetExpression="if(dim_openvswitch_port.openvswitch_port_deleted_at,null,0,1)"/>
+        <field type="java.lang.String" id="dim_openvswitch_port.openvswitch_port_name"/>
+        <field type="java.lang.String" id="dim_openvswitch_port.snmpindex"/>
+        <field type="java.lang.Boolean" id="dim_openvswitch_port.monitor"/>
+        <field type="java.lang.String" id="dim_openvswitch_port.productionState"/>
+        <field type="java.lang.String" id="dim_openvswitch_port.preMWProductionState"/>
+        <field type="java.lang.String" id="dim_openvswitch_port.tag_"/>
+        <field type="java.lang.String" id="dim_openvswitch_port.portId"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_port.ovsdevice_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_port.bridge_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_port.component_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_port.device_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_port.openvswitch_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_flow.openvswitch_flow_key"/>
+        <field type="openvswitch_flow_deleted_at" id="dim_openvswitch_flow.openvswitch_flow_deleted_at" dataSetExpression="if(dim_openvswitch_flow.openvswitch_flow_deleted_at,null,0,1)"/>
+        <field type="java.lang.String" id="dim_openvswitch_flow.openvswitch_flow_name"/>
+        <field type="java.lang.String" id="dim_openvswitch_flow.snmpindex"/>
+        <field type="java.lang.Boolean" id="dim_openvswitch_flow.monitor"/>
+        <field type="java.lang.String" id="dim_openvswitch_flow.productionState"/>
+        <field type="java.lang.String" id="dim_openvswitch_flow.preMWProductionState"/>
+        <field type="java.lang.String" id="dim_openvswitch_flow.protocol"/>
+        <field type="java.lang.String" id="dim_openvswitch_flow.inport"/>
+        <field type="java.lang.String" id="dim_openvswitch_flow.nwdst"/>
+        <field type="java.lang.String" id="dim_openvswitch_flow.priority"/>
+        <field type="java.lang.String" id="dim_openvswitch_flow.flowId"/>
+        <field type="java.lang.String" id="dim_openvswitch_flow.action"/>
+        <field type="java.lang.String" id="dim_openvswitch_flow.table"/>
+        <field type="java.lang.String" id="dim_openvswitch_flow.nwsrc"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_flow.ovsdevice_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_flow.bridge_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_flow.component_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_flow.device_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_flow.openvswitch_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_interface.openvswitch_interface_key"/>
+        <field type="openvswitch_interface_deleted_at" id="dim_openvswitch_interface.openvswitch_interface_deleted_at" dataSetExpression="if(dim_openvswitch_interface.openvswitch_interface_deleted_at,null,0,1)"/>
+        <field type="java.lang.String" id="dim_openvswitch_interface.openvswitch_interface_name"/>
+        <field type="java.lang.String" id="dim_openvswitch_interface.snmpindex"/>
+        <field type="java.lang.Boolean" id="dim_openvswitch_interface.monitor"/>
+        <field type="java.lang.String" id="dim_openvswitch_interface.productionState"/>
+        <field type="java.lang.String" id="dim_openvswitch_interface.preMWProductionState"/>
+        <field type="java.lang.String" id="dim_openvswitch_interface.ofport"/>
+        <field type="java.lang.String" id="dim_openvswitch_interface.interfaceId"/>
+        <field type="java.lang.String" id="dim_openvswitch_interface.lspeed"/>
+        <field type="java.lang.String" id="dim_openvswitch_interface.lstate"/>
+        <field type="java.lang.String" id="dim_openvswitch_interface.amac"/>
+        <field type="java.lang.String" id="dim_openvswitch_interface.duplex"/>
+        <field type="java.lang.String" id="dim_openvswitch_interface.mac"/>
+        <field type="java.lang.String" id="dim_openvswitch_interface.mtu"/>
+        <field type="java.lang.String" id="dim_openvswitch_interface.type_"/>
+        <field type="java.lang.String" id="dim_openvswitch_interface.astate"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_interface.ovsdevice_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_interface.port_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_interface.component_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_interface.device_key"/>
+        <field type="java.lang.Integer" id="dim_openvswitch_interface.openvswitch_key"/>
+        <field type="java.lang.Integer" id="daily_collisions.device_key"/>
+        <field type="java.lang.Integer" id="daily_collisions.component_key"/>
+        <field type="java.util.Date" id="daily_collisions.date_key"/>
+        <field type="java.sql.Timestamp" id="daily_collisions.fct_ts"/>
+        <field type="java.sql.Timestamp" id="daily_collisions.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="daily_collisions.fct_avg"/>
+        <field type="java.lang.Double" id="daily_collisions.fct_max"/>
+        <field type="java.lang.Double" id="daily_collisions.fct_min"/>
+        <field type="java.lang.Integer" id="hourly_collisions.device_key"/>
+        <field type="java.lang.Integer" id="hourly_collisions.component_key"/>
+        <field type="java.util.Date" id="hourly_collisions.date_key"/>
+        <field type="java.sql.Timestamp" id="hourly_collisions.fct_ts"/>
+        <field type="java.sql.Timestamp" id="hourly_collisions.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="hourly_collisions.fct_avg"/>
+        <field type="java.lang.Double" id="hourly_collisions.fct_max"/>
+        <field type="java.lang.Double" id="hourly_collisions.fct_min"/>
+        <field type="java.lang.Integer" id="daily_incoming_packets_dropped.device_key"/>
+        <field type="java.lang.Integer" id="daily_incoming_packets_dropped.component_key"/>
+        <field type="java.util.Date" id="daily_incoming_packets_dropped.date_key"/>
+        <field type="java.sql.Timestamp" id="daily_incoming_packets_dropped.fct_ts"/>
+        <field type="java.sql.Timestamp" id="daily_incoming_packets_dropped.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="daily_incoming_packets_dropped.fct_avg"/>
+        <field type="java.lang.Double" id="daily_incoming_packets_dropped.fct_max"/>
+        <field type="java.lang.Double" id="daily_incoming_packets_dropped.fct_min"/>
+        <field type="java.lang.Integer" id="hourly_incoming_packets_dropped.device_key"/>
+        <field type="java.lang.Integer" id="hourly_incoming_packets_dropped.component_key"/>
+        <field type="java.util.Date" id="hourly_incoming_packets_dropped.date_key"/>
+        <field type="java.sql.Timestamp" id="hourly_incoming_packets_dropped.fct_ts"/>
+        <field type="java.sql.Timestamp" id="hourly_incoming_packets_dropped.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="hourly_incoming_packets_dropped.fct_avg"/>
+        <field type="java.lang.Double" id="hourly_incoming_packets_dropped.fct_max"/>
+        <field type="java.lang.Double" id="hourly_incoming_packets_dropped.fct_min"/>
+        <field type="java.lang.Integer" id="daily_outgoing_packets_dropped.device_key"/>
+        <field type="java.lang.Integer" id="daily_outgoing_packets_dropped.component_key"/>
+        <field type="java.util.Date" id="daily_outgoing_packets_dropped.date_key"/>
+        <field type="java.sql.Timestamp" id="daily_outgoing_packets_dropped.fct_ts"/>
+        <field type="java.sql.Timestamp" id="daily_outgoing_packets_dropped.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="daily_outgoing_packets_dropped.fct_avg"/>
+        <field type="java.lang.Double" id="daily_outgoing_packets_dropped.fct_max"/>
+        <field type="java.lang.Double" id="daily_outgoing_packets_dropped.fct_min"/>
+        <field type="java.lang.Integer" id="hourly_outgoing_packets_dropped.device_key"/>
+        <field type="java.lang.Integer" id="hourly_outgoing_packets_dropped.component_key"/>
+        <field type="java.util.Date" id="hourly_outgoing_packets_dropped.date_key"/>
+        <field type="java.sql.Timestamp" id="hourly_outgoing_packets_dropped.fct_ts"/>
+        <field type="java.sql.Timestamp" id="hourly_outgoing_packets_dropped.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="hourly_outgoing_packets_dropped.fct_avg"/>
+        <field type="java.lang.Double" id="hourly_outgoing_packets_dropped.fct_max"/>
+        <field type="java.lang.Double" id="hourly_outgoing_packets_dropped.fct_min"/>
+        <field type="java.lang.Integer" id="daily_incoming_packets_CRC_error.device_key"/>
+        <field type="java.lang.Integer" id="daily_incoming_packets_CRC_error.component_key"/>
+        <field type="java.util.Date" id="daily_incoming_packets_CRC_error.date_key"/>
+        <field type="java.sql.Timestamp" id="daily_incoming_packets_CRC_error.fct_ts"/>
+        <field type="java.sql.Timestamp" id="daily_incoming_packets_CRC_error.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="daily_incoming_packets_CRC_error.fct_avg"/>
+        <field type="java.lang.Double" id="daily_incoming_packets_CRC_error.fct_max"/>
+        <field type="java.lang.Double" id="daily_incoming_packets_CRC_error.fct_min"/>
+        <field type="java.lang.Integer" id="hourly_incoming_packets_CRC_error.device_key"/>
+        <field type="java.lang.Integer" id="hourly_incoming_packets_CRC_error.component_key"/>
+        <field type="java.util.Date" id="hourly_incoming_packets_CRC_error.date_key"/>
+        <field type="java.sql.Timestamp" id="hourly_incoming_packets_CRC_error.fct_ts"/>
+        <field type="java.sql.Timestamp" id="hourly_incoming_packets_CRC_error.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="hourly_incoming_packets_CRC_error.fct_avg"/>
+        <field type="java.lang.Double" id="hourly_incoming_packets_CRC_error.fct_max"/>
+        <field type="java.lang.Double" id="hourly_incoming_packets_CRC_error.fct_min"/>
+        <field type="java.lang.Integer" id="daily_incoming_packets_error.device_key"/>
+        <field type="java.lang.Integer" id="daily_incoming_packets_error.component_key"/>
+        <field type="java.util.Date" id="daily_incoming_packets_error.date_key"/>
+        <field type="java.sql.Timestamp" id="daily_incoming_packets_error.fct_ts"/>
+        <field type="java.sql.Timestamp" id="daily_incoming_packets_error.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="daily_incoming_packets_error.fct_avg"/>
+        <field type="java.lang.Double" id="daily_incoming_packets_error.fct_max"/>
+        <field type="java.lang.Double" id="daily_incoming_packets_error.fct_min"/>
+        <field type="java.lang.Integer" id="hourly_incoming_packets_error.device_key"/>
+        <field type="java.lang.Integer" id="hourly_incoming_packets_error.component_key"/>
+        <field type="java.util.Date" id="hourly_incoming_packets_error.date_key"/>
+        <field type="java.sql.Timestamp" id="hourly_incoming_packets_error.fct_ts"/>
+        <field type="java.sql.Timestamp" id="hourly_incoming_packets_error.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="hourly_incoming_packets_error.fct_avg"/>
+        <field type="java.lang.Double" id="hourly_incoming_packets_error.fct_max"/>
+        <field type="java.lang.Double" id="hourly_incoming_packets_error.fct_min"/>
+        <field type="java.lang.Integer" id="daily_incoming_frame_error.device_key"/>
+        <field type="java.lang.Integer" id="daily_incoming_frame_error.component_key"/>
+        <field type="java.util.Date" id="daily_incoming_frame_error.date_key"/>
+        <field type="java.sql.Timestamp" id="daily_incoming_frame_error.fct_ts"/>
+        <field type="java.sql.Timestamp" id="daily_incoming_frame_error.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="daily_incoming_frame_error.fct_avg"/>
+        <field type="java.lang.Double" id="daily_incoming_frame_error.fct_max"/>
+        <field type="java.lang.Double" id="daily_incoming_frame_error.fct_min"/>
+        <field type="java.lang.Integer" id="hourly_incoming_frame_error.device_key"/>
+        <field type="java.lang.Integer" id="hourly_incoming_frame_error.component_key"/>
+        <field type="java.util.Date" id="hourly_incoming_frame_error.date_key"/>
+        <field type="java.sql.Timestamp" id="hourly_incoming_frame_error.fct_ts"/>
+        <field type="java.sql.Timestamp" id="hourly_incoming_frame_error.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="hourly_incoming_frame_error.fct_avg"/>
+        <field type="java.lang.Double" id="hourly_incoming_frame_error.fct_max"/>
+        <field type="java.lang.Double" id="hourly_incoming_frame_error.fct_min"/>
+        <field type="java.lang.Integer" id="daily_incoming_buffer_overrun_error.device_key"/>
+        <field type="java.lang.Integer" id="daily_incoming_buffer_overrun_error.component_key"/>
+        <field type="java.util.Date" id="daily_incoming_buffer_overrun_error.date_key"/>
+        <field type="java.sql.Timestamp" id="daily_incoming_buffer_overrun_error.fct_ts"/>
+        <field type="java.sql.Timestamp" id="daily_incoming_buffer_overrun_error.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="daily_incoming_buffer_overrun_error.fct_avg"/>
+        <field type="java.lang.Double" id="daily_incoming_buffer_overrun_error.fct_max"/>
+        <field type="java.lang.Double" id="daily_incoming_buffer_overrun_error.fct_min"/>
+        <field type="java.lang.Integer" id="hourly_incoming_buffer_overrun_error.device_key"/>
+        <field type="java.lang.Integer" id="hourly_incoming_buffer_overrun_error.component_key"/>
+        <field type="java.util.Date" id="hourly_incoming_buffer_overrun_error.date_key"/>
+        <field type="java.sql.Timestamp" id="hourly_incoming_buffer_overrun_error.fct_ts"/>
+        <field type="java.sql.Timestamp" id="hourly_incoming_buffer_overrun_error.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="hourly_incoming_buffer_overrun_error.fct_avg"/>
+        <field type="java.lang.Double" id="hourly_incoming_buffer_overrun_error.fct_max"/>
+        <field type="java.lang.Double" id="hourly_incoming_buffer_overrun_error.fct_min"/>
+        <field type="java.lang.Integer" id="daily_outgoing_packets_error.device_key"/>
+        <field type="java.lang.Integer" id="daily_outgoing_packets_error.component_key"/>
+        <field type="java.util.Date" id="daily_outgoing_packets_error.date_key"/>
+        <field type="java.sql.Timestamp" id="daily_outgoing_packets_error.fct_ts"/>
+        <field type="java.sql.Timestamp" id="daily_outgoing_packets_error.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="daily_outgoing_packets_error.fct_avg"/>
+        <field type="java.lang.Double" id="daily_outgoing_packets_error.fct_max"/>
+        <field type="java.lang.Double" id="daily_outgoing_packets_error.fct_min"/>
+        <field type="java.lang.Integer" id="hourly_outgoing_packets_error.device_key"/>
+        <field type="java.lang.Integer" id="hourly_outgoing_packets_error.component_key"/>
+        <field type="java.util.Date" id="hourly_outgoing_packets_error.date_key"/>
+        <field type="java.sql.Timestamp" id="hourly_outgoing_packets_error.fct_ts"/>
+        <field type="java.sql.Timestamp" id="hourly_outgoing_packets_error.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="hourly_outgoing_packets_error.fct_avg"/>
+        <field type="java.lang.Double" id="hourly_outgoing_packets_error.fct_max"/>
+        <field type="java.lang.Double" id="hourly_outgoing_packets_error.fct_min"/>
+        <field type="java.lang.Integer" id="daily_incoming_bytes.device_key"/>
+        <field type="java.lang.Integer" id="daily_incoming_bytes.component_key"/>
+        <field type="java.util.Date" id="daily_incoming_bytes.date_key"/>
+        <field type="java.sql.Timestamp" id="daily_incoming_bytes.fct_ts"/>
+        <field type="java.sql.Timestamp" id="daily_incoming_bytes.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="daily_incoming_bytes.fct_avg"/>
+        <field type="java.lang.Double" id="daily_incoming_bytes.fct_max"/>
+        <field type="java.lang.Double" id="daily_incoming_bytes.fct_min"/>
+        <field type="java.lang.Integer" id="hourly_incoming_bytes.device_key"/>
+        <field type="java.lang.Integer" id="hourly_incoming_bytes.component_key"/>
+        <field type="java.util.Date" id="hourly_incoming_bytes.date_key"/>
+        <field type="java.sql.Timestamp" id="hourly_incoming_bytes.fct_ts"/>
+        <field type="java.sql.Timestamp" id="hourly_incoming_bytes.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="hourly_incoming_bytes.fct_avg"/>
+        <field type="java.lang.Double" id="hourly_incoming_bytes.fct_max"/>
+        <field type="java.lang.Double" id="hourly_incoming_bytes.fct_min"/>
+        <field type="java.lang.Integer" id="daily_incoming_packets.device_key"/>
+        <field type="java.lang.Integer" id="daily_incoming_packets.component_key"/>
+        <field type="java.util.Date" id="daily_incoming_packets.date_key"/>
+        <field type="java.sql.Timestamp" id="daily_incoming_packets.fct_ts"/>
+        <field type="java.sql.Timestamp" id="daily_incoming_packets.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="daily_incoming_packets.fct_avg"/>
+        <field type="java.lang.Double" id="daily_incoming_packets.fct_max"/>
+        <field type="java.lang.Double" id="daily_incoming_packets.fct_min"/>
+        <field type="java.lang.Integer" id="hourly_incoming_packets.device_key"/>
+        <field type="java.lang.Integer" id="hourly_incoming_packets.component_key"/>
+        <field type="java.util.Date" id="hourly_incoming_packets.date_key"/>
+        <field type="java.sql.Timestamp" id="hourly_incoming_packets.fct_ts"/>
+        <field type="java.sql.Timestamp" id="hourly_incoming_packets.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="hourly_incoming_packets.fct_avg"/>
+        <field type="java.lang.Double" id="hourly_incoming_packets.fct_max"/>
+        <field type="java.lang.Double" id="hourly_incoming_packets.fct_min"/>
+        <field type="java.lang.Integer" id="daily_outgoing_bytes.device_key"/>
+        <field type="java.lang.Integer" id="daily_outgoing_bytes.component_key"/>
+        <field type="java.util.Date" id="daily_outgoing_bytes.date_key"/>
+        <field type="java.sql.Timestamp" id="daily_outgoing_bytes.fct_ts"/>
+        <field type="java.sql.Timestamp" id="daily_outgoing_bytes.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="daily_outgoing_bytes.fct_avg"/>
+        <field type="java.lang.Double" id="daily_outgoing_bytes.fct_max"/>
+        <field type="java.lang.Double" id="daily_outgoing_bytes.fct_min"/>
+        <field type="java.lang.Integer" id="hourly_outgoing_bytes.device_key"/>
+        <field type="java.lang.Integer" id="hourly_outgoing_bytes.component_key"/>
+        <field type="java.util.Date" id="hourly_outgoing_bytes.date_key"/>
+        <field type="java.sql.Timestamp" id="hourly_outgoing_bytes.fct_ts"/>
+        <field type="java.sql.Timestamp" id="hourly_outgoing_bytes.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="hourly_outgoing_bytes.fct_avg"/>
+        <field type="java.lang.Double" id="hourly_outgoing_bytes.fct_max"/>
+        <field type="java.lang.Double" id="hourly_outgoing_bytes.fct_min"/>
+        <field type="java.lang.Integer" id="daily_outgoing_packets.device_key"/>
+        <field type="java.lang.Integer" id="daily_outgoing_packets.component_key"/>
+        <field type="java.util.Date" id="daily_outgoing_packets.date_key"/>
+        <field type="java.sql.Timestamp" id="daily_outgoing_packets.fct_ts"/>
+        <field type="java.sql.Timestamp" id="daily_outgoing_packets.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="daily_outgoing_packets.fct_avg"/>
+        <field type="java.lang.Double" id="daily_outgoing_packets.fct_max"/>
+        <field type="java.lang.Double" id="daily_outgoing_packets.fct_min"/>
+        <field type="java.lang.Integer" id="hourly_outgoing_packets.device_key"/>
+        <field type="java.lang.Integer" id="hourly_outgoing_packets.component_key"/>
+        <field type="java.util.Date" id="hourly_outgoing_packets.date_key"/>
+        <field type="java.sql.Timestamp" id="hourly_outgoing_packets.fct_ts"/>
+        <field type="java.sql.Timestamp" id="hourly_outgoing_packets.fct_ts_gmt"/>
+        <field type="java.lang.Double" id="hourly_outgoing_packets.fct_avg"/>
+        <field type="java.lang.Double" id="hourly_outgoing_packets.fct_max"/>
+        <field type="java.lang.Double" id="hourly_outgoing_packets.fct_min"/>
+      </fieldList>
+      <joinInfo alias="dim_open_vswitch" referenceId="dim_open_vswitch"/>
+      <joinedDataSetList>
+        <joinedDataSetRef>
+          <joinString>left outer join dim_openvswitch_ovs dim_openvswitch_ovs on (dim_openvswitch_ovs.ovsdevice_key == dim_open_vswitch.open_vswitch_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join dim_openvswitch_bridge dim_openvswitch_bridge on (dim_openvswitch_bridge.ovs_key == dim_openvswitch_ovs.openvswitch_ovs_key and dim_openvswitch_bridge.ovsdevice_key == dim_open_vswitch.open_vswitch_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join daily_byte_count daily_byte_count on (dim_openvswitch_bridge.openvswitch_bridge_key == daily_byte_count.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join hourly_byte_count hourly_byte_count on (dim_openvswitch_bridge.openvswitch_bridge_key == hourly_byte_count.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join daily_flow_count daily_flow_count on (dim_openvswitch_bridge.openvswitch_bridge_key == daily_flow_count.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join hourly_flow_count hourly_flow_count on (dim_openvswitch_bridge.openvswitch_bridge_key == hourly_flow_count.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join daily_packet_count daily_packet_count on (dim_openvswitch_bridge.openvswitch_bridge_key == daily_packet_count.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join hourly_packet_count hourly_packet_count on (dim_openvswitch_bridge.openvswitch_bridge_key == hourly_packet_count.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join dim_openvswitch_port dim_openvswitch_port on (dim_openvswitch_port.bridge_key == dim_openvswitch_bridge.openvswitch_bridge_key and dim_openvswitch_port.ovsdevice_key == dim_open_vswitch.open_vswitch_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join dim_openvswitch_flow dim_openvswitch_flow on (dim_openvswitch_flow.ovsdevice_key == dim_open_vswitch.open_vswitch_key and dim_openvswitch_flow.bridge_key == dim_openvswitch_bridge.openvswitch_bridge_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join dim_openvswitch_interface dim_openvswitch_interface on (dim_openvswitch_interface.ovsdevice_key == dim_open_vswitch.open_vswitch_key and dim_openvswitch_interface.port_key == dim_openvswitch_port.openvswitch_port_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join daily_collisions daily_collisions on (dim_openvswitch_interface.openvswitch_interface_key == daily_collisions.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join hourly_collisions hourly_collisions on (dim_openvswitch_interface.openvswitch_interface_key == hourly_collisions.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join daily_incoming_packets_dropped daily_incoming_packets_dropped on (dim_openvswitch_interface.openvswitch_interface_key == daily_incoming_packets_dropped.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join hourly_incoming_packets_dropped hourly_incoming_packets_dropped on (dim_openvswitch_interface.openvswitch_interface_key == hourly_incoming_packets_dropped.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join daily_outgoing_packets_dropped daily_outgoing_packets_dropped on (dim_openvswitch_interface.openvswitch_interface_key == daily_outgoing_packets_dropped.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join hourly_outgoing_packets_dropped hourly_outgoing_packets_dropped on (dim_openvswitch_interface.openvswitch_interface_key == hourly_outgoing_packets_dropped.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join daily_incoming_packets_CRC_error daily_incoming_packets_CRC_error on (dim_openvswitch_interface.openvswitch_interface_key == daily_incoming_packets_CRC_error.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join hourly_incoming_packets_CRC_error hourly_incoming_packets_CRC_error on (dim_openvswitch_interface.openvswitch_interface_key == hourly_incoming_packets_CRC_error.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join daily_incoming_packets_error daily_incoming_packets_error on (dim_openvswitch_interface.openvswitch_interface_key == daily_incoming_packets_error.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join hourly_incoming_packets_error hourly_incoming_packets_error on (dim_openvswitch_interface.openvswitch_interface_key == hourly_incoming_packets_error.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join daily_incoming_frame_error daily_incoming_frame_error on (dim_openvswitch_interface.openvswitch_interface_key == daily_incoming_frame_error.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join hourly_incoming_frame_error hourly_incoming_frame_error on (dim_openvswitch_interface.openvswitch_interface_key == hourly_incoming_frame_error.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join daily_incoming_buffer_overrun_error daily_incoming_buffer_overrun_error on (dim_openvswitch_interface.openvswitch_interface_key == daily_incoming_buffer_overrun_error.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join hourly_incoming_buffer_overrun_error hourly_incoming_buffer_overrun_error on (dim_openvswitch_interface.openvswitch_interface_key == hourly_incoming_buffer_overrun_error.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join daily_outgoing_packets_error daily_outgoing_packets_error on (dim_openvswitch_interface.openvswitch_interface_key == daily_outgoing_packets_error.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join hourly_outgoing_packets_error hourly_outgoing_packets_error on (dim_openvswitch_interface.openvswitch_interface_key == hourly_outgoing_packets_error.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join daily_incoming_bytes daily_incoming_bytes on (dim_openvswitch_interface.openvswitch_interface_key == daily_incoming_bytes.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join hourly_incoming_bytes hourly_incoming_bytes on (dim_openvswitch_interface.openvswitch_interface_key == hourly_incoming_bytes.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join daily_incoming_packets daily_incoming_packets on (dim_openvswitch_interface.openvswitch_interface_key == daily_incoming_packets.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join hourly_incoming_packets hourly_incoming_packets on (dim_openvswitch_interface.openvswitch_interface_key == hourly_incoming_packets.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join daily_outgoing_bytes daily_outgoing_bytes on (dim_openvswitch_interface.openvswitch_interface_key == daily_outgoing_bytes.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join hourly_outgoing_bytes hourly_outgoing_bytes on (dim_openvswitch_interface.openvswitch_interface_key == hourly_outgoing_bytes.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join daily_outgoing_packets daily_outgoing_packets on (dim_openvswitch_interface.openvswitch_interface_key == daily_outgoing_packets.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join hourly_outgoing_packets hourly_outgoing_packets on (dim_openvswitch_interface.openvswitch_interface_key == hourly_outgoing_packets.component_key)</joinString>
+        </joinedDataSetRef>
+        <joinedDataSetRef>
+          <joinString>left outer join dim_date dim_date on (hourly_collisions.date_key == dim_date.date_key and daily_incoming_bytes.date_key == dim_date.date_key and hourly_outgoing_packets_dropped.date_key == dim_date.date_key and daily_outgoing_packets_error.date_key == dim_date.date_key and hourly_incoming_frame_error.date_key == dim_date.date_key and hourly_outgoing_packets_error.date_key == dim_date.date_key and daily_incoming_packets_error.date_key == dim_date.date_key and hourly_flow_count.date_key == dim_date.date_key and daily_byte_count.date_key == dim_date.date_key and hourly_incoming_packets_error.date_key == dim_date.date_key and hourly_incoming_bytes.date_key == dim_date.date_key and hourly_incoming_buffer_overrun_error.date_key == dim_date.date_key and daily_outgoing_packets.date_key == dim_date.date_key and hourly_outgoing_packets.date_key == dim_date.date_key and daily_incoming_packets_CRC_error.date_key == dim_date.date_key and daily_outgoing_bytes.date_key == dim_date.date_key and hourly_byte_count.date_key == dim_date.date_key and daily_packet_count.date_key == dim_date.date_key and daily_collisions.date_key == dim_date.date_key and daily_flow_count.date_key == dim_date.date_key and hourly_packet_count.date_key == dim_date.date_key and daily_incoming_buffer_overrun_error.date_key == dim_date.date_key and hourly_incoming_packets_CRC_error.date_key == dim_date.date_key and daily_incoming_packets.date_key == dim_date.date_key and daily_incoming_frame_error.date_key == dim_date.date_key and daily_outgoing_packets_dropped.date_key == dim_date.date_key and hourly_incoming_packets_dropped.date_key == dim_date.date_key and hourly_incoming_packets.date_key == dim_date.date_key and daily_incoming_packets_dropped.date_key == dim_date.date_key and hourly_outgoing_bytes.date_key == dim_date.date_key)</joinString>
+        </joinedDataSetRef>
+      </joinedDataSetList>
+    </jdbcTable>
+  </resources>
+</schema>

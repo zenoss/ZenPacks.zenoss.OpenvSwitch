@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<folder exportedWithPermissions="false">
+  <parent>/public</parent>
+  <name>OpenvSwitch_ZenPack</name>
+  <label>OpenvSwitch ZenPack</label>
+  <resource>OpenvSwitch_Domain</resource>
+</folder>
