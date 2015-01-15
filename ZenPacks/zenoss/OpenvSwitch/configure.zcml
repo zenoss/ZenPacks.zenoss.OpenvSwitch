@@ -4,9 +4,6 @@
     xmlns:zcml="http://namespaces.zope.org/zcml">
 
 
-    <!-- Includes: Browser Configuration -->
-    <include package=".browser"/>
-
     <!-- Impact -->
     <configure zcml:condition="installed ZenPacks.zenoss.Impact">
         <include package="ZenPacks.zenoss.Impact" file="meta.zcml"/>
