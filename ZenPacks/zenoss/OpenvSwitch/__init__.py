@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (C) Zenoss, Inc. 2013-2014, all rights reserved.
+# Copyright (C) Zenoss, Inc. 2013-2015, all rights reserved.
 #
 # This content is made available according to terms specified in
 # License.zenoss under the directory where your Zenoss product is installed.
@@ -186,12 +186,12 @@ CFG = zenpacklib.ZenPackSpec(
                                 'content_width': 50},
                 'mtu':         {'label': 'MTU',
                                 'order': 5.8,
-                                'label_width': 30,
-                                'content_width': 30},
+                                'label_width': 25,
+                                'content_width': 25},
                 'duplex':      {'label': 'Duplex',
                                 'order': 5.9,
-                                'label_width': 40,
-                                'content_width': 40},
+                                'label_width': 35,
+                                'content_width': 35},
             },
             'impacted_by': ['port'],
         },
