@@ -299,3 +299,11 @@ zenoss_delete_logical_node() {
 
     zenoss_check_status zenoss_delete_node "$@"
 }
+
+# Add standard global policy to a service
+add_standard_global_polices() {
+    local node_uid="$1"
+	local meta_list="$2"
+    zenoss_add_policy "global" "$node_uid" AVAILABILITY 50 policyPercentageTrigger ATRISK DOWN \"$meta_list\"
+    zenoss_add_policy "global" "$node_uid" AVAILABILITY 100 policyPercentageTrigger DOWN DOWN \"$meta_list\"
+}

@@ -7,7 +7,7 @@
     <!-- Includes: Browser Configuration -->
     <include package=".browser"/>
 
-    <!-- Impact (special cases) -->
+    <!-- Impact -->
     <configure zcml:condition="installed ZenPacks.zenoss.Impact">
         <include package="ZenPacks.zenoss.Impact" file="meta.zcml"/>
 
@@ -41,6 +41,30 @@
             factory=".impact.InterfaceDeviceRelationsProvider"
             />
     </configure>
+
+    <!-- Analytics -->
+    <configure zcml:condition="installed ZenPacks.zenoss.ZenETL">
+
+        <adapter
+            provides="Products.Zuul.interfaces.IReportableFactory"
+            for=".OpenvSwitchDevice.OpenvSwitchDevice"
+            factory=".analytics.OpenvSwitchDeviceReportableFactory"
+            />
+
+        <adapter
+            provides="Products.Zuul.interfaces.IReportable"
+            for=".OpenvSwitchDevice.OpenvSwitchDevice"
+            factory=".analytics.OpenvSwitchDeviceReportable"
+            />
+
+        <adapter
+            provides="Products.Zuul.interfaces.IReportable"
+            for=".OpenvSwitchComponent.OpenvSwitchComponent"
+            factory=".analytics.OpenvSwitchComponentReportable"
+            />
+
+    </configure>
+
 
 </configure>
 
