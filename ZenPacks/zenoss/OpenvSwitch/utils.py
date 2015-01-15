@@ -1,9 +1,9 @@
 ##############################################################################
 #
-# GPLv2
+# Copyright (C) Zenoss, Inc. 2015, all rights reserved.
 #
-# You should have received a copy of the GNU General Public License
-# along with this ZenPack. If not, see <http://www.gnu.org/licenses/>.
+# This content is made available according to terms specified in
+# License.zenoss under the directory where your Zenoss product is installed.
 #
 ##############################################################################
 
