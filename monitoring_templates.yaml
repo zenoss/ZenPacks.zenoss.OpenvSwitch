@@ -6,9 +6,13 @@
     interfaceIncomingBytes:
       commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
+
       datapoints:
         rx_bytes:
           rrdmin: 0
+          aliases:
+            incoming_bytes: ""
+
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
       type: COMMAND
       component: ${here/id}
@@ -17,9 +21,13 @@
     interfaceOutgoingBytes:
       commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
+
       datapoints:
         tx_bytes:
           rrdmin: 0
+          aliases:
+            outgoing_bytes: ""
+
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
       type: COMMAND
       component: ${here/id}
@@ -28,9 +36,13 @@
     interfaceIncomingPackets:
       commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
+
       datapoints:
         rx_packets:
           rrdmin: 0
+          aliases:
+            incoming_packets: ""
+
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
       type: COMMAND
       component: ${here/id}
@@ -39,9 +51,13 @@
     interfaceOutgoingPackets:
       commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
+
       datapoints:
         tx_packets:
           rrdmin: 0
+          aliases:
+            outgoing_packets: ""
+
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
       type: COMMAND
       component: ${here/id}
@@ -50,13 +66,23 @@
     collisions_dropped:
       commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
+
       datapoints:
         collisions:
           rrdmin: 0
+          aliases:
+            collisions: ""
+
         rx_dropped:
           rrdmin: 0
+          aliases:
+            incoming_packets_dropped: ""
+
         tx_dropped:
           rrdmin: 0
+          aliases:
+            outgoing_packets_dropped: ""
+
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
       type: COMMAND
       component: ${here/id}
@@ -65,17 +91,33 @@
     errors:
       commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
+
       datapoints:
         rx_crc_err:
           rrdmin: 0
+          aliases:
+            incoming_packets_CRC_error: ""
+
         rx_errors:
           rrdmin: 0
+          aliases:
+            incoming_packets_error: ""
+
         tx_errors:
           rrdmin: 0
+          aliases:
+            outgoing_packets_error: ""
+
         rx_frame_err:
           rrdmin: 0
+          aliases:
+            incoming_frame_error: ""
+
         rx_over_err:
           rrdmin: 0
+          aliases:
+            incoming_buffer_overrun_error: ""
+
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
       type: COMMAND
       component: ${here/id}
@@ -154,13 +196,23 @@
     bridgeFlowCount:
       commandTemplate: /usr/bin/ovs-vsctl --columns=name,_uuid list bridge; for txt in $$(/usr/bin/ovs-vsctl --columns=name list bridge); do if [ $$txt != 'name' ] && [ $$txt != ':' ] ; then echo $$txt; /usr/bin/ovs-ofctl dump-aggregate $$txt; fi; done;
       cycletime: 300
+
       datapoints:
         flow_count:
           rrdmin: 0
+          aliases:
+            flow_count: ""
+
         byte_count:
           rrdmin: 0
+          aliases:
+            byte_count: ""
+
         packet_count:
           rrdmin: 0
+          aliases:
+            packet_count: ""
+
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.BridgeStatistics
       type: COMMAND
       component: ${here/id}

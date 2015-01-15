@@ -175,6 +175,9 @@ class OpenvSwitch(CommandPlugin):
                 lspd = '100 Mb'
             else:
                 lspd = 'unknown'
+            imac = ''
+            if iface['mac_in_use']:
+                imac = iface['mac_in_use'].upper()
             amac = ''
             if 'attached-mac' in iface['external_ids']:
                 amac = iface['external_ids']['attached-mac'].upper()
@@ -187,7 +190,7 @@ class OpenvSwitch(CommandPlugin):
                 'title':       'Interface-' + iface['name'],
                 'interfaceId': iface['_uuid'],
                 'type_':       iface['type'],
-                'mac':         iface['mac_in_use'].upper(),
+                'mac':         imac,
                 'amac':        amac,
                 'ofport':      iface['ofport'],
                 'lstate':      iface['link_state'].upper(),
