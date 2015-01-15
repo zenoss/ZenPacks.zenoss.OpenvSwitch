@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (C) Zenoss, Inc. 2014, all rights reserved.
+# Copyright (C) Zenoss, Inc. 2015, all rights reserved.
 #
 # This content is made available according to terms specified in
 # License.zenoss under the directory where your Zenoss product is installed.
@@ -13,13 +13,6 @@ import urllib2
 import base64
 import json
 import subprocess
-
-import Globals
-from Products.ZenUtils.Utils import unused
-unused(Globals)
-
-from ZenPacks.zenoss.Impact.impactd import Trigger
-
 
 ZENPACK_NAME = 'ZenPacks.zenoss.OpenvSwitch'
 
@@ -56,50 +49,15 @@ def add_to_service (node, field):
 def add_to_dynamic_service (svc, impactor):
     RunBashCommand(["/bin/bash", "-c", '. impact_utils.sh; zenoss_add_to_dynamic_service \"' + svc + '\" \"' + impactor + '\"'])
 
+# delete node
+def delete_node (nodeuid):
+    return RunBashCommand(["/bin/bash", "-c", '. impact_utils.sh; zenoss_delete_node ' + nodeuid])
+
 # Add standard global policy to a service
-# Constants to avoid typos.
-AVAILABILITY = 'AVAILABILITY'
-PERCENT = 'policyPercentageTrigger'
-THRESHOLD = 'policyThresholdTrigger'
-DOWN = 'DOWN'
-DEGRADED = 'DEGRADED'
-ATRISK = 'ATRISK'
-def add_standard_global_polices(node_guid, node_uid, meta_list):
+def add_global_polices(node_uid, meta_list):
+    return RunBashCommand(["/bin/bash", "-c", '. impact_utils.sh; add_standard_global_polices ' + node_uid + ' ' + meta_list])
 
-    triggers = [
-        ('DOWN when 100% leafs DOWN', PERCENT, AVAILABILITY, {
-            'dependentState': DOWN,
-            'threshold': '100',
-            'state': DOWN,
-            'metaTypes': ["OpenvSwitch"],
-            }),
-
-        ('DEGRADED when 50% leafs DOWN', PERCENT, AVAILABILITY, {
-            'dependentState': DOWN,
-            'threshold': '50',
-            'state': DEGRADED,
-            'metaTypes': ["OpenvSwitch"],
-            }),
-
-        ('ATRISK when >=2 leafs DOWN', THRESHOLD, AVAILABILITY, {
-            'dependentState': DOWN,
-            'threshold': '2',
-            'state': ATRISK,
-            'metaTypes': ["OpenvSwitch"],
-            }),
-        ]
-
-    for trigger_args in triggers:
-        yield Trigger(node_guid, *trigger_args)
-
-    # RunBashCommand(["/bin/bash",
-    #                 "-c",
-    #                 '. impact_utils.sh; zenoss_add_policy \"global\" ' + \
-    #                 '\"' + node_uid + '\"' + \
-    #                 " AVAILABILITY 50 policyPercentageTrigger ATRISK DOWN " + \
-    #                 meta_list])
-
-def get_data_from_components(credential, component_url, clue):
+def get_data_from_components(credential, component_url, componentname = None):
     request = urllib2.Request(component_url)
     request.add_header("Authorization", "Basic %s" % credential)
     request.add_header("Content-Type", "application/json")
@@ -107,26 +65,26 @@ def get_data_from_components(credential, component_url, clue):
     data = result.readlines()
 
     ret_list = []
-    if len(clue) == 0:
+    if not componentname:
         # ad hoc at its best (or worst)
-        # what we need is the line (the text of a element)
-        # next to the line with '<a href='
-        # this list connects id to name
+        # what we need is the text of the anchor tag
+        # this text connects component id to component name
+        # which is between the line with '<a href=' and the line with '/a>'
         next = False
-        for x in data:
-            if x.find('<a href=') > -1:
+        for line in data:
+            if line.find('<a href=') > -1:
                 next = True
                 continue
             if next:
-                ret_list.append(x.strip())
+                ret_list.append(line.strip())
                 next = False
     else:
-        # this list is just ids
-        x1=data[0].strip('[]')
-        x2=x1.split(', ')
-        for x in x2:
-            if x.find(clue) > -1:
-                ret_list.append(x[x.index('/'):x.index('>')])
+        # ret_list is just component ids
+        data=data[0].strip('[]')
+        lines=data.split(', ')
+        for line in lines:
+            if line.find(componentname) > -1:
+                ret_list.append(line[line.index('/'):line.index('>')])
 
     return ret_list
 
@@ -137,16 +95,16 @@ def find_item_name(items, id):
             name = item[item.index('(') + 1:item.index(')')]
     return name
 
-def get_node_data(url, username, password, ip):
+def get_node_data(url, username, password, deviceip):
     # Define device variables
     credential_base64string = base64.encodestring('%s:%s' % (username, password)).replace('\n', '')
     device_root=url + "/zport/dmd/Devices/Network/OpenvSwitch/devices/"
-    ovs_device = device_root + ip
+    ovs_device = device_root + deviceip
     component_root = ovs_device + "/components"
     bridges = get_data_from_components(credential_base64string, component_root, 'Bridge')
 
     allitems_root = component_root + '/manage_main'
-    allitems = get_data_from_components(credential_base64string, allitems_root, '')
+    allitems = get_data_from_components(credential_base64string, allitems_root)
 
     nodes = {}
     for bridge in bridges:
@@ -169,7 +127,10 @@ def get_node_data(url, username, password, ip):
 
             items[port_name]['interfaces'] = []
             for iface in ifaces:
-                items[port_name]['interfaces'].append(iface)
+                item = {}
+                iface_id = iface[iface.rindex('/') + 1:]
+                item['id'] = iface_id
+                items[port_name]['interfaces'].append(item)
 
             nodes[bridge_name]['ports'].append(items)
 
@@ -178,12 +139,15 @@ def get_node_data(url, username, password, ip):
 
         nodes[bridge_name]['flows'] = []
         for flow in flows:
-            nodes[bridge_name]['flows'].append(flow)
+            item = {}
+            flow_id = flow[flow.rindex('/') + 1:]
+            item['id'] = flow_id
+            nodes[bridge_name]['flows'].append(item)
 
     return nodes
 
 if __name__ == '__main__':
-    # commandline operations for populating SERVICES
+    # commandline operations for populating SERVICES for impact
     if len(sys.argv) != 4:
         print "Usage: python %s <Zenoss GUI username> <Zenoss GUI password> <OpenvSwitch device IP address>" % sys.argv[0]
         sys.exit(0)
@@ -199,41 +163,46 @@ if __name__ == '__main__':
     ZENOSS_PASSWORD=sys.argv[2]
     ZENOSS_DEVICE_IP=sys.argv[3]
 
+    # UID = '/zport/dmd/DynamicServices/' + <organizer name>
+    DASHBOARD_UID='/zport/dmd/DynamicServices/Dashboard'
+    OVSAPP_UID='/zport/dmd/DynamicServices/OVS_Application'
+
+    # for whatever reason, when an OVS device is created, the device name is its IP,
+    # not the device name used during device creation
     nodes = get_node_data(ZENOSS_URL, ZENOSS_USERNAME, ZENOSS_PASSWORD, ZENOSS_DEVICE_IP)
-    # print nodes
+
+    # delete existing organizers to start anew
+    delete_node(DASHBOARD_UID)
+    delete_node(OVSAPP_UID)
 
     # populate SERVICE for impact
-
     # Create service organizers
     ovs_org = add_service_organizer("/", "OVS_Application")
 
     # Create dashboard organizers
     dashboard_org = add_service_organizer("/", "Dashboard")
 
-    # Create external bridge service nodes for Openv Switch
-    # nodes.keys() contain bridge ids
-    # import pdb;pdb.set_trace()
+    ovs_svc = None
     for nkey in nodes.keys():
-        svc_node = add_to_service(ovs_org, nkey)
-        #add_standard_global_polices(svc_node, '\"DynamicService\"')
+        # nkey is the bridge name
+        for flow in nodes[nkey]['flows']:
+            # add flow to OVS_Application organizer
+            flow_node = add_to_service(ovs_org, flow['id'])
+            # add policy to flow node
+            add_global_polices(flow_node, 'DynamicService')
+            # add dynamic service nodes to flow node
+            add_to_dynamic_service(flow_node, nodes[nkey]['id'])
+
+            if ovs_svc is None:
+                ovs_svc = add_to_service(dashboard_org, "OVS_Service")
+            add_to_dynamic_service(ovs_svc, flow_node)
 
         for port in nodes[nkey]['ports']:
             for pkey in port.keys():
-                add_to_dynamic_service(svc_node, port[pkey]['id'])
                 for iface in port[pkey]['interfaces']:
-                    add_to_dynamic_service(svc_node, iface)
+                    iface_node = add_to_service(ovs_org, iface['id'])
+                    add_global_polices(iface_node, 'DynamicService')
+                    add_to_dynamic_service(iface_node, port[pkey]['id'])
 
-        # import pdb;pdb.set_trace()
-        for flow in nodes[nkey]['flows']:
-            add_to_dynamic_service(svc_node, flow)
+                    add_to_dynamic_service(ovs_svc, iface_node)
 
-    # Create Open vSwitch service node
-    open_vSwitch = add_to_service(ovs_org, "Open_vSwitch")
-    for nkey in nodes.keys():
-        add_to_dynamic_service(open_vSwitch, nodes[nkey]['id'])
-
-    ovs_svc = add_to_service(dashboard_org, "OVS_Service")
-    add_to_dynamic_service(ovs_svc, open_vSwitch)
-
-    # add_standard_global_polices "$bridge_integration" "DynamicService"
-    # add_standard_global_polices "$open_vSwitch" "DynamicService"

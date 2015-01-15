@@ -1,7 +1,7 @@
 #!/bin/bash
 ##############################################################################
 #
-# Copyright (C) Zenoss, Inc. 2013, all rights reserved.
+# Copyright (C) Zenoss, Inc. 2015, all rights reserved.
 #
 # This content is made available according to terms specified in
 # License.zenoss under the directory where your Zenoss product is installed.
@@ -298,4 +298,12 @@ zenoss_delete_logical_node() {
         "{\"uid\":\"$node_uid\"}"
 
     zenoss_check_status zenoss_delete_node "$@"
+}
+
+# Add standard global policy to a service
+add_standard_global_polices() {
+    local node_uid="$1"
+	local meta_list="$2"
+    zenoss_add_policy "global" "$node_uid" AVAILABILITY 50 policyPercentageTrigger ATRISK DOWN \"$meta_list\"
+    zenoss_add_policy "global" "$node_uid" AVAILABILITY 100 policyPercentageTrigger DOWN DOWN \"$meta_list\"
 }

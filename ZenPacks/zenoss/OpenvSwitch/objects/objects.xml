@@ -2,6 +2,9 @@
 <objects>
 <!-- ('', 'zport', 'dmd', 'Devices', 'Network', 'OpenvSwitch') -->
 <object id='/zport/dmd/Devices/Network/OpenvSwitch' module='Products.ZenModel.DeviceClass' class='DeviceClass'>
+<property visible="True" type="lines" id="zCollectorPlugins" >
+['zenoss.ssh.OpenvSwitch']
+</property>
 <property visible="True" type="string" id="zPythonClass" >
 ZenPacks.zenoss.OpenvSwitch.OpenvSwitchDevice
 </property>
@@ -53,6 +56,10 @@ GAUGE
 <property type="boolean" id="isrow" mode="w" >
 True
 </property>
+<tomanycont id='aliases'>
+<object id='byte_count' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
+</tomanycont>
 </object>
 <object id='flow_count' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
@@ -61,6 +68,10 @@ GAUGE
 <property type="boolean" id="isrow" mode="w" >
 True
 </property>
+<tomanycont id='aliases'>
+<object id='flow_count' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
+</tomanycont>
 </object>
 <object id='packet_count' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
@@ -69,6 +80,10 @@ GAUGE
 <property type="boolean" id="isrow" mode="w" >
 True
 </property>
+<tomanycont id='aliases'>
+<object id='packet_count' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
+</tomanycont>
 </object>
 </tomanycont>
 </object>
@@ -241,6 +256,10 @@ GAUGE
 <property type="boolean" id="isrow" mode="w" >
 True
 </property>
+<tomanycont id='aliases'>
+<object id='collisions' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
+</tomanycont>
 </object>
 <object id='rx_dropped' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
@@ -249,6 +268,10 @@ GAUGE
 <property type="boolean" id="isrow" mode="w" >
 True
 </property>
+<tomanycont id='aliases'>
+<object id='incoming_packets_dropped' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
+</tomanycont>
 </object>
 <object id='tx_dropped' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
@@ -257,6 +280,10 @@ GAUGE
 <property type="boolean" id="isrow" mode="w" >
 True
 </property>
+<tomanycont id='aliases'>
+<object id='outgoing_packets_dropped' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
+</tomanycont>
 </object>
 </tomanycont>
 </object>
@@ -296,6 +323,10 @@ GAUGE
 <property type="boolean" id="isrow" mode="w" >
 True
 </property>
+<tomanycont id='aliases'>
+<object id='incoming_packets_CRC_error' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
+</tomanycont>
 </object>
 <object id='rx_errors' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
@@ -304,6 +335,10 @@ GAUGE
 <property type="boolean" id="isrow" mode="w" >
 True
 </property>
+<tomanycont id='aliases'>
+<object id='incoming_packets_error' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
+</tomanycont>
 </object>
 <object id='rx_frame_err' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
@@ -312,6 +347,10 @@ GAUGE
 <property type="boolean" id="isrow" mode="w" >
 True
 </property>
+<tomanycont id='aliases'>
+<object id='incoming_frame_error' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
+</tomanycont>
 </object>
 <object id='rx_over_err' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
@@ -320,6 +359,10 @@ GAUGE
 <property type="boolean" id="isrow" mode="w" >
 True
 </property>
+<tomanycont id='aliases'>
+<object id='incoming_buffer_overrun_error' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
+</tomanycont>
 </object>
 <object id='tx_errors' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
@@ -328,6 +371,10 @@ GAUGE
 <property type="boolean" id="isrow" mode="w" >
 True
 </property>
+<tomanycont id='aliases'>
+<object id='outgoing_packets_error' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
+</tomanycont>
 </object>
 </tomanycont>
 </object>
@@ -367,6 +414,10 @@ GAUGE
 <property type="boolean" id="isrow" mode="w" >
 True
 </property>
+<tomanycont id='aliases'>
+<object id='incoming_bytes' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
+</tomanycont>
 </object>
 </tomanycont>
 </object>
@@ -406,6 +457,10 @@ GAUGE
 <property type="boolean" id="isrow" mode="w" >
 True
 </property>
+<tomanycont id='aliases'>
+<object id='incoming_packets' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
+</tomanycont>
 </object>
 </tomanycont>
 </object>
@@ -445,6 +500,10 @@ GAUGE
 <property type="boolean" id="isrow" mode="w" >
 True
 </property>
+<tomanycont id='aliases'>
+<object id='outgoing_bytes' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
+</tomanycont>
 </object>
 </tomanycont>
 </object>
@@ -484,6 +543,10 @@ GAUGE
 <property type="boolean" id="isrow" mode="w" >
 True
 </property>
+<tomanycont id='aliases'>
+<object id='outgoing_packets' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
+</tomanycont>
 </object>
 </tomanycont>
 </object>
