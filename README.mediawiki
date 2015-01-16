@@ -131,7 +131,7 @@ Assuming that you've created a user named '''zenmonitor''' on your Open vSwitch 
 ## Add the following line to the bottom of the file.
 ##: zenmonitor ALL=(ALL) NOPASSWD: /usr/sbin/ovs-vsctl, /usr/sbin/ovs-ofctl, /bin/chmod
 ## Type ''ESC'' then '':wq'' to save the sudo configuration.
-# Alias rabbitmqctl for the '''zenmonitor''' user.
+# Alias ovs-vsctl, ovs-ofctl for the '''zenmonitor''' user.
 ## Add the following lines to ''/home/zenmonitor/.bashrc''.
 ##: shopt -s expand_aliases
 ##: alias ovs-vsctl="sudo /usr/sbin/ovs-vsctl"
