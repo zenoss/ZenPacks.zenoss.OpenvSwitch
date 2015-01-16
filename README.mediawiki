@@ -119,8 +119,6 @@ You should then add the zenoss.ssh.OpenvSwitch modeler plugin to the device, or 
 === Using a Non-Root User ===
 This ZenPack requires the ability to run the ''ovs-vsctl'' command and ''ovs-ofctl'' command remotely on your Open vSwitch server(s) using SSH. By default, these commands are only allowed to be run by the '''root''' user. Furthermore, this ZenPack expects these commands be in the user's path. Normally this is only true for the root user.
 
-In a nutshell, this means that any user with permission to run ''ovs-vsctl'' command and ''ovs-ofctl'' command can wreak total havoc on your Open vSwitch server if they had the intent to do so.
-
 Assuming that you've created a user named '''zenmonitor''' on your Open vSwitch servers for monitoring purposes, you can follow these steps to allow the '''zenmonitor''' user to run ''ovs-vsctl'' command and ''ovs-ofctl'' command.
 
 # Install the '''sudo''' package on your server.
@@ -128,10 +126,10 @@ Assuming that you've created a user named '''zenmonitor''' on your Open vSwitch 
 ## Run ''visudo'' as root.
 ## Find a line containing ''Defaults requiretty'' and comment it out by prefixing the line with a ''#''.
 ## Type ''ESC'' then '':wq'' to save the sudo configuration.
-# Allow the *zenmonitor* user to run ovs-vsctl and ovs-ofctl.
+# Allow the *zenmonitor* user to run ovs-vsctl, ovs-ofctl and /bin/chmod.
 ## Run ''visudo'' as root.
 ## Add the following line to the bottom of the file.
-##: zenmonitor ALL=(ALL) NOPASSWD: /usr/sbin/ovs-vsctl /usr/sbin/ovs-ofctl
+##: zenmonitor ALL=(ALL) NOPASSWD: /usr/sbin/ovs-vsctl, /usr/sbin/ovs-ofctl, /bin/chmod
 ## Type ''ESC'' then '':wq'' to save the sudo configuration.
 # Alias rabbitmqctl for the '''zenmonitor''' user.
 ## Add the following lines to ''/home/zenmonitor/.bashrc''.
