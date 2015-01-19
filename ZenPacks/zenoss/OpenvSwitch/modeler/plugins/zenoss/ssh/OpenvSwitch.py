@@ -23,17 +23,15 @@ add_local_lib_path()
 class OpenvSwitch(CommandPlugin):
     command = (
         '('
-        'sudo chmod 0766 /var/run/openvswitch/db.sock 2>&1 ; sudo chmod 0766 /var/run/openvswitch/*.mgmt 2>&1 ; '
+        '/usr/bin/sudo ovs-vsctl --columns=_uuid,statistics,external_ids,db_version,ovs_version,bridges list Open_vSwitch ; '
         'echo "__COMMAND__" ; '
-        'ovs-vsctl --columns=_uuid,statistics,external_ids,db_version,ovs_version,bridges list Open_vSwitch ; '
+        '/usr/bin/sudo ovs-vsctl --columns=_uuid,name,external_ids,ports,datapath_id,datapath_type,flood_vlans,flow_tables,status list bridge ; '
         'echo "__COMMAND__" ; '
-        'ovs-vsctl --columns=_uuid,name,external_ids,ports,datapath_id,datapath_type,flood_vlans,flow_tables,status list bridge ; '
+        '/usr/bin/sudo ovs-vsctl --columns=_uuid,name,mac,lacp,external_ids,interfaces,tag,trunks,vlan_mode,status,statistics list port ; '
         'echo "__COMMAND__" ; '
-        'ovs-vsctl --columns=_uuid,name,mac,lacp,external_ids,interfaces,tag,trunks,vlan_mode,status,statistics list port ; '
+        'for x in $(/usr/bin/sudo ovs-vsctl --columns=name list bridge); do if [ $x != \'name\' ] && [ $x != \':\' ] ; then  echo $x; /usr/bin/sudo ovs-ofctl dump-flows $x; fi; done ; '
         'echo "__COMMAND__" ; '
-        'for x in $(ovs-vsctl --columns=name list bridge); do if [ $x != \'name\' ] && [ $x != \':\' ] ; then  echo $x; ovs-ofctl dump-flows $x; fi; done ; '
-        'echo "__COMMAND__" ; '
-        'ovs-vsctl list interface ; '
+        '/usr/bin/sudo ovs-vsctl list interface ; '
         ')'
     )
 
@@ -59,7 +57,7 @@ class OpenvSwitch(CommandPlugin):
                 return None
 
         # OVSs
-        ovss = str_to_dict(command_strings[1])
+        ovss = str_to_dict(command_strings[0])
         ovses = []
         for ovs in ovss:
             if 'name' in ovs:
@@ -84,7 +82,7 @@ class OpenvSwitch(CommandPlugin):
             return None
 
         # bridges
-        brdgs = str_to_dict(command_strings[2])
+        brdgs = str_to_dict(command_strings[1])
         bridges = []
         for brdg in brdgs:
             ovsid = [ovs['_uuid'] for ovs in ovss \
@@ -105,7 +103,7 @@ class OpenvSwitch(CommandPlugin):
             LOG.info('No bridge found on %s for user %s', device.id, device.zCommandUsername)
 
         # ports
-        prts = str_to_dict(command_strings[3])
+        prts = str_to_dict(command_strings[2])
         ports = []
         for port in prts:
             brdgId = [brdg['_uuid'] for brdg in brdgs \
@@ -127,7 +125,7 @@ class OpenvSwitch(CommandPlugin):
             LOG.info('No port found on %s for user %s', device.id, device.zCommandUsername)
 
         # flows
-        flws = bridge_flow_data_to_dict(command_strings[4].split('\n')[1:-1])
+        flws = bridge_flow_data_to_dict(command_strings[3].split('\n')[1:-1])
         flows = []
         for key in flws.keys():
             brdgId = [brdg['_uuid'] for brdg in brdgs \
@@ -173,7 +171,7 @@ class OpenvSwitch(CommandPlugin):
             LOG.info('No flow found on %s for user %s', device.id, device.zCommandUsername)
 
         # interfaces
-        ifaces = str_to_dict(command_strings[5])
+        ifaces = str_to_dict(command_strings[4])
         interfaces = []
         for iface in ifaces:
             if iface['link_speed'] == 10000000000:

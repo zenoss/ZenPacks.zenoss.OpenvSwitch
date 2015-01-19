@@ -122,22 +122,17 @@ This ZenPack requires the ability to run the ''ovs-vsctl'' command and ''ovs-ofc
 Assuming that you've created a user named '''zenmonitor''' on your Open vSwitch servers for monitoring purposes, you can follow these steps to allow the '''zenmonitor''' user to run ''ovs-vsctl'' command and ''ovs-ofctl'' command.
 
 # Install the '''sudo''' package on your server.
-# Allow the *zenmonitor* user to run ovs-vsctl, ovs-ofctl and /bin/chmod.
+# Allow the *zenmonitor* user to run ovs-vsctl, ovs-ofctl.
 ## Run ''visudo'' as root.
 ## Add the following line to the bottom of the file.
-##: zenmonitor ALL=(ALL) NOPASSWD: /usr/sbin/ovs-vsctl, /usr/sbin/ovs-ofctl, /bin/chmod
+##: zenmonitor ALL=(ALL) NOPASSWD: /usr/sbin/ovs-vsctl, /usr/sbin/ovs-ofctl
 ## Type ''ESC'' then '':wq'' to save the sudo configuration.
 # Allow *zenmonitor* to execute commands via ssh without a TTY.
 ## Run ''visudo'' as root.
-## Find the line containing ''zenmonitor ALL=(ALL) NOPASSWD: /usr/sbin/ovs-vsctl, /usr/sbin/ovs-ofctl, /bin/chmod''.
+## Find the line containing ''zenmonitor ALL=(ALL) NOPASSWD: /usr/sbin/ovs-vsctl, /usr/sbin/ovs-ofctl''.
 ## Add this line underneath it:
 ##: Defaults:zenmonitor        !requiretty
 ## Type ''ESC'' then '':wq'' to save the sudo configuration.
-# Alias ovs-vsctl, ovs-ofctl for the '''zenmonitor''' user.
-## Add the following lines to ''/home/zenmonitor/.bashrc''.
-##: shopt -s expand_aliases
-##: alias ovs-vsctl="sudo /usr/sbin/ovs-vsctl"
-##: alias ovs-ofctl="sudo /usr/sbin/ovs-ofctl"
 
 
 == Zenoss Analytics ==
