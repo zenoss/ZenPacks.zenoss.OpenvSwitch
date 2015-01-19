@@ -23,15 +23,15 @@ add_local_lib_path()
 class OpenvSwitch(CommandPlugin):
     command = (
         '('
-        'ovs-vsctl --columns=_uuid,statistics,external_ids,db_version,ovs_version,bridges list Open_vSwitch ; '
+        '/usr/bin/sudo ovs-vsctl --columns=_uuid,statistics,external_ids,db_version,ovs_version,bridges list Open_vSwitch ; '
         'echo "__COMMAND__" ; '
-        'ovs-vsctl --columns=_uuid,name,external_ids,ports,datapath_id,datapath_type,flood_vlans,flow_tables,status list bridge ; '
+        '/usr/bin/sudo ovs-vsctl --columns=_uuid,name,external_ids,ports,datapath_id,datapath_type,flood_vlans,flow_tables,status list bridge ; '
         'echo "__COMMAND__" ; '
-        'ovs-vsctl --columns=_uuid,name,mac,lacp,external_ids,interfaces,tag,trunks,vlan_mode,status,statistics list port ; '
+        '/usr/bin/sudo ovs-vsctl --columns=_uuid,name,mac,lacp,external_ids,interfaces,tag,trunks,vlan_mode,status,statistics list port ; '
         'echo "__COMMAND__" ; '
-        'for x in $(ovs-vsctl --columns=name list bridge); do if [ $x != \'name\' ] && [ $x != \':\' ] ; then  echo $x; ovs-ofctl dump-flows $x; fi; done ; '
+        'for x in $(/usr/bin/sudo ovs-vsctl --columns=name list bridge); do if [ $x != \'name\' ] && [ $x != \':\' ] ; then  echo $x; /usr/bin/sudo ovs-ofctl dump-flows $x; fi; done ; '
         'echo "__COMMAND__" ; '
-        'ovs-vsctl list interface ; '
+        '/usr/bin/sudo ovs-vsctl list interface ; '
         ')'
     )
 
@@ -48,6 +48,13 @@ class OpenvSwitch(CommandPlugin):
             return None
 
         command_strings = results.split('__COMMAND__')
+
+        # sanity check first
+        # no need for the 1st command_string
+        for i in range(1, len(command_strings)):
+            if len(command_strings[i]) < 2:
+                LOG.error('No meaningful data found: \n%s', results)
+                return None
 
         # OVSs
         ovss = str_to_dict(command_strings[0])
@@ -69,9 +76,9 @@ class OpenvSwitch(CommandPlugin):
 
 
         if len(ovses) > 0:
-            LOG.info('Found %d ovses on %s', len(ovses), device.id)
+            LOG.info('Found %d ovses on %s for user %s', len(ovses), device.id, device.zCommandUsername)
         else:
-            LOG.info('No ovs found on %s', device.id)
+            LOG.info('No ovs found on %s for user %s', device.id, device.zCommandUsername)
             return None
 
         # bridges
@@ -91,9 +98,9 @@ class OpenvSwitch(CommandPlugin):
 
 
         if len(bridges) > 0:
-            LOG.info('Found %d bridges on %s', len(bridges), device.id)
+            LOG.info('Found %d bridges on %s for user %s', len(bridges), device.id, device.zCommandUsername)
         else:
-            LOG.info('No bridge found on %s', device.id)
+            LOG.info('No bridge found on %s for user %s', device.id, device.zCommandUsername)
 
         # ports
         prts = str_to_dict(command_strings[2])
@@ -113,9 +120,9 @@ class OpenvSwitch(CommandPlugin):
 
 
         if len(ports) > 0:
-            LOG.info('Found %d ports on %s', len(ports), device.id)
+            LOG.info('Found %d ports on %s for user %s', len(ports), device.id, device.zCommandUsername)
         else:
-            LOG.info('No port found on %s', device.id)
+            LOG.info('No port found on %s for user %s', device.id, device.zCommandUsername)
 
         # flows
         flws = bridge_flow_data_to_dict(command_strings[3].split('\n')[1:-1])
@@ -159,9 +166,9 @@ class OpenvSwitch(CommandPlugin):
 
 
         if len(flows) > 0:
-            LOG.info('Found %d flows on %s', len(flows), device.id)
+            LOG.info('Found %d flows on %s for user %s', len(flows), device.id, device.zCommandUsername)
         else:
-            LOG.info('No flow found on %s', device.id)
+            LOG.info('No flow found on %s for user %s', device.id, device.zCommandUsername)
 
         # interfaces
         ifaces = str_to_dict(command_strings[4])
@@ -203,9 +210,9 @@ class OpenvSwitch(CommandPlugin):
 
 
         if len(interfaces) > 0:
-            LOG.info('Found %d interfaces on %s', len(interfaces), device.id)
+            LOG.info('Found %d interfaces on %s for user %s', len(interfaces), device.id, device.zCommandUsername)
         else:
-            LOG.info('No interface found on %s', device.id)
+            LOG.info('No interface found on %s for user %s', device.id, device.zCommandUsername)
 
         objmaps = {
             'ovses': ovses,

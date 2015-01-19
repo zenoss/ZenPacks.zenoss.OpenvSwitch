@@ -4,7 +4,7 @@
 
   datasources:
     interfaceIncomingBytes:
-      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
 
       datapoints:
@@ -19,7 +19,7 @@
       usessh: true
 
     interfaceOutgoingBytes:
-      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
 
       datapoints:
@@ -34,7 +34,7 @@
       usessh: true
 
     interfaceIncomingPackets:
-      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
 
       datapoints:
@@ -49,7 +49,7 @@
       usessh: true
 
     interfaceOutgoingPackets:
-      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
 
       datapoints:
@@ -64,7 +64,7 @@
       usessh: true
 
     collisions_dropped:
-      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
 
       datapoints:
@@ -89,7 +89,7 @@
       usessh: true
 
     errors:
-      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
 
       datapoints:
@@ -194,7 +194,7 @@
 
   datasources:
     bridgeFlowCount:
-      commandTemplate: /usr/bin/ovs-vsctl --columns=name,_uuid list bridge; for txt in $$(/usr/bin/ovs-vsctl --columns=name list bridge); do if [ $$txt != 'name' ] && [ $$txt != ':' ] ; then echo $$txt; /usr/bin/ovs-ofctl dump-aggregate $$txt; fi; done;
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=name,_uuid list bridge; for txt in $$(/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name list bridge); do if [ $$txt != 'name' ] && [ $$txt != ':' ] ; then echo $$txt; /usr/bin/sudo /usr/bin/ovs-ofctl dump-aggregate $$txt; fi; done;
       cycletime: 300
 
       datapoints:
