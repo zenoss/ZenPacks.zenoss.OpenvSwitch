@@ -228,42 +228,42 @@ def create_fuid(bridgename, flowdict):
     funame = bridgename
 
     if 'priority' in flowdict:
-        funame += flowdict['priority']
+        funame += str(flowdict['priority'])
     if 'table' in flowdict:
         funame += str(flowdict['table'])
     if 'proto' in flowdict:
-        funame += flowdict['proto']
+        funame += str(flowdict['proto'])
     if 'in_port' in flowdict:
-        funame += flowdict['in_port']
+        funame += str(flowdict['in_port'])
     if 'nw_proto' in flowdict:
-        funame += flowdict['nw_proto']
+        funame += str(flowdict['nw_proto'])
     if 'nw_src' in flowdict:
-        funame += flowdict['nw_src']
+        funame += str(flowdict['nw_src'])
     if 'nw_dst' in flowdict:
-        funame += flowdict['nw_dst']
+        funame += str(flowdict['nw_dst'])
     if 'ipv6_src' in flowdict:
-        funame += flowdict['ipv6_src']
+        funame += str(flowdict['ipv6_src'])
     if 'ipv6_dst' in flowdict:
-        funame += flowdict['ipv6_dst']
+        funame += str(flowdict['ipv6_dst'])
     if 'dl_vlan' in flowdict:
-        funame += flowdict['dl_vlan']                # data link layer VLAN
+        funame += str(flowdict['dl_vlan'])               # data link layer VLAN
     if 'dl_vlan_pcp' in flowdict:
-        funame += flowdict['dl_vlan_pcp']            # data link layer VLAN Priority Code Point
+        funame += str(flowdict['dl_vlan_pcp'])           # data link layer VLAN Priority Code Point
     if 'dl_src' in flowdict:
-        funame += flowdict['dl_src']                 # data link layer source
+        funame += str(flowdict['dl_src'])                # data link layer source
     if 'dl_dst' in flowdict:
-        funame += flowdict['dl_dst']                 # data link layer destination
+        funame += str(flowdict['dl_dst'])                # data link layer destination
     if 'dl_type' in flowdict:
-        funame += flowdict['dl_type']                # data link layer type
+        funame += str(flowdict['dl_type'])               # data link layer type
     if 'metadata' in flowdict:
-        funame += flowdict['metadata']               # metadata
+        funame += str(flowdict['metadata'])              # metadata
     if 'vlan_tci' in flowdict:
-        funame += flowdict['vlan_tci']               # VLAN TCI
+        funame += str(flowdict['vlan_tci'])              # VLAN TCI
     if 'icmp_code' in flowdict:
-        funame += flowdict['icmp_code']
+        funame += str(flowdict['icmp_code'])
     if 'mpls_label' in flowdict:
-        funame += flowdict['mpls_label']
+        funame += str(flowdict['mpls_label'])
     if 'actions' in flowdict:
-        funame += flowdict['actions']
+        funame += str(flowdict['actions'])
 
     return str(uuid.uuid5(uuid.NAMESPACE_OID, funame))
