@@ -12,11 +12,11 @@ LOG = logging.getLogger('zen.OpenvSwitch')
 
 from Products.DataCollector.plugins.CollectorPlugin import CommandPlugin
 from Products.DataCollector.plugins.DataMaps import ObjectMap, RelationshipMap
-from Products.ZenUtils.guid.guid import generate
 
 from ZenPacks.zenoss.OpenvSwitch.utils import add_local_lib_path, \
                                               str_to_dict, \
-                                              bridge_flow_data_to_dict
+                                              bridge_flow_data_to_dict, \
+                                              create_fuid
 add_local_lib_path()
 
 
@@ -128,6 +128,7 @@ class OpenvSwitch(CommandPlugin):
         flws = bridge_flow_data_to_dict(command_strings[3].split('\n')[1:-1])
         flows = []
         for key in flws.keys():
+            # key is bridge name
             brdgId = [brdg['_uuid'] for brdg in brdgs \
                       if key == brdg['name']]
             for flow in flws[key]:
@@ -147,13 +148,13 @@ class OpenvSwitch(CommandPlugin):
                 if 'nw_dst' in flow:
                     nwdst = flow['nw_dst']
 
-                fid = generate()
+                fuid = create_fuid(key, flow)
                 flows.append(ObjectMap(
                     modname='ZenPacks.zenoss.OpenvSwitch.Flow',
                     data={
-                        'id':       'flow-{0}'.format(fid),
-                        'flowId':    fid,
-                        'title':    'flow-{0}'.format(fid),
+                        'id':       'flow-{0}'.format(fuid),
+                        'flowId':    fuid,
+                        'title':    'flow-{0}'.format(fuid),
                         'table':    flow['table'],
                         'priority': priority,
                         'protocol': protoname,
