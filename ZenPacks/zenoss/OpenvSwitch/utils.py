@@ -8,32 +8,10 @@
 ##############################################################################
 
 import os
-import re
-
-from Products.AdvancedQuery import And, Eq
-from ZODB.transact import transact
-
-from Products.Zuul.interfaces import ICatalogTool
-
-from Products.ZenUtils.guid.interfaces import IGlobalIdentifier
-from collections import deque
-import dateutil
-import datetime
-import functools
-import importlib
-import pytz
-import time
-
-from twisted.internet import reactor
-from twisted.internet.error import ConnectionRefusedError, TimeoutError
-from twisted.internet.task import deferLater
+import uuid
 
 import logging
 LOG = logging.getLogger('zen.OpenvSwitch.utils')
-
-
-def zenpack_path(path):
-    return os.path.join(os.path.dirname(__file__), path)
 
 
 def zenpack_path(path):
@@ -235,3 +213,57 @@ def bridge_stats_data_to_dict(bridge_stats):
             continue
 
     return flowstats_dct
+
+def create_fuid(bridgename, flowdict):
+    # flowdict in input parameter list is a dict
+    # by default, flow does not have a unique ID
+    # use info provided by flowdict to create a unique, static flow id
+    # but see this: http://lwn.net/Articles/629741/
+    # openvswitch: Introduce 128-bit unique flow identifiers.
+    # FUID coming soon, maybe?
+
+    if not bridgename:
+        return None
+
+    funame = bridgename
+
+    if 'priority' in flowdict:
+        funame += str(flowdict['priority'])
+    if 'table' in flowdict:
+        funame += str(flowdict['table'])
+    if 'proto' in flowdict:
+        funame += str(flowdict['proto'])
+    if 'in_port' in flowdict:
+        funame += str(flowdict['in_port'])
+    if 'nw_proto' in flowdict:
+        funame += str(flowdict['nw_proto'])
+    if 'nw_src' in flowdict:
+        funame += str(flowdict['nw_src'])
+    if 'nw_dst' in flowdict:
+        funame += str(flowdict['nw_dst'])
+    if 'ipv6_src' in flowdict:
+        funame += str(flowdict['ipv6_src'])
+    if 'ipv6_dst' in flowdict:
+        funame += str(flowdict['ipv6_dst'])
+    if 'dl_vlan' in flowdict:
+        funame += str(flowdict['dl_vlan'])               # data link layer VLAN
+    if 'dl_vlan_pcp' in flowdict:
+        funame += str(flowdict['dl_vlan_pcp'])           # data link layer VLAN Priority Code Point
+    if 'dl_src' in flowdict:
+        funame += str(flowdict['dl_src'])                # data link layer source
+    if 'dl_dst' in flowdict:
+        funame += str(flowdict['dl_dst'])                # data link layer destination
+    if 'dl_type' in flowdict:
+        funame += str(flowdict['dl_type'])               # data link layer type
+    if 'metadata' in flowdict:
+        funame += str(flowdict['metadata'])              # metadata
+    if 'vlan_tci' in flowdict:
+        funame += str(flowdict['vlan_tci'])              # VLAN TCI
+    if 'icmp_code' in flowdict:
+        funame += str(flowdict['icmp_code'])
+    if 'mpls_label' in flowdict:
+        funame += str(flowdict['mpls_label'])
+    if 'actions' in flowdict:
+        funame += str(flowdict['actions'])
+
+    return str(uuid.uuid5(uuid.NAMESPACE_OID, funame))
