@@ -37,11 +37,18 @@ class TestModeler(BaseTestCase):
         zcml.load_config('meta.zcml', zope.viewlet)
 
         import ZenPacks.zenoss.OpenvSwitch
-        zcml.load_config('configure.zcml.original', ZenPacks.zenoss.OpenvSwitch)
+        zcml.load_config('configure.zcml', ZenPacks.zenoss.OpenvSwitch)
 
     def testOvsVsctlNotFound(self):
         modeler = OpenvSwitchModeler()
         modeler_results = loadData('model_no_ovs-vsctl.txt')
+        data_maps = modeler.process(self.d, modeler_results, log)
+
+        self.assertEquals(data_maps, None)
+
+    def testOvsOfctlNotFound(self):
+        modeler = OpenvSwitchModeler()
+        modeler_results = loadData('model_no_ovs-ofctl.txt')
         data_maps = modeler.process(self.d, modeler_results, log)
 
         self.assertEquals(data_maps, None)
