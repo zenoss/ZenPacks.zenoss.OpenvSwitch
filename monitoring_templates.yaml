@@ -219,18 +219,32 @@
       usessh: true
 
   graphs:
-    Bridge Statistics:
+    Flow:
       units: count
       height: 100
       width: 500
 
       graphpoints:
-        flow_count:
-          dpName: bridgeFlowCount_flow_count
+        Flow:
+          dpName: flow_count
           format: '%7.0lf'
-        byte_count:
-          dpName: bridgeFlowCount_byte_count
+
+    Throughput:
+      units: bits/sec
+      height: 100
+      width: 500
+
+      graphpoints:
+        Total bridge throughput:
+          dpName: byte_count
           format: '%7.0lf'
-        packet_count:
-          dpName: bridgeFlowCount_packet_count
+
+    Packets:
+      units: packets/sec
+      height: 100
+      width: 500
+
+      graphpoints:
+        Total bridge packets:
+          dpName: packet_count
           format: '%7.0lf'
