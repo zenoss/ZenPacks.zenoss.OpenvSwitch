@@ -89,7 +89,7 @@ True
 </object>
 </tomanycont>
 <tomanycont id='graphDefs'>
-<object id='Bridge Statistics' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<object id='Flow' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
 <property type="int" id="height" mode="w" >
 100
 </property>
@@ -118,36 +118,7 @@ True
 0
 </property>
 <tomanycont id='graphPoints'>
-<object id='byte_count' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
-<property type="long" id="sequence" mode="w" >
-1
-</property>
-<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
-LINE
-</property>
-<property type="long" id="lineWidth" mode="w" >
-1
-</property>
-<property type="boolean" id="stacked" mode="w" >
-False
-</property>
-<property type="string" id="format" mode="w" >
-%7.0lf
-</property>
-<property type="string" id="legend" mode="w" >
-${graphPoint/id}
-</property>
-<property type="long" id="limit" mode="w" >
--1
-</property>
-<property type="string" id="dpName" mode="w" >
-bridgeFlowCount_byte_count
-</property>
-<property type="string" id="cFunc" mode="w" >
-AVERAGE
-</property>
-</object>
-<object id='flow_count' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='Flow' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 0
 </property>
@@ -170,15 +141,46 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-bridgeFlowCount_flow_count
+flow_count
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
 </property>
 </object>
-<object id='packet_count' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+</tomanycont>
+</object>
+<object id='Packets' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="string" id="units" mode="w" >
+packets/sec
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+-1
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
 <property type="long" id="sequence" mode="w" >
 2
+</property>
+<tomanycont id='graphPoints'>
+<object id='Total bridge packets' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
 </property>
 <property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
 LINE
@@ -199,7 +201,67 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-bridgeFlowCount_packet_count
+packet_count
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Throughput' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="string" id="units" mode="w" >
+bits/sec
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+-1
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<tomanycont id='graphPoints'>
+<object id='Total bridge throughput' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%7.0lf
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+byte_count
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
