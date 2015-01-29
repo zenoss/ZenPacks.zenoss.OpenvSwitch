@@ -39,6 +39,10 @@ vlan_mode           : []
 status              : {}
 statistics          : {}
 __COMMAND__
+br-ex
+NXST_FLOW reply (xid=0x4):
+ cookie=0x0, duration=159.903s, table=0, n_packets=14, n_bytes=972, idle_age=115, priority=0 actions=NORMAL
+__COMMAND__
 _uuid               : 83a75842-6033-4480-b8c5-d4268501bf8c
 admin_state         : up
 cfm_fault           : []
