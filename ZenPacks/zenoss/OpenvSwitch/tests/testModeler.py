@@ -65,7 +65,7 @@ class TestModeler(BaseTestCase):
         modeler_results = loadData('model_running_zenoss.txt')
         data_maps = modeler.process(self.d, modeler_results, log)
 
-        self.assertEquals(len(data_maps.maps), 6)
+        self.assertEquals(len(data_maps.maps), 7)
 
 
 def test_suite():
