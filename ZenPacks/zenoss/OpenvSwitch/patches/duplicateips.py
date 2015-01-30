@@ -12,7 +12,7 @@ import itertools
 from Products.ZenModel.Exceptions import DeviceExistsError
 from Products.ZenUtils.Utils import monkeypatch
 from Products.Zuul.facades.devicefacade import DeviceFacade
-
+from Products.ZenHub.PBDaemon import translateError
 
 ALLOW_DUPLICATES_IN = [
     '/Network/OpenvSwitch'
@@ -191,9 +191,9 @@ def findDevice(self, deviceName):
     """
 
     # Make sure this patch only applies to OpenvSwitch device
-    zpname = None
-    device = self.dmd.Devices.findDevice(deviceName)
+    device = self.dmd.Devices.findDeviceByIdExact(deviceName)
 
+    # for those ZPs that do not use ZPL
     if device is None or not hasattr(device, 'zenpack_name'):
         # original is injected by monkeypatch decorator.
         return original(self, deviceName)
@@ -209,3 +209,51 @@ def findDevice(self, deviceName):
             return brain.getObject()
 
     return None
+
+@monkeypatch('Products.Zuul.facades.devicefacade.DeviceFacade')
+def addDevice(self, deviceName, deviceClass, title=None, snmpCommunity="",
+              snmpPort=161, manageIp="", model=False, collector='localhost',
+              rackSlot=0, productionState=1000, comments="",
+              hwManufacturer="", hwProductName="", osManufacturer="",
+              osProductName="", priority = 3, tag="", serialNumber="",
+              locationPath="", systemPaths=[], groupPaths=[],
+              zProperties={}, cProperties={},
+              ):
+    import logging
+    from Products.ZenUtils.IpUtil import isip
+    log = logging.getLogger('zen.DeviceFacade')
+
+    zProps = dict(zSnmpCommunity=snmpCommunity,
+                  zSnmpPort=snmpPort)
+    zProps.update(zProperties)
+    model = model and "Auto" or "none"
+    perfConf = self._dmd.Monitors.getPerformanceMonitor(collector)
+
+    # Make sure this patch only applies to OpenvSwitch device
+    if title and isip(deviceName) and deviceClass == '/Network/OpenvSwitch':
+        manageIp = deviceName
+        deviceName = title
+
+    jobStatus = perfConf.addDeviceCreationJob(deviceName=deviceName,
+                                              devicePath=deviceClass,
+                                              performanceMonitor=collector,
+                                              discoverProto=model,
+                                              manageIp=manageIp,
+                                              zProperties=zProps,
+                                              cProperties=cProperties,
+                                              rackSlot=rackSlot,
+                                              productionState=productionState,
+                                              comments=comments,
+                                              hwManufacturer=hwManufacturer,
+                                              hwProductName=hwProductName,
+                                              osManufacturer=osManufacturer,
+                                              osProductName=osProductName,
+                                              priority=priority,
+                                              tag=tag,
+                                              serialNumber=serialNumber,
+                                              locationPath=locationPath,
+                                              systemPaths=systemPaths,
+                                              groupPaths=groupPaths,
+                                              title=title)
+    return jobStatus
+
