@@ -12,7 +12,6 @@ import itertools
 from Products.ZenModel.Exceptions import DeviceExistsError
 from Products.ZenUtils.Utils import monkeypatch
 from Products.Zuul.facades.devicefacade import DeviceFacade
-from Products.ZenHub.PBDaemon import translateError
 
 ALLOW_DUPLICATES_IN = [
     '/Network/OpenvSwitch'
@@ -178,38 +177,6 @@ def addDevice(self, *args, **kwargs):
     return r
 
 
-
-@monkeypatch('Products.ZenModel.PerformanceConf.PerformanceConf')
-def findDevice(self, deviceName):
-    """
-    Return the object given the name
-
-    @param deviceName: Name of a device
-    @type deviceName: string
-    @return: device corresponding to the name with 'Network' and 'OpenvSwitch' in its getPath()
-    @rtype: device object
-    """
-
-    # Make sure this patch only applies to OpenvSwitch device
-    device = self.dmd.Devices.findDeviceByIdExact(deviceName)
-
-    # for those ZPs that do not use ZPL
-    if device is None or not hasattr(device, 'zenpack_name'):
-        # original is injected by monkeypatch decorator.
-        return original(self, deviceName)
-
-    zpname = device.zenpack_name.split('.')[-1]
-    if zpname is None or zpname.find('OpenvSwitch') == -1:
-        return original(self, deviceName)
-
-    brains = self.dmd.Devices._findDevice(deviceName)
-    for brain in brains:
-        if  brain.getPath().find('Network') > -1 and \
-            brain.getPath().find('OpenvSwitch') > -1:
-            return brain.getObject()
-
-    return None
-
 @monkeypatch('Products.Zuul.facades.devicefacade.DeviceFacade')
 def addDevice(self, deviceName, deviceClass, title=None, snmpCommunity="",
               snmpPort=161, manageIp="", model=False, collector='localhost',
@@ -219,9 +186,7 @@ def addDevice(self, deviceName, deviceClass, title=None, snmpCommunity="",
               locationPath="", systemPaths=[], groupPaths=[],
               zProperties={}, cProperties={},
               ):
-    import logging
     from Products.ZenUtils.IpUtil import isip
-    log = logging.getLogger('zen.DeviceFacade')
 
     zProps = dict(zSnmpCommunity=snmpCommunity,
                   zSnmpPort=snmpPort)
@@ -256,4 +221,29 @@ def addDevice(self, deviceName, deviceClass, title=None, snmpCommunity="",
                                               groupPaths=groupPaths,
                                               title=title)
     return jobStatus
+
+@monkeypatch('Products.ZenHub.services.ModelerService.ModelerService')
+def remote_getDeviceConfig(self, names, checkStatus=False):
+    result = []
+    for name in names:
+        device = self.dmd.Devices.findDeviceByIdExact(name)
+        if not device:
+            continue
+        device = device.primaryAq()
+        skipModelMsg = ''
+
+        if device.isLockedFromUpdates():
+            skipModelMsg = "device %s is locked, skipping modeling" % device.id
+        if checkStatus and (device.getPingStatus() > 0
+                            or device.getSnmpStatus() > 0):
+            skipModelMsg = "device %s is down skipping modeling" % device.id
+        if (device.productionState <
+                device.getProperty('zProdStateThreshold', 0)):
+            skipModelMsg = "device %s is below zProdStateThreshold" % device.id
+        if skipModelMsg:
+            log.info(skipModelMsg)
+
+        result.append(self.createDeviceProxy(device, skipModelMsg))
+    return result
+
 
