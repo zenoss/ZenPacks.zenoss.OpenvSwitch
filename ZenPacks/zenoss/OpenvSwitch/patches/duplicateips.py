@@ -224,6 +224,9 @@ def addDevice(self, deviceName, deviceClass, title=None, snmpCommunity="",
 
 @monkeypatch('Products.ZenHub.services.ModelerService.ModelerService')
 def remote_getDeviceConfig(self, names, checkStatus=False):
+    import logging
+    log = logging.getLogger('zen.ModelerService')
+
     result = []
     for name in names:
         device = self.dmd.Devices.findDeviceByIdExact(name)
