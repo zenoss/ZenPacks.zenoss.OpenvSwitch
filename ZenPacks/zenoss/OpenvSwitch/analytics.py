@@ -83,7 +83,6 @@ class OpenvSwitchComponentReportable(BaseReportable):
     def entity_class_name(self):
         """Return entity class name for adapted object."""
         return 'openvswitch_{}'.format({
-            'OVS': 'ovs',
             'Bridge': 'bridge',
             'Port': 'port',
             'Flow': 'flow',

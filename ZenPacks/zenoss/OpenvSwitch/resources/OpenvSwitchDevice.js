@@ -7,13 +7,17 @@ Ext.onReady(function() {
         var box = Ext.getCmp(DEVICE_OVERVIEW_ID);
         box.removeField('uptime');
         box.removeField('memory');
+
+        box.addField({name: 'ovsVersion', fieldLabel: _t('Open vSwitch Version')});
+        box.addField({name: 'ovsDBVersion', fieldLabel: _t('Open vSwitch Database Version')});
+        box.addField({name: 'ovsTitle', fieldLabel: _t('Open vSwitch Database Name')});
     });
 
     var DEVICE_OVERVIEW_IDSUMMARY = 'deviceoverviewpanel_idsummary';
     Ext.ComponentMgr.onAvailable(DEVICE_OVERVIEW_IDSUMMARY, function(){
         var box = Ext.getCmp(DEVICE_OVERVIEW_IDSUMMARY);
         box.removeField('tagNumber');
-        box.removeField('serialNumber');
+        box.replaceField('serialNumber');
     });
 
     var DEVICE_OVERVIEW_DESCRIPTION = 'deviceoverviewpanel_descriptionsummary';
@@ -22,6 +26,13 @@ Ext.onReady(function() {
         box.removeField('rackSlot');
         box.removeField('hwManufacturer');
         box.removeField('hwModel');
+        box.removeField('osManufacturer');
+        box.removeField('osModel');
+
+        box.addField({name: 'numberBridges', fieldLabel: _t('Number of Bridges'), xtype: 'displayfield'});
+        box.addField({name: 'numberPorts', fieldLabel: _t('Number of Ports'), xtype: 'displayfield'});
+        box.addField({name: 'numberFlows', fieldLabel: _t('Number of Flows'), xtype: 'displayfield'});
+        box.addField({name: 'numberInterfaces', fieldLabel: _t('Number of Interfaces'), xtype: 'displayfield'});
     });
 
     var DEVICE_OVERVIEW_SNMP = 'deviceoverviewpanel_snmpsummary';

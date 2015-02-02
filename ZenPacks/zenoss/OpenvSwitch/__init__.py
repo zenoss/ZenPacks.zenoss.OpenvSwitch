@@ -29,11 +29,11 @@ CLASS_NAME = {}
 RELATIONSHIPS_YUML = """
 // containing
 [OpenvSwitchDevice]++components-ovsdevice1[OpenvSwitchComponent]
-[OVS]++-[Bridge]
+[OpenvSwitchDevice]++-[Bridge]
 [Bridge]++-[Port]
 [Bridge]++-[Flow]
+[Port]++-[Interface]
 // non-containing 1:M
-[Port]1-.-*[Interface]
 // non-containing 1:1
 """
 
@@ -46,7 +46,7 @@ CFG = zenpacklib.ZenPackSpec(
             'remove': False,
             'zProperties': {
                 'zCollectorPlugins': [
-                    'zenoss.ssh.OpenvSwitch'
+                    'zenoss.ssh.OpenvSwitch',
                 ]
             }
         }
@@ -58,27 +58,30 @@ CFG = zenpacklib.ZenPackSpec(
             'base': zenpacklib.Device,
             'meta_type': 'OpenvSwitchDevice',
             'filter_display': False,
+            'properties': {
+                'ovsTitle':          {'grid_display': False,
+                                      'label': 'OpenvSwitch Title'},
+                'ovsId':             {'grid_display': False,
+                                      'label': 'OpenvSwitch ID'},
+                'ovsDBVersion':      {'grid_display': False,
+                                      'label': 'OpenvSwitch DB Version'},
+                'ovsVersion':        {'grid_display': False,
+                                      'label': 'OpenvSwitch Version'},
+                'numberBridges':     {'grid_display': False,
+                                      'label': 'Number of Bridges'},
+                'numberPorts':       {'grid_display': False,
+                                      'label': 'Number of Bridges'},
+                'numberFlows':       {'grid_display': False,
+                                      'label': 'Number of Bridges'},
+                'numberInterfaces':  {'grid_display': False,
+                                      'label': 'Number of Bridges'},
+            },
         },
 
         # Component Base Types #######################################
         'OpenvSwitchComponent': {
             'base': zenpacklib.Component,
             'filter_display': False,
-        },
-
-        'OVS': {
-            'base': 'OpenvSwitchComponent',
-            'meta_type': 'OpenvSwitchOVS',
-            'label': 'Open vSwitch',
-            'plural_label': 'Open vSwitchs',
-            'order': 1,
-            'properties': {
-                'ovsId':       {'grid_display': False,
-                                'label': 'OpenvSwitch ID'},
-                'DB_version':  {'label': 'DB Version'},
-                'OVS_version': {'label': 'OVS Version'},
-            },
-            'impacts': ['bridges'],
         },
 
         'Bridge': {
@@ -94,7 +97,6 @@ CFG = zenpacklib.ZenPackSpec(
             'impacts': ['ports',
                         'flows',
                        ],
-            'impacted_by': ['ovs'],
         },
 
         'Port': {
@@ -108,7 +110,7 @@ CFG = zenpacklib.ZenPackSpec(
                                 'label': 'Port ID'},
                 'tag_':        {'label': 'VLAN Tag'},
             },
-            'impacts': ['interfaces'],
+            'impacts': ['interface'],
             'impacted_by': ['bridge'],
         },
 
