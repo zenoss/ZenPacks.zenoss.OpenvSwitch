@@ -110,11 +110,10 @@ class OpenvSwitch(CommandPlugin):
         # bridges
         bridges = []
         rel_maps = []
-        relnameFromClassname = 'bridges'
+        classname = 'bridges'
         for brdg in brdgs:
             bridge_id = 'bridge-{0}'.format(brdg['_uuid'])
             bridges.append(ObjectMap(
-                modname='ZenPacks.zenoss.OpenvSwitch.Bridge',
                 data={
                 'id':       bridge_id,
                 'title':    brdg['name'],
@@ -123,11 +122,11 @@ class OpenvSwitch(CommandPlugin):
 
             # ports
             ports = self.getPortRelMap(prts, ifaces,
-                                       relnameFromClassname + \
+                                       classname + \
                                        '/%s' % bridge_id, brdg['ports'])
             # flows
             flows = self.getFlowRelMap(flws,
-                                       relnameFromClassname + \
+                                       classname + \
                                        '/%s' % bridge_id, brdg['name'])
 
             # excluding empty RelationshipMaps
@@ -137,7 +136,7 @@ class OpenvSwitch(CommandPlugin):
                 rel_maps.append(flows)
 
         maps.append(RelationshipMap(
-            relname=relnameFromClassname,
+            relname=classname,
             modname='ZenPacks.zenoss.OpenvSwitch.Bridge',
             objmaps=bridges))
         maps.extend(rel_maps)
@@ -149,14 +148,13 @@ class OpenvSwitch(CommandPlugin):
         # ports
         rel_maps = []
         ports = []
-        relnameFromClassname = 'ports'
+        classname = 'ports'
         for port in prts:
             if port['_uuid'] not in bridgeports:
                 continue
 
             port_id = 'port-{0}'.format(port['_uuid'])
             ports.append(ObjectMap(
-                modname='ZenPacks.zenoss.OpenvSwitch.Port',
                 data={
                 'id':         port_id,
                 'title':      'Port-' + port['name'],
@@ -165,13 +163,13 @@ class OpenvSwitch(CommandPlugin):
                 }))
 
             interfaces = self.getInterfaceRelMap(ifaces,
-                     '%s/%s/%s' % (compname, relnameFromClassname, port_id), port['interfaces'])
+                     '%s/%s/%s' % (compname, classname, port_id), port['interfaces'])
 
             rel_maps.append(interfaces)
 
         return [RelationshipMap(
             compname=compname,
-            relname=relnameFromClassname,
+            relname=classname,
             modname='ZenPacks.zenoss.OpenvSwitch.Port',
             objmaps=ports)] + rel_maps
 
@@ -179,7 +177,7 @@ class OpenvSwitch(CommandPlugin):
     def getFlowRelMap(self, flws, compname, bridgename):
         # flows
         flows = []
-        relnameFromClassname = 'flows'
+        classname = 'flows'
         for key in flws.keys():
             # key is the bridge name
             if key != bridgename:
@@ -204,7 +202,6 @@ class OpenvSwitch(CommandPlugin):
 
                 fuid = create_fuid(key, flow)
                 flows.append(ObjectMap(
-                    modname='ZenPacks.zenoss.OpenvSwitch.Flow',
                     data={
                         'id':       'flow-{0}'.format(fuid),
                         'flowId':    fuid,
@@ -221,14 +218,14 @@ class OpenvSwitch(CommandPlugin):
 
         return RelationshipMap(
             compname=compname,
-            relname=relnameFromClassname,
+            relname=classname,
             modname='ZenPacks.zenoss.OpenvSwitch.Flow',
             objmaps=flows)
 
     def getInterfaceRelMap(self, ifaces, compname, pinterfaces):
         # interfaces
         interfaces = []
-        relnameFromClassname = 'interfaces'
+        classname = 'interfaces'
         for iface in ifaces:
             if iface['_uuid'] not in pinterfaces:
                 continue
@@ -248,7 +245,6 @@ class OpenvSwitch(CommandPlugin):
             if 'attached-mac' in iface['external_ids']:
                 amac = iface['external_ids']['attached-mac'].upper()
             interfaces.append(ObjectMap(
-                modname='ZenPacks.zenoss.OpenvSwitch.Interface',
                 data={
                 'id':          'interface-{0}'.format(iface['_uuid']),
                 'title':       'Interface-' + iface['name'],
@@ -267,6 +263,6 @@ class OpenvSwitch(CommandPlugin):
 
         return RelationshipMap(
             compname=compname,
-            relname=relnameFromClassname,
+            relname=classname,
             modname='ZenPacks.zenoss.OpenvSwitch.Interface',
             objmaps=interfaces)
