@@ -44,20 +44,20 @@
 
         <adapter
             provides="Products.Zuul.interfaces.IReportableFactory"
-            for=".OpenvSwitchDevice.OpenvSwitchDevice"
-            factory=".analytics.OpenvSwitchDeviceReportableFactory"
+            for=".OpenvSwitch.OpenvSwitch"
+            factory=".analytics.OpenvSwitchReportableFactory"
             />
 
         <adapter
             provides="Products.Zuul.interfaces.IReportable"
-            for=".OpenvSwitchDevice.OpenvSwitchDevice"
-            factory=".analytics.OpenvSwitchDeviceReportable"
+            for=".OpenvSwitch.OpenvSwitch"
+            factory=".analytics.OpenvSwitchReportable"
             />
 
         <adapter
             provides="Products.Zuul.interfaces.IReportable"
-            for=".OpenvSwitchComponent.OpenvSwitchComponent"
-            factory=".analytics.OpenvSwitchComponentReportable"
+            for=".ManagedObject.ManagedObject"
+            factory=".analytics.ManagedObjectReportable"
             />
 
     </configure>
