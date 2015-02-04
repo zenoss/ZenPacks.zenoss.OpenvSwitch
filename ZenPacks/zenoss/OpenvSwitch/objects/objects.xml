@@ -6,7 +6,7 @@
 ['zenoss.ssh.OpenvSwitch']
 </property>
 <property visible="True" type="string" id="zPythonClass" >
-ZenPacks.zenoss.OpenvSwitch.OpenvSwitchDevice
+ZenPacks.zenoss.OpenvSwitch.OpenvSwitch
 </property>
 <tomanycont id='rrdTemplates'>
 <object id='Bridge' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>

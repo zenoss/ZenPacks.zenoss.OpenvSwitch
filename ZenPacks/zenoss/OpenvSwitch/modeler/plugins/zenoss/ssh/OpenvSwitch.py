@@ -56,8 +56,7 @@ class OpenvSwitch(CommandPlugin):
                 LOG.error('No meaningful data found: \n%s', results)
                 return None
 
-        # OVS as device
-        # there should be only one OVS DB entry
+        # OVS as device. there should be only one OVS DB entry per ovs host
         ovsdata = str_to_dict(command_strings[0])[0]
         brdgs = str_to_dict(command_strings[1])
         prts = str_to_dict(command_strings[2])
@@ -69,11 +68,33 @@ class OpenvSwitch(CommandPlugin):
             LOG.info('No OVS DB found on %s for user %s', device.id, device.zCommandUsername)
             return None
 
+        if len(brdgs) > 0:
+            LOG.info('Found %d bridges on %s for user %s', len(brdgs), device.id, device.zCommandUsername)
+        else:
+            LOG.info('No bridge found on %s for user %s', device.id, device.zCommandUsername)
+
+        if len(prts) > 0:
+            LOG.info('Found %d ports on %s for user %s', len(prts), device.id, device.zCommandUsername)
+        else:
+            LOG.info('No port found on %s for user %s', device.id, device.zCommandUsername)
+
+        if len(flws) > 0:
+            LOG.info('Found %d flows on %s for user %s', len(flws), device.id, device.zCommandUsername)
+        else:
+            LOG.info('No flow found on %s for user %s', device.id, device.zCommandUsername)
+
+        if len(ifaces) > 0:
+            LOG.info('Found %d interfaces on %s for user %s', len(ifaces), device.id, device.zCommandUsername)
+        else:
+            LOG.info('No interface found on %s for user %s', device.id, device.zCommandUsername)
+
+        maps = []
+
         if 'name' in ovsdata:
             ovs_name = ovsdata['name']
         else:
             ovs_name = 'Open_vSwitch'
-        objMap = self.objectMap({
+        ovsObjMap = self.objectMap({
             'ovsTitle':          ovs_name,
             'ovsId':             ovsdata['_uuid'],
             'ovsDBVersion':      ovsdata['db_version'],
@@ -84,50 +105,84 @@ class OpenvSwitch(CommandPlugin):
             'numberInterfaces':  len(ifaces),
             })
 
+        maps.append(ovsObjMap)
+
         # bridges
         bridges = []
+        rel_maps = []
+        classname = 'bridges'
         for brdg in brdgs:
+            bridge_id = 'bridge-{0}'.format(brdg['_uuid'])
             bridges.append(ObjectMap(
-                modname='ZenPacks.zenoss.OpenvSwitch.Bridge',
                 data={
-                'id':       'bridge-{0}'.format(brdg['_uuid']),
+                'id':       bridge_id,
                 'title':    brdg['name'],
                 'bridgeId': brdg['_uuid'],
                 }))
 
+            # ports
+            ports = self.getPortRelMap(prts, ifaces,
+                                       classname + \
+                                       '/%s' % bridge_id, brdg['ports'])
+            # flows
+            flows = self.getFlowRelMap(flws,
+                                       classname + \
+                                       '/%s' % bridge_id, brdg['name'])
 
-        if len(bridges) > 0:
-            LOG.info('Found %d bridges on %s for user %s', len(bridges), device.id, device.zCommandUsername)
-        else:
-            LOG.info('No bridge found on %s for user %s', device.id, device.zCommandUsername)
+            # excluding empty RelationshipMaps
+            if ports and len(ports) > 0 and len(ports[0].maps) > 0:
+                rel_maps.extend(ports)
+            if flows and len(flows.maps) > 0:
+                rel_maps.append(flows)
 
+        maps.append(RelationshipMap(
+            relname=classname,
+            modname='ZenPacks.zenoss.OpenvSwitch.Bridge',
+            objmaps=bridges))
+        maps.extend(rel_maps)
+
+        return maps
+
+
+    def getPortRelMap(self, prts, ifaces, compname, bridgeports):
         # ports
+        rel_maps = []
         ports = []
+        classname = 'ports'
         for port in prts:
-            brdgId = [brdg['_uuid'] for brdg in brdgs \
-                       if port['_uuid'] in brdg['ports']]
+            if port['_uuid'] not in bridgeports:
+                continue
+
+            port_id = 'port-{0}'.format(port['_uuid'])
             ports.append(ObjectMap(
-                modname='ZenPacks.zenoss.OpenvSwitch.Port',
                 data={
-                'id':         'port-{0}'.format(port['_uuid']),
+                'id':         port_id,
                 'title':      'Port-' + port['name'],
                 'portId':     port['_uuid'],
                 'tag_':       port['tag'],
-                'set_bridge': 'bridge-{0}'.format(brdgId[0]),
                 }))
 
+            interfaces = self.getInterfaceRelMap(ifaces,
+                     '%s/%s/%s' % (compname, classname, port_id), port['interfaces'])
 
-        if len(ports) > 0:
-            LOG.info('Found %d ports on %s for user %s', len(ports), device.id, device.zCommandUsername)
-        else:
-            LOG.info('No port found on %s for user %s', device.id, device.zCommandUsername)
+            rel_maps.append(interfaces)
 
+        return [RelationshipMap(
+            compname=compname,
+            relname=classname,
+            modname='ZenPacks.zenoss.OpenvSwitch.Port',
+            objmaps=ports)] + rel_maps
+
+
+    def getFlowRelMap(self, flws, compname, bridgename):
         # flows
         flows = []
+        classname = 'flows'
         for key in flws.keys():
-            # key is bridge name
-            brdgId = [brdg['_uuid'] for brdg in brdgs \
-                      if key == brdg['name']]
+            # key is the bridge name
+            if key != bridgename:
+                continue
+
             for flow in flws[key]:
                 priority = None
                 if 'priority' in flow:
@@ -147,7 +202,6 @@ class OpenvSwitch(CommandPlugin):
 
                 fuid = create_fuid(key, flow)
                 flows.append(ObjectMap(
-                    modname='ZenPacks.zenoss.OpenvSwitch.Flow',
                     data={
                         'id':       'flow-{0}'.format(fuid),
                         'flowId':    fuid,
@@ -159,18 +213,23 @@ class OpenvSwitch(CommandPlugin):
                         'nwsrc':    nwsrc,
                         'nwdst':    nwdst,
                         'action':   flow['actions'],
-                        'set_bridge': 'bridge-{0}'.format(brdgId[0]),
                     }))
 
 
-        if len(flows) > 0:
-            LOG.info('Found %d flows on %s for user %s', len(flows), device.id, device.zCommandUsername)
-        else:
-            LOG.info('No flow found on %s for user %s', device.id, device.zCommandUsername)
+        return RelationshipMap(
+            compname=compname,
+            relname=classname,
+            modname='ZenPacks.zenoss.OpenvSwitch.Flow',
+            objmaps=flows)
 
+    def getInterfaceRelMap(self, ifaces, compname, pinterfaces):
         # interfaces
         interfaces = []
+        classname = 'interfaces'
         for iface in ifaces:
+            if iface['_uuid'] not in pinterfaces:
+                continue
+
             if iface['link_speed'] == 10000000000:
                 lspd = '10 Gb'
             elif iface['link_speed'] == 1000000000:
@@ -185,12 +244,7 @@ class OpenvSwitch(CommandPlugin):
             amac = ''
             if 'attached-mac' in iface['external_ids']:
                 amac = iface['external_ids']['attached-mac'].upper()
-            prtid = [prt['_uuid'] for prt in prts \
-                    if iface['_uuid'] in prt['interfaces']]
-            brdgId = [brdg['_uuid'] for brdg in brdgs \
-                      if prtid[0] in brdg['ports']]
             interfaces.append(ObjectMap(
-                modname='ZenPacks.zenoss.OpenvSwitch.Interface',
                 data={
                 'id':          'interface-{0}'.format(iface['_uuid']),
                 'title':       'Interface-' + iface['name'],
@@ -204,27 +258,11 @@ class OpenvSwitch(CommandPlugin):
                 'lspeed':      lspd,
                 'mtu':         iface['mtu'],
                 'duplex':      iface['duplex'],
-                'set_port':    'port-{0}'.format(prtid[0]),
-#                'set_bridge':  'bridge-{0}'.format(brdgId[0]),
                 }))
 
 
-        if len(interfaces) > 0:
-            LOG.info('Found %d interfaces on %s for user %s', len(interfaces), device.id, device.zCommandUsername)
-        else:
-            LOG.info('No interface found on %s for user %s', device.id, device.zCommandUsername)
-
-        objmaps = {
-            'bridges': bridges,
-            'ports': ports,
-            'flows': flows,
-            'interfaces': interfaces,
-            }
-
-        # Apply the objmaps in the right order.
-        componentsMap = RelationshipMap(relname='components')
-        for i in ('bridges', 'ports', 'flows', 'interfaces',):
-            for objmap in objmaps[i]:
-                componentsMap.append(objmap)
-
-        return [objMap, componentsMap]
+        return RelationshipMap(
+            compname=compname,
+            relname=classname,
+            modname='ZenPacks.zenoss.OpenvSwitch.Interface',
+            objmaps=interfaces)
