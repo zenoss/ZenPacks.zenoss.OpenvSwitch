@@ -3,6 +3,18 @@
   targetPythonClass: ZenPacks.zenoss.OpenvSwitch.Interface
 
   datasources:
+    interfaceStatus:
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,admin_state,link_state list interfac;
+      cycletime: 300
+
+      parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatus
+      type: COMMAND
+      component: ${here/id}
+      usessh: true
+      eventClass: "/Net"
+      eventKey: "interface_status"
+      severity: Error
+
     interfaceIncomingBytes:
       commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
@@ -193,6 +205,29 @@
   targetPythonClass: ZenPacks.zenoss.OpenvSwitch.Bridge
 
   datasources:
+    openvswitchStatus:
+      commandTemplate: /bin/echo 'hi' &> /dev/null; ver=$$(/bin/cat /etc/system-release); if [[ $$ver =~ "6." ]]; then /sbin/service openvswitch status; elif [[ $$ver =~ "7." ]]; then /usr/bin/systemctl status openvswitch.service; fi;
+      cycletime: 300
+
+      parser: ZenPacks.zenoss.OpenvSwitch.parsers.OVSStatus
+      type: COMMAND
+      usessh: true
+      eventClass: "/Service/State/Availability"
+      eventKey: "ovs_status"
+      severity: Critical
+
+    bridgePortStatus:
+      commandTemplate: /usr/bin/sudo /usr/bin/ovsdb-tool show-log;
+      cycletime: 300
+
+      parser: ZenPacks.zenoss.OpenvSwitch.parsers.BridgePortStatus
+      type: COMMAND
+      component: ${here/id}
+      usessh: true
+      eventClass: "/Status"
+      eventKey: "bridge_port_status"
+      severity: Info
+
     bridgeFlowCount:
       commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=name,_uuid list bridge; for txt in $$(/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name list bridge); do if [ $$txt != 'name' ] && [ $$txt != ':' ] ; then echo $$txt; /usr/bin/sudo /usr/bin/ovs-ofctl dump-aggregate $$txt; fi; done;
       cycletime: 300
