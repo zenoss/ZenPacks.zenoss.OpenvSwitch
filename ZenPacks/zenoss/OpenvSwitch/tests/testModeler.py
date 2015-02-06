@@ -60,12 +60,21 @@ class TestModeler(BaseTestCase):
 
         self.assertEquals(data_maps, None)
 
+    def testMeaningless(self):
+        # if openvswitch service on target Open vSwitch host is down
+        # the results look like what is in model_meaningless.txt
+        modeler = OpenvSwitchModeler()
+        modeler_results = loadData('model_meaningless.txt')
+        data_maps = modeler.process(self.d, modeler_results, log)
+
+        self.assertEquals(data_maps, None)
+
     def testRunningZenoss(self):
         modeler = OpenvSwitchModeler()
         modeler_results = loadData('model_running_zenoss.txt')
         data_maps = modeler.process(self.d, modeler_results, log)
 
-        self.assertEquals(len(data_maps.maps), 7)
+        self.assertEquals(len(data_maps), 6)
 
 
 def test_suite():

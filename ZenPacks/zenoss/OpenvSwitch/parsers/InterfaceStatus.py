@@ -39,17 +39,16 @@ class InterfaceStatus(CommandParser):
 
         # interface admin_state: UP or DOWN
         # interface link_state: UP or DOWN
+        summary = ''
         iface_stat = [stat for stat in iface_stats if stat['_uuid'] == iface_id]
         if iface_stat[0]['admin_state'] == 'up' and iface_stat[0]['link_state'] == 'up':
             return
-
-        summary = ''
-        if iface_stat[0]['admin_state'] == 'down' and iface_stat[0]['link_state'] == 'down':
+        elif iface_stat[0]['admin_state'] == 'down' and iface_stat[0]['link_state'] == 'down':
             summary = 'Interface admin state: DOWN; Interface link state: DOWN'
-        elif iface_stat[0]['admin_state'] == 'down' and iface_stat[0]['link_state'] == 'up':
-            summary = 'Interface admin state: DOWN'
+            severity = 2
         elif iface_stat[0]['link_state'] == 'down' and iface_stat[0]['admin_state'] == 'up':
-            summary = 'Interface link state: DOWN'
+            summary = 'Interface admin state: UP; Interface link state: DOWN'
+            severity = 4
 
 
         event = dict(
@@ -57,7 +56,7 @@ class InterfaceStatus(CommandParser):
             component=cmd.component,
             eventClass=cmd.eventClass,
             eventKey=self.eventKey,
-            severity=cmd.severity
+            severity=severity
             )
 
         result.events.append(event)

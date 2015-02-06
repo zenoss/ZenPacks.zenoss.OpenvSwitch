@@ -25,7 +25,8 @@ class OVSStatus(CommandParser):
         # Since during 1.1.0, we only use
         # Red Hat versions of OpenStack testing targets
         # we are not ready to test Ubuntu hosts for OpenvSwitch yet
-        if '/etc/system-release' in cmd.command:
+        if '/sbin/service openvswitch status' not in cmd.command or \
+           '/usr/bin/systemctl status openvswitch.service' not in cmd.command :
             return
 
         if len(cmd.result.output) == 0:
@@ -33,34 +34,38 @@ class OVSStatus(CommandParser):
 
         summary = ''
         stats = cmd.result.output.split('\n')
+        for word in ('BEGIN', 'SPLIT', 'END', ''):
+            while word in stats:
+                stats.remove(word)
 
         # centos 6
-        if len(stats) < 3:
+        if len(stats) < 2:
             # should not happen
             return
 
-        match_centos_6_1 = re.search(r'ovsdb-server is running', stats[1])
-        match_centos_6_2 = re.search(r'ovs-vswitchd is running', stats[2])
+        match_centos_6_1 = re.search(r'ovsdb-server is running', stats[0])
+        match_centos_6_2 = re.search(r'ovs-vswitchd is running', stats[1])
         if match_centos_6_1 and match_centos_6_2:
             return
 
-        match_centos_6_3 = re.search(r'ovsdb-server is not running', stats[1])
-        match_centos_6_4 = re.search(r'ovs-vswitchd is not running', stats[2])
+        match_centos_6_3 = re.search(r'ovsdb-server is not running', stats[0])
+        match_centos_6_4 = re.search(r'ovs-vswitchd is not running', stats[1])
         if match_centos_6_3 or match_centos_6_4:
-            summary = stats[1] + '; ' + stats[2]
+            summary = stats[0] + '; ' + stats[1]
 
-        # centos 7
-        if len(stats) < 4:
-            # should not happen
-            return
+        if len(summary) == 0:
+            # centos 7
+            if len(stats) < 4:
+                # should not happen
+                return
 
-        match_centos_7_1 = re.search(r'Active: active', stats[3])
-        if match_centos_7_1:
-            return
+            match_centos_7_1 = re.search(r'Active: active', stats[2])
+            if match_centos_7_1:
+                return
 
-        match_centos_7_2 = re.search(r'Active: inactive', stats[3])
-        if match_centos_7_2:
-            summary = 'openvswitch.service: ' + stats[3]
+            match_centos_7_2 = re.search(r'Active: inactive', stats[2])
+            if match_centos_7_2:
+                summary = 'openvswitch.service: ' + stats[2]
 
         event = dict(
             summary=summary,

@@ -222,7 +222,7 @@
 
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.BridgePortStatus
       type: COMMAND
-      component: ${here/title/}
+      component: ${here/title}
       usessh: true
       eventClass: "/Status"
       eventKey: "bridge_port_status"

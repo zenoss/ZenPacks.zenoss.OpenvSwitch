@@ -52,7 +52,7 @@ class OpenvSwitch(CommandPlugin):
         # sanity check first
         # no need for the 1st command_string
         for i in range(1, len(command_strings)):
-            if len(command_strings[i]) < 2:
+            if len(command_strings[i]) < 4:
                 LOG.error('No meaningful data found on %s', device.id)
                 return None
 
