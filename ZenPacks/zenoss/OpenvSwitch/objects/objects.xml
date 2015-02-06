@@ -87,6 +87,67 @@ True
 </object>
 </tomanycont>
 </object>
+<object id='bridgePortStatus' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
+<property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
+COMMAND
+</property>
+<property type="boolean" id="enabled" mode="w" >
+True
+</property>
+<property type="string" id="component" mode="w" >
+${here/title}
+</property>
+<property type="string" id="eventClass" mode="w" >
+/Status
+</property>
+<property type="string" id="eventKey" mode="w" >
+bridge_port_status
+</property>
+<property type="int" id="severity" mode="w" >
+2
+</property>
+<property type="string" id="commandTemplate" mode="w" >
+/usr/bin/sudo /usr/bin/ovsdb-tool show-log;
+</property>
+<property type="int" id="cycletime" mode="w" >
+300
+</property>
+<property type="boolean" id="usessh" mode="w" >
+True
+</property>
+<property type="string" id="parser" mode="w" >
+ZenPacks.zenoss.OpenvSwitch.parsers.BridgePortStatus
+</property>
+</object>
+<object id='openvswitchStatus' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
+<property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
+COMMAND
+</property>
+<property type="boolean" id="enabled" mode="w" >
+True
+</property>
+<property type="string" id="eventClass" mode="w" >
+/Service/State/Availability
+</property>
+<property type="string" id="eventKey" mode="w" >
+ovs_status
+</property>
+<property type="int" id="severity" mode="w" >
+5
+</property>
+<property type="string" id="commandTemplate" mode="w" >
+/bin/echo 'BEGIN' ; /sbin/service openvswitch status 2&gt; /dev/null ; echo "SPLIT" ; /usr/bin/systemctl status openvswitch.service 2&gt; /dev/null ; echo "SPLIT" ; /usr/bin/sudo service openvswitch-switch status 2&gt; /dev/null ; echo "END"
+</property>
+<property type="int" id="cycletime" mode="w" >
+300
+</property>
+<property type="boolean" id="usessh" mode="w" >
+True
+</property>
+<property type="string" id="parser" mode="w" >
+ZenPacks.zenoss.OpenvSwitch.parsers.OVSStatus
+</property>
+</object>
 </tomanycont>
 <tomanycont id='graphDefs'>
 <object id='Flow' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
@@ -612,6 +673,38 @@ True
 </object>
 </tomanycont>
 </object>
+<object id='interfaceStatus' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
+<property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
+COMMAND
+</property>
+<property type="boolean" id="enabled" mode="w" >
+True
+</property>
+<property type="string" id="component" mode="w" >
+${here/id}
+</property>
+<property type="string" id="eventClass" mode="w" >
+/Net
+</property>
+<property type="string" id="eventKey" mode="w" >
+interface_status
+</property>
+<property type="int" id="severity" mode="w" >
+4
+</property>
+<property type="string" id="commandTemplate" mode="w" >
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,admin_state,link_state list interface;
+</property>
+<property type="int" id="cycletime" mode="w" >
+300
+</property>
+<property type="boolean" id="usessh" mode="w" >
+True
+</property>
+<property type="string" id="parser" mode="w" >
+ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatus
+</property>
+</object>
 </tomanycont>
 <tomanycont id='graphDefs'>
 <object id='Dropped Collisions' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
@@ -740,7 +833,7 @@ AVERAGE
 500
 </property>
 <property type="string" id="units" mode="w" >
-count
+errors/sec
 </property>
 <property type="boolean" id="log" mode="w" >
 False
