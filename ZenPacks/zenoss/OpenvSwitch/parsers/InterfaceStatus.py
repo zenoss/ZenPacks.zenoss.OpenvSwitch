@@ -23,7 +23,7 @@ class InterfaceStatus(CommandParser):
 
     def processResults(self, cmd, result):
         # send an event if state is 'down'
-        if '/usr/bin/ovs-vsctl' in cmd.command:
+        if '/usr/bin/ovs-vsctl' not in cmd.command:
             return
 
         if len(cmd.result.output) == 0:
