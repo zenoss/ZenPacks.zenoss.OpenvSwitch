@@ -53,7 +53,7 @@ class OpenvSwitch(CommandPlugin):
         # no need for the 1st command_string
         for i in range(1, len(command_strings)):
             if len(command_strings[i]) < 2:
-                LOG.error('No meaningful data found: \n%s', results)
+                LOG.error('No meaningful data found on %s', device.id)
                 return None
 
         # OVS as device. there should be only one OVS DB entry per ovs host
@@ -212,7 +212,7 @@ class OpenvSwitch(CommandPlugin):
                         'inport':   inport,
                         'nwsrc':    nwsrc,
                         'nwdst':    nwdst,
-                        'action':   flow['actions'],
+                        'action':   flow['actions'].upper(),
                     }))
 
 

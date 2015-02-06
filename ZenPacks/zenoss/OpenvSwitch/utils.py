@@ -39,8 +39,6 @@ def add_local_lib_path():
 add_local_lib_path()
 
 # The following methods are used to parse strings from SSH commands
-# If the code is confusing to you, here is FYI that the coder himself
-# is not exactly proud of it himself.
 def str_to_dict(original):
     original = original.split('\n')
     # remove '' from head and tail
