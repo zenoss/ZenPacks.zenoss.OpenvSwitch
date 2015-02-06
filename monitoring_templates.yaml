@@ -4,7 +4,7 @@
 
   datasources:
     interfaceStatus:
-      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,admin_state,link_state list interfac;
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,admin_state,link_state list interface;
       cycletime: 300
 
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatus
@@ -206,7 +206,7 @@
 
   datasources:
     openvswitchStatus:
-      commandTemplate: /bin/echo 'hi' &> /dev/null; ver=$$(/bin/cat /etc/system-release); if [[ $$ver =~ "6." ]]; then /sbin/service openvswitch status; elif [[ $$ver =~ "7." ]]; then /usr/bin/systemctl status openvswitch.service; fi;
+      commandTemplate: /bin/echo 'BEGIN' ; /sbin/service openvswitch status 2> /dev/null ; echo "SPLIT" ; /usr/bin/systemctl status openvswitch.service 2> /dev/null ; echo "SPLIT" ; /usr/bin/sudo service openvswitch-switch status 2> /dev/null ; echo "END"
       cycletime: 300
 
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.OVSStatus
@@ -222,7 +222,7 @@
 
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.BridgePortStatus
       type: COMMAND
-      component: ${here/id}
+      component: ${here/title/}
       usessh: true
       eventClass: "/Status"
       eventKey: "bridge_port_status"

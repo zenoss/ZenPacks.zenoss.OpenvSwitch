@@ -8,6 +8,7 @@
 ##############################################################################
 
 import itertools
+import inspect
 
 from Products.ZenModel.Exceptions import DeviceExistsError
 from Products.ZenUtils.Utils import monkeypatch
@@ -199,27 +200,50 @@ def addDevice(self, deviceName, deviceClass, title=None, snmpCommunity="",
         manageIp = deviceName
         deviceName = title
 
-    jobStatus = perfConf.addDeviceCreationJob(deviceName=deviceName,
-                                              devicePath=deviceClass,
-                                              performanceMonitor=collector,
-                                              discoverProto=model,
-                                              manageIp=manageIp,
-                                              zProperties=zProps,
-                                              cProperties=cProperties,
-                                              rackSlot=rackSlot,
-                                              productionState=productionState,
-                                              comments=comments,
-                                              hwManufacturer=hwManufacturer,
-                                              hwProductName=hwProductName,
-                                              osManufacturer=osManufacturer,
-                                              osProductName=osProductName,
-                                              priority=priority,
-                                              tag=tag,
-                                              serialNumber=serialNumber,
-                                              locationPath=locationPath,
-                                              systemPaths=systemPaths,
-                                              groupPaths=groupPaths,
-                                              title=title)
+    from Products.ZenModel.PerformanceConf import PerformanceConf
+    if 'cProperties' in inspect.getargspec(PerformanceConf.addDeviceCreationJob).args:
+        jobStatus = perfConf.addDeviceCreationJob(deviceName=deviceName,
+                                                  devicePath=deviceClass,
+                                                  performanceMonitor=collector,
+                                                  discoverProto=model,
+                                                  manageIp=manageIp,
+                                                  zProperties=zProps,
+                                                  cProperties=cProperties,
+                                                  rackSlot=rackSlot,
+                                                  productionState=productionState,
+                                                  comments=comments,
+                                                  hwManufacturer=hwManufacturer,
+                                                  hwProductName=hwProductName,
+                                                  osManufacturer=osManufacturer,
+                                                  osProductName=osProductName,
+                                                  priority=priority,
+                                                  tag=tag,
+                                                  serialNumber=serialNumber,
+                                                  locationPath=locationPath,
+                                                  systemPaths=systemPaths,
+                                                  groupPaths=groupPaths,
+                                                  title=title)
+    else:
+        jobStatus = perfConf.addDeviceCreationJob(deviceName=deviceName,
+                                                  devicePath=deviceClass,
+                                                  performanceMonitor=collector,
+                                                  discoverProto=model,
+                                                  manageIp=manageIp,
+                                                  zProperties=zProps,
+                                                  rackSlot=rackSlot,
+                                                  productionState=productionState,
+                                                  comments=comments,
+                                                  hwManufacturer=hwManufacturer,
+                                                  hwProductName=hwProductName,
+                                                  osManufacturer=osManufacturer,
+                                                  osProductName=osProductName,
+                                                  priority=priority,
+                                                  tag=tag,
+                                                  serialNumber=serialNumber,
+                                                  locationPath=locationPath,
+                                                  systemPaths=systemPaths,
+                                                  groupPaths=groupPaths,
+                                                  title=title)
     return jobStatus
 
 @monkeypatch('Products.ZenHub.services.ModelerService.ModelerService')

@@ -23,7 +23,7 @@ class InterfaceStatus(CommandParser):
 
     def processResults(self, cmd, result):
         # send an event if state is 'down'
-        if cmd.command.find('/usr/bin/ovs-vsctl') == -1:
+        if '/usr/bin/ovs-vsctl' in cmd.command:
             return
 
         if len(cmd.result.output) == 0:
@@ -57,7 +57,6 @@ class InterfaceStatus(CommandParser):
             component=cmd.component,
             eventClass=cmd.eventClass,
             eventKey=self.eventKey,
-            eventClassKey=self.eventClassKey,
             severity=cmd.severity
             )
 
