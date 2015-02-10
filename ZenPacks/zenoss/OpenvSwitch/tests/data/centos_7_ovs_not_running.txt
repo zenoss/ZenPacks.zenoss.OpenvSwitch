@@ -1,0 +1,11 @@
+openvswitch.service - Open vSwitch
+   Loaded: loaded (/usr/lib/systemd/system/openvswitch.service; enabled)
+   Active: inactive (dead) since Fri 2015-02-06 07:05:52 CST; 2s ago
+  Process: 26394 ExecStop=/bin/true (code=exited, status=0/SUCCESS)
+  Process: 18889 ExecStart=/bin/true (code=exited, status=0/SUCCESS)
+ Main PID: 18889 (code=exited, status=0/SUCCESS)
+   CGroup: /system.slice/openvswitch.service
+
+Feb 06 05:31:24 solutions-juno.zenoss.loc systemd[1]: Started Open vSwitch.
+Feb 06 07:05:52 solutions-juno.zenoss.loc systemd[1]: Stopping Open vSwitch...
+Feb 06 07:05:52 solutions-juno.zenoss.loc systemd[1]: Stopped Open vSwitch.

@@ -1,0 +1,2 @@
+ovsdb-server is running with pid 9779
+ovs-vswitchd is running with pid 9789
