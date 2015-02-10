@@ -15,13 +15,14 @@
       eventKey: "interface_status"
       severity: Error
 
-    interfaceIncomingBytes:
+    interfaceIncomingByteRate:
       commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
 
       datapoints:
         rx_bytes:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             incoming_bytes: ""
 
@@ -30,13 +31,14 @@
       component: ${here/id}
       usessh: true
 
-    interfaceOutgoingBytes:
+    interfaceOutgoingByteRate:
       commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
 
       datapoints:
         tx_bytes:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             outgoing_bytes: ""
 
@@ -45,13 +47,14 @@
       component: ${here/id}
       usessh: true
 
-    interfaceIncomingPackets:
+    interfaceIncomingPacketRate:
       commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
 
       datapoints:
         rx_packets:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             incoming_packets: ""
 
@@ -60,13 +63,14 @@
       component: ${here/id}
       usessh: true
 
-    interfaceOutgoingPackets:
+    interfaceOutgoingPacketRate:
       commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
       cycletime: 300
 
       datapoints:
         tx_packets:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             outgoing_packets: ""
 
@@ -143,10 +147,10 @@
 
       graphpoints:
         Inbound:
-          dpName: interfaceIncomingBytes_rx_bytes
+          dpName: interfaceIncomingByteRate_rx_bytes
           format: '%7.0lf'
         Outbound:
-          dpName: interfaceOutgoingBytes_tx_bytes
+          dpName: interfaceOutgoingByteRate_tx_bytes
           format: '%7.0lf'
 
     Packets:
@@ -156,10 +160,10 @@
 
       graphpoints:
         Inbound:
-          dpName: interfaceIncomingPackets_rx_packets
+          dpName: interfaceIncomingPacketRate_rx_packets
           format: '%7.0lf'
         Outbound:
-          dpName: interfaceOutgoingPackets_tx_packets
+          dpName: interfaceOutgoingPacketRate_tx_packets
           format: '%7.0lf'
 
     Dropped Collisions:
@@ -240,11 +244,13 @@
 
         byte_count:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             byte_count: ""
 
         packet_count:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             packet_count: ""
 
@@ -260,8 +266,8 @@
       width: 500
 
       graphpoints:
-        Flow:
-          dpName: flow_count
+        Flow count:
+          dpName: bridgeFlowCount_flow_count
           format: '%7.0lf'
 
     Throughput:
@@ -270,8 +276,8 @@
       width: 500
 
       graphpoints:
-        Total bridge throughput:
-          dpName: byte_count
+        Bridge throughput:
+          dpName: bridgeFlowCount_byte_count
           format: '%7.0lf'
 
     Packets:
@@ -280,6 +286,6 @@
       width: 500
 
       graphpoints:
-        Total bridge packets:
-          dpName: packet_count
+        Bridge packet rate:
+          dpName: bridgeFlowCount_packet_count
           format: '%7.0lf'
