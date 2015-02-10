@@ -179,71 +179,76 @@ def addDevice(self, *args, **kwargs):
 
 
 @monkeypatch('Products.Zuul.facades.devicefacade.DeviceFacade')
-def addDevice(self, deviceName, deviceClass, title=None, snmpCommunity="",
-              snmpPort=161, manageIp="", model=False, collector='localhost',
-              rackSlot=0, productionState=1000, comments="",
-              hwManufacturer="", hwProductName="", osManufacturer="",
-              osProductName="", priority = 3, tag="", serialNumber="",
-              locationPath="", systemPaths=[], groupPaths=[],
-              zProperties={}, cProperties={},
-              ):
+def addDevice(self, *args, **kwargs):
     from Products.ZenUtils.IpUtil import isip
 
-    zProps = dict(zSnmpCommunity=snmpCommunity,
-                  zSnmpPort=snmpPort)
-    zProps.update(zProperties)
-    model = model and "Auto" or "none"
-    perfConf = self._dmd.Monitors.getPerformanceMonitor(collector)
+    if  'zCommandUsername' in kwargs and \
+        'zCommandPassword' in kwargs and \
+        'zWinUser' in kwargs and \
+        'zWinPassword' in kwargs:
+        zProps = dict(  zSnmpCommunity=kwargs['snmpCommunity'],
+                        zSnmpPort=kwargs['snmpPort'],
+                        zCommandUsername=kwargs['zCommandUsername'],
+                        zCommandPassword=kwargs['zCommandPassword'],
+                        zWinUser=kwargs['zWinUser'],
+                        zWinPassword=kwargs['zWinPassword'],
+                    )
+    else:
+        zProps = dict(zSnmpCommunity=kwargs['snmpCommunity'],
+                      zSnmpPort=kwargs['snmpPort'])
+    zProps.update(kwargs['zProperties'])
+    model = kwargs['model'] and "Auto" or "none"
+    perfConf = self._dmd.Monitors.getPerformanceMonitor(kwargs['collector'])
 
     # Make sure this patch only applies to OpenvSwitch device
-    if title and isip(deviceName) and deviceClass == '/Network/OpenvSwitch':
-        manageIp = deviceName
-        deviceName = title
+    if kwargs['title'] and isip(kwargs['deviceName']) and kwargs['deviceClass'] == '/Network/OpenvSwitch':
+        kwargs['manageIp'] = kwargs['deviceName']
+        kwargs['deviceName'] = kwargs['title']
 
     from Products.ZenModel.PerformanceConf import PerformanceConf
     if 'cProperties' in inspect.getargspec(PerformanceConf.addDeviceCreationJob).args:
-        jobStatus = perfConf.addDeviceCreationJob(deviceName=deviceName,
-                                                  devicePath=deviceClass,
-                                                  performanceMonitor=collector,
+        jobStatus = perfConf.addDeviceCreationJob(deviceName=kwargs['deviceName'],
+                                                  devicePath=kwargs['deviceClass'],
+                                                  performanceMonitor=kwargs['collector'],
                                                   discoverProto=model,
-                                                  manageIp=manageIp,
+                                                  manageIp=kwargs['manageIp'],
                                                   zProperties=zProps,
-                                                  cProperties=cProperties,
-                                                  rackSlot=rackSlot,
-                                                  productionState=productionState,
-                                                  comments=comments,
-                                                  hwManufacturer=hwManufacturer,
-                                                  hwProductName=hwProductName,
-                                                  osManufacturer=osManufacturer,
-                                                  osProductName=osProductName,
-                                                  priority=priority,
-                                                  tag=tag,
-                                                  serialNumber=serialNumber,
-                                                  locationPath=locationPath,
-                                                  systemPaths=systemPaths,
-                                                  groupPaths=groupPaths,
-                                                  title=title)
+                                                  cProperties=kwargs['cProperties'],
+                                                  rackSlot=kwargs['rackSlot'],
+                                                  productionState=kwargs['productionState'],
+                                                  comments=kwargs['comments'],
+                                                  hwManufacturer=kwargs['hwManufacturer'],
+                                                  hwProductName=kwargs['hwProductName'],
+                                                  osManufacturer=kwargs['osManufacturer'],
+                                                  osProductName=kwargs['osProductName'],
+                                                  priority=kwargs['priority'],
+                                                  tag=kwargs['tag'],
+                                                  serialNumber=kwargs['serialNumber'],
+                                                  locationPath=kwargs['locationPath'],
+                                                  systemPaths=kwargs['systemPaths'],
+                                                  groupPaths=kwargs['groupPaths'],
+                                                  title=kwargs['title'])
     else:
-        jobStatus = perfConf.addDeviceCreationJob(deviceName=deviceName,
-                                                  devicePath=deviceClass,
-                                                  performanceMonitor=collector,
+        jobStatus = perfConf.addDeviceCreationJob(deviceName=kwargs['deviceName'],
+                                                  devicePath=kwargs['deviceClass'],
+                                                  performanceMonitor=kwargs['collector'],
                                                   discoverProto=model,
-                                                  manageIp=manageIp,
+                                                  manageIp=kwargs['manageIp'],
                                                   zProperties=zProps,
-                                                  rackSlot=rackSlot,
-                                                  productionState=productionState,
-                                                  comments=comments,
-                                                  hwManufacturer=hwManufacturer,
-                                                  hwProductName=hwProductName,
-                                                  osManufacturer=osManufacturer,
-                                                  osProductName=osProductName,
-                                                  priority=priority,
-                                                  tag=tag,
-                                                  serialNumber=serialNumber,
-                                                  locationPath=locationPath,
-                                                  systemPaths=systemPaths,
-                                                  groupPaths=groupPaths,
-                                                  title=title)
+                                                  rackSlot=kwargs['rackSlot'],
+                                                  productionState=kwargs['productionState'],
+                                                  comments=kwargs['comments'],
+                                                  hwManufacturer=kwargs['hwManufacturer'],
+                                                  hwProductName=kwargs['hwProductName'],
+                                                  osManufacturer=kwargs['osManufacturer'],
+                                                  osProductName=kwargs['osProductName'],
+                                                  priority=kwargs['priority'],
+                                                  tag=kwargs['tag'],
+                                                  serialNumber=kwargs['serialNumber'],
+                                                  locationPath=kwargs['locationPath'],
+                                                  systemPaths=kwargs['systemPaths'],
+                                                  groupPaths=kwargs['groupPaths'],
+                                                  title=kwargs['title'])
     return jobStatus
 
 @monkeypatch('Products.ZenHub.services.ModelerService.ModelerService')
