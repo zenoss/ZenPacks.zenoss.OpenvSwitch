@@ -266,8 +266,8 @@
       width: 500
 
       graphpoints:
-        Flow:
-          dpName: flow_count
+        Flow count:
+          dpName: bridgeFlowCount_flow_count
           format: '%7.0lf'
 
     Throughput:
@@ -277,7 +277,7 @@
 
       graphpoints:
         Bridge throughput:
-          dpName: byte_count
+          dpName: bridgeFlowCount_byte_count
           format: '%7.0lf'
 
     Packets:
@@ -287,5 +287,5 @@
 
       graphpoints:
         Bridge packet rate:
-          dpName: packet_count
+          dpName: bridgeFlowCount_packet_count
           format: '%7.0lf'
