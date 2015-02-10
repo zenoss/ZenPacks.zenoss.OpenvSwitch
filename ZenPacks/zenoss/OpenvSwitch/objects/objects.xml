@@ -51,7 +51,7 @@ ZenPacks.zenoss.OpenvSwitch.parsers.BridgeStatistics
 <tomanycont id='datapoints'>
 <object id='byte_count' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -75,7 +75,7 @@ True
 </object>
 <object id='packet_count' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -501,7 +501,7 @@ True
 </object>
 </tomanycont>
 </object>
-<object id='interfaceIncomingBytes' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
+<object id='interfaceIncomingByteRate' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
 <property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
 COMMAND
 </property>
@@ -532,7 +532,7 @@ ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
 <tomanycont id='datapoints'>
 <object id='rx_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -544,7 +544,7 @@ True
 </object>
 </tomanycont>
 </object>
-<object id='interfaceIncomingPackets' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
+<object id='interfaceIncomingPacketRate' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
 <property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
 COMMAND
 </property>
@@ -575,7 +575,7 @@ ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
 <tomanycont id='datapoints'>
 <object id='rx_packets' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -587,7 +587,7 @@ True
 </object>
 </tomanycont>
 </object>
-<object id='interfaceOutgoingBytes' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
+<object id='interfaceOutgoingByteRate' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
 <property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
 COMMAND
 </property>
@@ -618,7 +618,7 @@ ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
 <tomanycont id='datapoints'>
 <object id='tx_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -630,7 +630,7 @@ True
 </object>
 </tomanycont>
 </object>
-<object id='interfaceOutgoingPackets' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
+<object id='interfaceOutgoingPacketRate' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
 <property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
 COMMAND
 </property>
@@ -661,7 +661,7 @@ ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
 <tomanycont id='datapoints'>
 <object id='tx_packets' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -1053,7 +1053,7 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-interfaceIncomingPackets_rx_packets
+interfaceIncomingPacketRate_rx_packets
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -1082,7 +1082,7 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-interfaceOutgoingPackets_tx_packets
+interfaceOutgoingPacketRate_tx_packets
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -1142,7 +1142,7 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-interfaceIncomingBytes_rx_bytes
+interfaceIncomingByteRate_rx_bytes
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -1171,7 +1171,7 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-interfaceOutgoingBytes_tx_bytes
+interfaceOutgoingByteRate_tx_bytes
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
