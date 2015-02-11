@@ -34,5 +34,10 @@ class InterfaceStatistics(CommandParser):
             dp_map = dict([(dp.id, dp) for dp in cmd.points])
             for name, dp in dp_map.items():
                 if name in resp['statistics']:
-                    result.values.append((dp, resp['statistics'][name]))
+                    if 'bytes' in name:
+                        # for throughput, convert to bits from bytes
+                        val = resp['statistics'][name] * 8
+                    else:
+                        val = resp['statistics'][name]
+                    result.values.append((dp, val))
 

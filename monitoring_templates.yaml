@@ -86,16 +86,19 @@
       datapoints:
         collisions:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             collisions: ""
 
         rx_dropped:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             incoming_packets_dropped: ""
 
         tx_dropped:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             outgoing_packets_dropped: ""
 
@@ -111,26 +114,31 @@
       datapoints:
         rx_crc_err:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             incoming_packets_CRC_error: ""
 
         rx_errors:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             incoming_packets_error: ""
 
         tx_errors:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             outgoing_packets_error: ""
 
         rx_frame_err:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             incoming_frame_error: ""
 
         rx_over_err:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             incoming_buffer_overrun_error: ""
 
@@ -144,65 +152,69 @@
       units: bits/sec
       height: 100
       width: 500
+      miny: 0
 
       graphpoints:
         Inbound:
           dpName: interfaceIncomingByteRate_rx_bytes
-          format: '%7.0lf'
+          format: '%7.2lf'
         Outbound:
           dpName: interfaceOutgoingByteRate_tx_bytes
-          format: '%7.0lf'
+          format: '%7.2lf'
 
     Packets:
       units: packets/sec
       height: 100
       width: 500
+      miny: 0
 
       graphpoints:
         Inbound:
           dpName: interfaceIncomingPacketRate_rx_packets
-          format: '%7.0lf'
+          format: '%7.2lf'
         Outbound:
           dpName: interfaceOutgoingPacketRate_tx_packets
-          format: '%7.0lf'
+          format: '%7.2lf'
 
     Dropped Collisions:
       units: drops/sec
       height: 100
       width: 500
+      miny: 0
 
       graphpoints:
         Inbound Drops:
           dpName: collisions_dropped_rx_dropped
-          format: '%7.0lf'
+          format: '%7.2lf'
         Outbound Drops:
           dpName: collisions_dropped_tx_dropped
-          format: '%7.0lf'
+          format: '%7.2lf'
         Collision Drops:
           dpName: collisions_dropped_collisions
-          format: '%7.0lf'
+          format: '%7.2lf'
 
     Errors:
       units: errors/sec
       height: 100
       width: 500
+      miny: 0
 
       graphpoints:
         Inbound Packet Errors:
           dpName: errors_rx_errors
-          format: '%7.0lf'
+          format: '%7.2lf'
         Outbound Packet Errors:
           dpName: errors_tx_errors
-          format: '%7.0lf'
+          format: '%7.2lf'
         Inbound Packet CRC Errors:
           dpName: errors_rx_crc_err
-          format: '%7.0lf'
+          format: '%7.2lf'
         Inbound Frame Errors:
           dpName: errors_rx_frame_err
-          format: '%7.0lf'
+          format: '%7.2lf'
         Inbound Buffer Overrun Errors:
           dpName: errors_rx_over_err
-          format: '%7.0lf'
+          format: '%7.2lf'
 
 /Network/OpenvSwitch/Bridge:
   description: "OpenvSwitch: Bridge Monitoring"
@@ -264,6 +276,7 @@
       units: count
       height: 100
       width: 500
+      miny: 0
 
       graphpoints:
         Flow count:
@@ -274,18 +287,20 @@
       units: bits/sec
       height: 100
       width: 500
+      miny: 0
 
       graphpoints:
         Bridge throughput:
           dpName: bridgeFlowCount_byte_count
-          format: '%7.0lf'
+          format: '%7.2lf'
 
     Packets:
       units: packets/sec
       height: 100
       width: 500
+      miny: 0
 
       graphpoints:
         Bridge packet rate:
           dpName: bridgeFlowCount_packet_count
-          format: '%7.0lf'
+          format: '%7.2lf'

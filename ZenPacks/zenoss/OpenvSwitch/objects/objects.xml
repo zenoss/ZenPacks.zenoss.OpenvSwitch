@@ -167,7 +167,7 @@ False
 False
 </property>
 <property type="int" id="miny" mode="w" >
--1
+0
 </property>
 <property type="int" id="maxy" mode="w" >
 -1
@@ -208,35 +208,6 @@ bridgeFlowCount_flow_count
 AVERAGE
 </property>
 </object>
-<object id='flow_count' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
-<property type="long" id="sequence" mode="w" >
-1
-</property>
-<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
-LINE
-</property>
-<property type="long" id="lineWidth" mode="w" >
-1
-</property>
-<property type="boolean" id="stacked" mode="w" >
-False
-</property>
-<property type="string" id="format" mode="w" >
-%5.2lf%s
-</property>
-<property type="string" id="legend" mode="w" >
-${graphPoint/id}
-</property>
-<property type="long" id="limit" mode="w" >
--1
-</property>
-<property type="string" id="dpName" mode="w" >
-bridgeFlowCount_flow_count
-</property>
-<property type="string" id="cFunc" mode="w" >
-AVERAGE
-</property>
-</object>
 </tomanycont>
 </object>
 <object id='Packets' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
@@ -256,7 +227,7 @@ False
 False
 </property>
 <property type="int" id="miny" mode="w" >
--1
+0
 </property>
 <property type="int" id="maxy" mode="w" >
 -1
@@ -282,36 +253,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
-</property>
-<property type="string" id="legend" mode="w" >
-${graphPoint/id}
-</property>
-<property type="long" id="limit" mode="w" >
--1
-</property>
-<property type="string" id="dpName" mode="w" >
-bridgeFlowCount_packet_count
-</property>
-<property type="string" id="cFunc" mode="w" >
-AVERAGE
-</property>
-</object>
-<object id='packet_count' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
-<property type="long" id="sequence" mode="w" >
-1
-</property>
-<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
-LINE
-</property>
-<property type="long" id="lineWidth" mode="w" >
-1
-</property>
-<property type="boolean" id="stacked" mode="w" >
-False
-</property>
-<property type="string" id="format" mode="w" >
-%5.2lf%s
+%7.2lf
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -345,7 +287,7 @@ False
 False
 </property>
 <property type="int" id="miny" mode="w" >
--1
+0
 </property>
 <property type="int" id="maxy" mode="w" >
 -1
@@ -371,36 +313,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
-</property>
-<property type="string" id="legend" mode="w" >
-${graphPoint/id}
-</property>
-<property type="long" id="limit" mode="w" >
--1
-</property>
-<property type="string" id="dpName" mode="w" >
-bridgeFlowCount_byte_count
-</property>
-<property type="string" id="cFunc" mode="w" >
-AVERAGE
-</property>
-</object>
-<object id='byte_count' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
-<property type="long" id="sequence" mode="w" >
-1
-</property>
-<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
-LINE
-</property>
-<property type="long" id="lineWidth" mode="w" >
-1
-</property>
-<property type="boolean" id="stacked" mode="w" >
-False
-</property>
-<property type="string" id="format" mode="w" >
-%5.2lf%s
+%7.2lf
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -461,7 +374,7 @@ ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
 <tomanycont id='datapoints'>
 <object id='collisions' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -473,7 +386,7 @@ True
 </object>
 <object id='rx_dropped' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -485,7 +398,7 @@ True
 </object>
 <object id='tx_dropped' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -528,7 +441,7 @@ ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
 <tomanycont id='datapoints'>
 <object id='rx_crc_err' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -540,7 +453,7 @@ True
 </object>
 <object id='rx_errors' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -552,7 +465,7 @@ True
 </object>
 <object id='rx_frame_err' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -564,7 +477,7 @@ True
 </object>
 <object id='rx_over_err' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -576,7 +489,7 @@ True
 </object>
 <object id='tx_errors' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -811,7 +724,7 @@ False
 False
 </property>
 <property type="int" id="miny" mode="w" >
--1
+0
 </property>
 <property type="int" id="maxy" mode="w" >
 -1
@@ -837,7 +750,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
+%7.2lf
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -866,7 +779,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
+%7.2lf
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -895,7 +808,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
+%7.2lf
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -929,7 +842,7 @@ False
 False
 </property>
 <property type="int" id="miny" mode="w" >
--1
+0
 </property>
 <property type="int" id="maxy" mode="w" >
 -1
@@ -955,7 +868,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
+%7.2lf
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -984,7 +897,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
+%7.2lf
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -1013,7 +926,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
+%7.2lf
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -1042,7 +955,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
+%7.2lf
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -1071,7 +984,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
+%7.2lf
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -1105,7 +1018,7 @@ False
 False
 </property>
 <property type="int" id="miny" mode="w" >
--1
+0
 </property>
 <property type="int" id="maxy" mode="w" >
 -1
@@ -1131,7 +1044,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
+%7.2lf
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -1160,7 +1073,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
+%7.2lf
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -1194,7 +1107,7 @@ False
 False
 </property>
 <property type="int" id="miny" mode="w" >
--1
+0
 </property>
 <property type="int" id="maxy" mode="w" >
 -1
@@ -1220,7 +1133,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
+%7.2lf
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -1249,7 +1162,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
+%7.2lf
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
