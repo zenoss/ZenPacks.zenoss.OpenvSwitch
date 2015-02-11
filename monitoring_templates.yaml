@@ -157,10 +157,10 @@
       graphpoints:
         Inbound:
           dpName: interfaceIncomingByteRate_rx_bytes
-          format: '%7.2lf'
+          format: '%7.2lf%s'
         Outbound:
           dpName: interfaceOutgoingByteRate_tx_bytes
-          format: '%7.2lf'
+          format: '%7.2lf%s'
 
     Packets:
       units: packets/sec
@@ -171,10 +171,10 @@
       graphpoints:
         Inbound:
           dpName: interfaceIncomingPacketRate_rx_packets
-          format: '%7.2lf'
+          format: '%7.2lf%s'
         Outbound:
           dpName: interfaceOutgoingPacketRate_tx_packets
-          format: '%7.2lf'
+          format: '%7.2lf%s'
 
     Dropped Collisions:
       units: drops/sec
@@ -185,13 +185,13 @@
       graphpoints:
         Inbound Drops:
           dpName: collisions_dropped_rx_dropped
-          format: '%7.2lf'
+          format: '%7.2lf%s'
         Outbound Drops:
           dpName: collisions_dropped_tx_dropped
-          format: '%7.2lf'
+          format: '%7.2lf%s'
         Collision Drops:
           dpName: collisions_dropped_collisions
-          format: '%7.2lf'
+          format: '%7.2lf%s'
 
     Errors:
       units: errors/sec
@@ -202,19 +202,19 @@
       graphpoints:
         Inbound Packet Errors:
           dpName: errors_rx_errors
-          format: '%7.2lf'
+          format: '%7.2lf%s'
         Outbound Packet Errors:
           dpName: errors_tx_errors
-          format: '%7.2lf'
+          format: '%7.2lf%s'
         Inbound Packet CRC Errors:
           dpName: errors_rx_crc_err
-          format: '%7.2lf'
+          format: '%7.2lf%s'
         Inbound Frame Errors:
           dpName: errors_rx_frame_err
-          format: '%7.2lf'
+          format: '%7.2lf%s'
         Inbound Buffer Overrun Errors:
           dpName: errors_rx_over_err
-          format: '%7.2lf'
+          format: '%7.2lf%s'
 
 /Network/OpenvSwitch/Bridge:
   description: "OpenvSwitch: Bridge Monitoring"
@@ -281,7 +281,7 @@
       graphpoints:
         Flow count:
           dpName: bridgeFlowCount_flow_count
-          format: '%7.0lf'
+          format: '%7.0lf%s'
 
     Throughput:
       units: bits/sec
@@ -292,7 +292,7 @@
       graphpoints:
         Bridge throughput:
           dpName: bridgeFlowCount_byte_count
-          format: '%7.2lf'
+          format: '%7.2lf%s'
 
     Packets:
       units: packets/sec
@@ -303,4 +303,4 @@
       graphpoints:
         Bridge packet rate:
           dpName: bridgeFlowCount_packet_count
-          format: '%7.2lf'
+          format: '%7.2lf%s'
