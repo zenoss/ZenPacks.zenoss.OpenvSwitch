@@ -281,7 +281,7 @@
       graphpoints:
         Flow count:
           dpName: bridgeFlowCount_flow_count
-          format: '%7.0lf%s'
+          format: '%7.0lf'
 
     Throughput:
       units: bits/sec
