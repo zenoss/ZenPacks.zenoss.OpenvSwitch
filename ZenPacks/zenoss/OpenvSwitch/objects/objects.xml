@@ -107,7 +107,7 @@ bridge_port_status
 2
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/sudo /usr/bin/ovsdb-tool show-log;
+/usr/bin/ovs-vsctl list bridge ; echo "SPLIT" ; /usr/bin/sudo /usr/bin/ovsdb-tool show-log;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -127,7 +127,7 @@ COMMAND
 True
 </property>
 <property type="string" id="eventClass" mode="w" >
-/Service/State/Availability
+/Status
 </property>
 <property type="string" id="eventKey" mode="w" >
 ovs_status
@@ -253,7 +253,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.2lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -313,7 +313,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.2lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -684,7 +684,7 @@ True
 ${here/id}
 </property>
 <property type="string" id="eventClass" mode="w" >
-/Net
+/Status
 </property>
 <property type="string" id="eventKey" mode="w" >
 interface_status
@@ -750,7 +750,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.2lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -779,7 +779,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.2lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -808,7 +808,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.2lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -868,7 +868,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.2lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -897,7 +897,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.2lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -926,7 +926,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.2lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -955,7 +955,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.2lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -984,7 +984,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.2lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -1044,7 +1044,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.2lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -1073,7 +1073,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.2lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -1133,7 +1133,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.2lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -1162,7 +1162,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.2lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}

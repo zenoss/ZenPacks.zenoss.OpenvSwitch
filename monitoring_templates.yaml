@@ -11,7 +11,7 @@
       type: COMMAND
       component: ${here/id}
       usessh: true
-      eventClass: "/Net"
+      eventClass: "/Status"
       eventKey: "interface_status"
       severity: Error
 
@@ -228,12 +228,12 @@
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.OVSStatus
       type: COMMAND
       usessh: true
-      eventClass: "/Service/State/Availability"
+      eventClass: "/Status"
       eventKey: "ovs_status"
       severity: Critical
 
     bridgePortStatus:
-      commandTemplate: /usr/bin/sudo /usr/bin/ovsdb-tool show-log;
+      commandTemplate: /usr/bin/ovs-vsctl list bridge ; echo "SPLIT" ; /usr/bin/sudo /usr/bin/ovsdb-tool show-log;
       cycletime: 300
 
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.BridgePortStatus

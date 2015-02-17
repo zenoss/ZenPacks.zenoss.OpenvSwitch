@@ -29,10 +29,24 @@ class BridgePortStatus(CommandParser):
         if '/usr/bin/ovsdb-tool' not in cmd.command:
             return
 
+        if cmd.result.stderr:
+            summary = cmd.result.stderr.split('\n')[0]
+            summary = summary[summary.rindex(':') + 1:]
+            event = dict(
+                summary=summary,
+                component=cmd.component,
+                eventClass=cmd.eventClass,
+                eventKey=self.eventKey,
+                severity=5
+            )
+
+            result.events.append(event)
+            return
+
         if len(cmd.result.output) == 0:
             return
 
-        logs = str_to_dict(cmd.result.output)
+        logs = str_to_dict(cmd.result.output.split('SPLIT')[1])
         rcrd_index = 0
         # logs[0] looks like:
         # {'record 0': 'Open_vSwitch" schema, version="7.4.0", cksum="951746691 20389'}
