@@ -101,7 +101,7 @@ CFG = zenpacklib.ZenPackSpec(
                                 'label': 'Port ID'},
                 'tag_':        {'label': 'VLAN Tag'},
             },
-            'impacts': ['interface'],
+            'impacts': ['interfaces'],
             'impacted_by': ['bridge'],
         },
 

@@ -4,9 +4,21 @@
     xmlns:zcml="http://namespaces.zope.org/zcml">
 
 
-    <!-- Impact -->
+    <!-- OVS Impact -->
     <configure zcml:condition="installed ZenPacks.zenoss.Impact">
         <include package="ZenPacks.zenoss.Impact" file="meta.zcml"/>
+
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.INodeTriggers"
+            for=".Bridge.Bridge"
+            factory=".impact.BridgeTriggers"
+            />
+
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.INodeTriggers"
+            for=".Interface.Interface"
+            factory=".impact.InterfaceTriggers"
+            />
 
         <subscriber
             provides="ZenPacks.zenoss.Impact.impactd.interfaces.IRelationshipDataProvider"
