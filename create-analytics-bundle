@@ -16,7 +16,7 @@ Example usage::
     ./create-analytics-bundle \
         --folder="OpenvSwitch ZenPack" \
         --domain="OpenvSwitch Domain" \
-        --device=192.168.56.122 ;\
+        --device=<OpenvSwitch device name> ;\
     pushd analytics ;\
     zip -r analytics-bundle.zip * ;\
     popd
