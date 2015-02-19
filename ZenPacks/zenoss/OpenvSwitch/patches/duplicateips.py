@@ -186,7 +186,7 @@ def addDevice(self, *args, **kwargs):
     # based on Products.Zuul.routers.device.DeviceRouter::addDevice()
     # Products.Zuul.facades.devicefacade.DeviceFacade::addDevice() is being called
     # with positional arguments (args) only
-    if len(args) == 23:        # 4.2.4 and 4.2.5
+    if len(args) == 22 or len(args) == 23:        # 4.2.4 and 4.2.5
         deviceName = args[0]
         deviceClass = args[1]
         title = args[2]
@@ -209,7 +209,10 @@ def addDevice(self, *args, **kwargs):
         systemPaths = args[19]
         groupPaths = args[20]
         zProperties = args[21]
-        cProperties = args[22]
+        if len(args) == 23:
+            cProperties = args[22]
+        else:
+            cProperties = None
         zProps = dict(zSnmpCommunity=snmpCommunity,
                       zSnmpPort=snmpPort
                     )
