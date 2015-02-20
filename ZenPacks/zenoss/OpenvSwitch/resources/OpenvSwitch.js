@@ -7,10 +7,6 @@ Ext.onReady(function() {
         var box = Ext.getCmp(DEVICE_OVERVIEW_ID);
         box.removeField('uptime');
         box.removeField('memory');
-
-        box.addField({name: 'ovsVersion', fieldLabel: _t('Open vSwitch Version')});
-        box.addField({name: 'ovsDBVersion', fieldLabel: _t('Open vSwitch Database Version')});
-        box.addField({name: 'ovsTitle', fieldLabel: _t('Open vSwitch Database Name')});
     });
 
     var DEVICE_OVERVIEW_IDSUMMARY = 'deviceoverviewpanel_idsummary';
@@ -20,7 +16,8 @@ Ext.onReady(function() {
         box.replaceField('serialNumber');
     });
 
-    var DEVICE_OVERVIEW_DESCRIPTION = 'deviceoverviewpanel_descriptionsummary';
+    var DEVICE_OVERVIEW_DESCRIPTION =
+        'deviceoverviewpanel_descriptionsummary';
     Ext.ComponentMgr.onAvailable(DEVICE_OVERVIEW_DESCRIPTION, function(){
         var box = Ext.getCmp(DEVICE_OVERVIEW_DESCRIPTION);
         box.removeField('rackSlot');
@@ -29,10 +26,15 @@ Ext.onReady(function() {
         box.removeField('osManufacturer');
         box.removeField('osModel');
 
-        box.addField({name: 'numberBridges', fieldLabel: _t('Number of Bridges'), xtype: 'displayfield'});
-        box.addField({name: 'numberPorts', fieldLabel: _t('Number of Ports'), xtype: 'displayfield'});
-        box.addField({name: 'numberFlows', fieldLabel: _t('Number of Flows'), xtype: 'displayfield'});
-        box.addField({name: 'numberInterfaces', fieldLabel: _t('Number of Interfaces'), xtype: 'displayfield'});
+        box.addField({name: 'ovsVersion',
+                      fieldLabel: _t('Open vSwitch Version'),
+                      xtype: 'displayfield'});
+        box.addField({name: 'ovsDBVersion',
+                      fieldLabel: _t('Open vSwitch Database Version'),
+                      xtype: 'displayfield'});
+        box.addField({name: 'ovsTitle',
+                      fieldLabel: _t('Open vSwitch Database Name'),
+                      xtype: 'displayfield'});
     });
 
     var DEVICE_OVERVIEW_SNMP = 'deviceoverviewpanel_snmpsummary';
@@ -44,5 +46,18 @@ Ext.onReady(function() {
         box.removeField('snmpDescr');
         box.removeField('snmpCommunity');
         box.removeField('snmpVersion');
+
+        box.addField({name: 'numberBridges',
+                      fieldLabel: _t('Number of Bridges'),
+                      xtype: 'displayfield'});
+        box.addField({name: 'numberPorts',
+                      fieldLabel: _t('Number of Ports'),
+                      xtype: 'displayfield'});
+        box.addField({name: 'numberFlows',
+                      fieldLabel: _t('Number of Flows'),
+                      xtype: 'displayfield'});
+        box.addField({name: 'numberInterfaces',
+                      fieldLabel: _t('Number of Interfaces'),
+                      xtype: 'displayfield'});
     });
 });
