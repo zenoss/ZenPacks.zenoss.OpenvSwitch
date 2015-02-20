@@ -1,3 +1,41 @@
+_uuid               : a22d9208-9123-46eb-9544-2353e3bd6d34
+controller          : []
+datapath_id         : "00000a922da2eb46"
+datapath_type       : ""
+external_ids        : {}
+fail_mode           : secure
+flood_vlans         : []
+flow_tables         : {}
+ipfix               : []
+mirrors             : []
+name                : br-int
+netflow             : []
+other_config        : {}
+ports               : [1bc44291-5696-4ec1-9550-7850f8602b7b, 8acfbc58-0904-4baa-9c16-d68bc67baf5e, a802767b-0a51-4d08-b686-2df8ddb804ae, b0b56b74-af78-4292-86fc-79e672c82859, ddfc27b6-05b8-49fe-8760-db2f73a4f9e4, e49a9fdf-8034-4863-af05-e33b7ed33e5c]
+protocols           : []
+sflow               : []
+status              : {}
+stp_enable          : false
+
+_uuid               : 8921ecae-f377-4370-9e74-de2c24d7a6a5
+controller          : []
+datapath_id         : "0000aeec21897043"
+datapath_type       : ""
+external_ids        : {}
+fail_mode           : []
+flood_vlans         : []
+flow_tables         : {}
+ipfix               : []
+mirrors             : []
+name                : br-ex
+netflow             : []
+other_config        : {}
+ports               : [1074d480-c9ba-4d8e-9bf4-8812b48f593a, 5f345363-846b-4975-8255-39fc6e928693]
+protocols           : []
+sflow               : []
+status              : {}
+stp_enable          : false
+SPLIT
 record 0: "Open_vSwitch" schema, version="7.4.0", cksum="951746691 20389"
 
 record 1: 2015-01-26 18:20:12.209 "ovs-vsctl: ovs-vsctl --no-wait -- init -- set Open_vSwitch . db-version=7.4.0"

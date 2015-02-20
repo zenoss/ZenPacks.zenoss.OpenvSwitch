@@ -27,6 +27,7 @@ from .util import loadData
 class FakeCmdResult(object):
     exitCode = None
     output = None
+    stderr = None
 
     def __init__(self, exitCode, output):
         self.exitCode = exitCode
