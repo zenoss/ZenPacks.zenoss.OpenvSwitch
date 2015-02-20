@@ -179,71 +179,52 @@ def addDevice(self, *args, **kwargs):
 
 
 @monkeypatch('Products.Zuul.facades.devicefacade.DeviceFacade')
-def addDevice(self, *args, **kwargs):
+def addDevice(self, deviceName, deviceClass, *args, **kwargs):
     from Products.ZenModel.PerformanceConf import PerformanceConf
     from Products.ZenUtils.IpUtil import isip
 
-    # based on Products.Zuul.routers.device.DeviceRouter::addDevice()
-    # Products.Zuul.facades.devicefacade.DeviceFacade::addDevice() is being called
-    # with positional arguments (args) only
-    if len(args) == 22 or len(args) == 23:        # 4.2.4 and 4.2.5
-        deviceName = args[0]
-        deviceClass = args[1]
-        title = args[2]
-        snmpCommunity = args[3]
-        snmpPort = args[4]
-        manageIp = args[5]
-        model = args[6]
-        collector = args[7]
-        rackSlot = args[8]
-        productionState = args[9]
-        comments = args[10]
-        hwManufacturer = args[11]
-        hwProductName = args[12]
-        osManufacturer = args[13]
-        osProductName = args[14]
-        priority = args[15]
-        tag = args[16]
-        serialNumber = args[17]
-        locationPath = args[18]
-        systemPaths = args[19]
-        groupPaths = args[20]
-        zProperties = args[21]
-        if len(args) == 23:
-            cProperties = args[22]
-        else:
-            cProperties = None
-        zProps = dict(zSnmpCommunity=snmpCommunity,
-                      zSnmpPort=snmpPort
-                    )
-    elif len(args) == 27:      # 5.0.0
-        deviceName = args[0]
-        deviceClass = args[1]
-        title = args[2]
-        snmpCommunity = args[3]
-        snmpPort = args[4]
-        manageIp = args[5]
-        model = args[6]
-        collector = args[7]
-        rackSlot = args[8]
-        productionState = args[9]
-        comments = args[10]
-        hwManufacturer = args[11]
-        hwProductName = args[12]
-        osManufacturer = args[13]
-        osProductName = args[14]
-        priority = args[15]
-        tag = args[16]
-        serialNumber = args[17]
-        locationPath = args[18]
-        zCommandUsername = args[19]
-        zCommandPassword = args[20]
-        zWinUser = args[21]
-        zWinPassword = args[22]
-        systemPaths = args[23]
-        groupPaths = args[24]
-        zProperties = args[25]
-        cProperties = args[26]
+    # y: kwargs; x: key; z: default
+    g = lambda x, y, z: y[x] if x in y else z
+
+    original_kwargs = inspect.getcallargs(original, self, deviceName, deviceClass, *args, **kwargs)
+
+    deviceName = g('deviceName', original_kwargs, '')
+    deviceClass = g('deviceClass', original_kwargs, '')
+    title = g('title', original_kwargs, '')
+    snmpCommunity = g('snmpCommunity', original_kwargs, '')
+    snmpPort = g('snmpPort', original_kwargs, 161)
+    manageIp = g('manageIp', original_kwargs, '')
+    model = g('model', original_kwargs, False)
+    collector = g('collector', original_kwargs, 'localhost')
+    rackSlot = g('rackSlot', original_kwargs, 0)
+    productionState = g('productionState', original_kwargs, 1000)
+    comments = g('comments', original_kwargs, '')
+    hwManufacturer = g('hwManufacturer', original_kwargs, '')
+    hwProductName = g('hwProductName', original_kwargs, '')
+    osManufacturer = g('osManufacturer', original_kwargs, '')
+    osProductName = g('osProductName', original_kwargs, '')
+    priority = g('priority', original_kwargs, 3)
+    tag = g('tag', original_kwargs, '')
+    serialNumber = g('serialNumber', original_kwargs, '')
+    locationPath = g('locationPath', original_kwargs, '')
+    zCommandUsername = g('zCommandUsername', original_kwargs, '')
+    zCommandPassword = g('zCommandPassword', original_kwargs, '')
+    zWinUser = g('zWinUser', original_kwargs, '')
+    zWinPassword = g('zWinPassword', original_kwargs, '')
+    systemPaths = g('systemPaths', original_kwargs, [])
+    groupPaths = g('groupPaths', original_kwargs, [])
+    zProperties = g('zProperties', original_kwargs, {})
+    cProperties = g('cProperties', original_kwargs, {})
+
+    # Make sure this patch only applies to OpenvSwitch device
+    if deviceClass != '/Network/OpenvSwitch':
+        return original(self, deviceName, deviceClass, *args, **kwargs)
+
+    # 5.x.x uses username, password, but 4.2.x does not
+    if  'zCommandUsername' in original_kwargs and \
+        'zCommandPassword' in original_kwargs and \
+        'zWinUser' in original_kwargs and \
+        'zWinPassword' in original_kwargs:
         zProps = dict(  zSnmpCommunity=snmpCommunity,
                         zSnmpPort=snmpPort,
                         zCommandUsername=zCommandUsername,
@@ -251,60 +232,48 @@ def addDevice(self, *args, **kwargs):
                         zWinUser=zWinUser,
                         zWinPassword=zWinPassword,
                     )
+    else:
+        zProps = dict(  zSnmpCommunity=snmpCommunity,
+                        zSnmpPort=snmpPort
+                    )
 
     zProps.update(zProperties)
     model = model and "Auto" or "none"
     perfConf = self._dmd.Monitors.getPerformanceMonitor(collector)
 
-    # Make sure this patch only applies to OpenvSwitch device
-    if title and isip(deviceName) and deviceClass == '/Network/OpenvSwitch':
+    # this is why we need this patch.
+    # we want device name to be the device title entered via GUI
+    # it would be the host IP address without patch
+    if title and isip(deviceName):
         manageIp = deviceName
         deviceName = title
 
+    new_kwargs = {}
+    new_kwargs['deviceName'] = deviceName
+    new_kwargs['devicePath'] = deviceClass
+    new_kwargs['performanceMonitor'] = collector
+    new_kwargs['discoverProto'] = model
+    new_kwargs['manageIp'] = manageIp
+    new_kwargs['zProperties'] = zProps
+    new_kwargs['rackSlot'] = rackSlot
+    new_kwargs['productionState'] = productionState
+    new_kwargs['comments'] = comments
+    new_kwargs['hwManufacturer'] = hwManufacturer
+    new_kwargs['hwProductName'] = hwProductName
+    new_kwargs['osManufacturer'] = osManufacturer
+    new_kwargs['osProductName'] = osProductName
+    new_kwargs['priority'] = priority
+    new_kwargs['tag'] = tag
+    new_kwargs['serialNumber'] = serialNumber
+    new_kwargs['locationPath'] = locationPath
+    new_kwargs['systemPaths'] = systemPaths
+    new_kwargs['groupPaths'] = groupPaths
+    new_kwargs['title'] = title
+
     if 'cProperties' in inspect.getargspec(PerformanceConf.addDeviceCreationJob).args:
-        jobStatus = perfConf.addDeviceCreationJob(deviceName=deviceName,
-                                                  devicePath=deviceClass,
-                                                  performanceMonitor=collector,
-                                                  discoverProto=model,
-                                                  manageIp=manageIp,
-                                                  zProperties=zProps,
-                                                  cProperties=cProperties,
-                                                  rackSlot=rackSlot,
-                                                  productionState=productionState,
-                                                  comments=comments,
-                                                  hwManufacturer=hwManufacturer,
-                                                  hwProductName=hwProductName,
-                                                  osManufacturer=osManufacturer,
-                                                  osProductName=osProductName,
-                                                  priority=priority,
-                                                  tag=tag,
-                                                  serialNumber=serialNumber,
-                                                  locationPath=locationPath,
-                                                  systemPaths=systemPaths,
-                                                  groupPaths=groupPaths,
-                                                  title=title)
-    else:
-        jobStatus = perfConf.addDeviceCreationJob(deviceName=deviceName,
-                                                  devicePath=deviceClass,
-                                                  performanceMonitor=collector,
-                                                  discoverProto=model,
-                                                  manageIp=manageIp,
-                                                  zProperties=zProps,
-                                                  rackSlot=rackSlot,
-                                                  productionState=productionState,
-                                                  comments=comments,
-                                                  hwManufacturer=hwManufacturer,
-                                                  hwProductName=hwProductName,
-                                                  osManufacturer=osManufacturer,
-                                                  osProductName=osProductName,
-                                                  priority=priority,
-                                                  tag=tag,
-                                                  serialNumber=serialNumber,
-                                                  locationPath=locationPath,
-                                                  systemPaths=systemPaths,
-                                                  groupPaths=groupPaths,
-                                                  title=title)
-    return jobStatus
+        new_kwargs['cProperties'] = cProperties
+
+    return perfConf.addDeviceCreationJob(**new_kwargs)
 
 @monkeypatch('Products.ZenHub.services.ModelerService.ModelerService')
 def remote_getDeviceConfig(self, names, checkStatus=False):
