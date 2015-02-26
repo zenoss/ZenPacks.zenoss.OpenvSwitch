@@ -69,6 +69,7 @@ CFG = zenpacklib.ZenPackSpec(
                 'numberFlows':       {'grid_display': False},
                 'numberInterfaces':  {'grid_display': False},
             },
+            'impacts': ['bridges'],
         },
 
         # Component Base Types #######################################
@@ -89,6 +90,7 @@ CFG = zenpacklib.ZenPackSpec(
             'impacts': ['ports',
                         'flows',
                        ],
+            'impacted_by': ['openvSwitch'],
         },
 
         'Port': {

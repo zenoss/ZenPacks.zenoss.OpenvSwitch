@@ -29,20 +29,6 @@ class BridgePortStatus(CommandParser):
         if '/usr/bin/ovsdb-tool' not in cmd.command:
             return
 
-        if cmd.result.stderr:
-            summary = cmd.result.stderr.split('\n')[0]
-            summary = summary[summary.rindex(':') + 1:]
-            event = dict(
-                summary=summary,
-                component=cmd.component,
-                eventClass=cmd.eventClass,
-                eventKey=self.eventKey,
-                severity=5
-            )
-
-            result.events.append(event)
-            return
-
         if len(cmd.result.output) == 0:
             return
 

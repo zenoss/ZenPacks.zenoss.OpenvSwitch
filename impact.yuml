@@ -1,6 +1,6 @@
 // OpenvSwicth Internal Impacts
-[note: OpenvSwicth;ZenPack{bg:deepskyblue}]-[Openv_Switch{bg:darkslateblue}]
-[Openv_Switch{bg:darkslateblue}]1..*-1>[Bridge{bg:darkslateblue}]
+[note: OpenvSwicth;ZenPack{bg:deepskyblue}]-[OVS Device{bg:darkslateblue}]
+[OVS Device{bg:darkslateblue}]1..*-1>[Bridge{bg:darkslateblue}]
 [Bridge{bg:darkslateblue}]1..*-1>[Port{bg:darkslateblue}]
 [Bridge{bg:darkslateblue}]1..*-1>[Flow{bg:darkslateblue}]
 [Port{bg:darkslateblue}]1..*-1>[Interface{bg:darkslateblue}]

@@ -135,6 +135,20 @@ class BaseTriggers(BaseImpactAdapterFactory):
 
 # OVS Impact Providers #################################################
 
+class OVSDeviceTriggers(BaseTriggers):
+
+    """Impact policy triggers for OVS device."""
+
+    triggers = [
+        ('DOWN when 100% device DOWN', PERCENT, AVAILABILITY, {
+            'dependentState': DOWN,
+            'threshold': '100',
+            'state': DOWN,
+            'metaTypes': [OpenvSwitch.meta_type],
+            }),
+        ]
+
+
 class BridgeTriggers(BaseTriggers):
 
     """Impact policy triggers for bridge instances."""
