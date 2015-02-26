@@ -10,6 +10,12 @@
 
         <subscriber
             provides="ZenPacks.zenoss.Impact.impactd.interfaces.INodeTriggers"
+            for=".OpenvSwitch.OpenvSwitch"
+            factory=".impact.OVSDeviceTriggers"
+            />
+
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.INodeTriggers"
             for=".Bridge.Bridge"
             factory=".impact.BridgeTriggers"
             />
