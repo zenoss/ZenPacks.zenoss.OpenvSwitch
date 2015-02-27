@@ -87,7 +87,7 @@ class BridgePortStatus(CommandParser):
                     component=cmd.component,
                     eventClass=cmd.eventClass,
                     eventKey=self.eventKey,
-                    severity=cmd.severity
+                    severity=3
                 )
 
                 result.events.append(event)

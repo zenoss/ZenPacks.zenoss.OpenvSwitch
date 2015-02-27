@@ -29,7 +29,7 @@ class OpenvSwitch(CommandPlugin):
         'echo "__COMMAND__" ; '
         '/usr/bin/sudo ovs-vsctl --columns=_uuid,name,mac,lacp,external_ids,interfaces,tag,trunks,vlan_mode,status,statistics list port ; '
         'echo "__COMMAND__" ; '
-        'for x in $(/usr/bin/sudo ovs-vsctl --columns=name list bridge); do if [ $x != \'name\' ] && [ $x != \':\' ] ; then  echo $x; /usr/bin/sudo ovs-ofctl dump-flows $x; fi; done ; '
+        'for x in $(/usr/bin/sudo ovs-vsctl --columns=name list bridge); do if [ $x != \'name\' ] && [ $x != \':\' ] ; then x=$(echo $x | tr -d \'"\' ); echo $x; /usr/bin/sudo ovs-ofctl dump-flows $x; fi; done ; '
         'echo "__COMMAND__" ; '
         '/usr/bin/sudo ovs-vsctl list interface ; '
         ')'
@@ -68,24 +68,27 @@ class OpenvSwitch(CommandPlugin):
             return None
 
         if len(brdgs) > 0:
-            LOG.info('Found %d bridges on %s for user %s', len(brdgs), device.id, device.zCommandUsername)
+            LOG.info('Found %d BRIDGES on %s for user %s', len(brdgs), device.id, device.zCommandUsername)
         else:
-            LOG.info('No bridge found on %s for user %s', device.id, device.zCommandUsername)
+            LOG.info('No BRIDGE found on %s for user %s', device.id, device.zCommandUsername)
 
         if len(prts) > 0:
-            LOG.info('Found %d ports on %s for user %s', len(prts), device.id, device.zCommandUsername)
+            LOG.info('Found %d PORTS on %s for user %s', len(prts), device.id, device.zCommandUsername)
         else:
-            LOG.info('No port found on %s for user %s', device.id, device.zCommandUsername)
+            LOG.info('No PORT found on %s for user %s', device.id, device.zCommandUsername)
 
-        if len(flws) > 0:
-            LOG.info('Found %d flows on %s for user %s', len(flws), device.id, device.zCommandUsername)
+        flowcount = 0
+        for brdg in flws.keys():
+            flowcount += len(flws[brdg])
+        if flowcount > 0:
+            LOG.info('Found %d FLOWS on %s for user %s', flowcount, device.id, device.zCommandUsername)
         else:
-            LOG.info('No flow found on %s for user %s', device.id, device.zCommandUsername)
+            LOG.info('No FLOW found on %s for user %s', device.id, device.zCommandUsername)
 
         if len(ifaces) > 0:
-            LOG.info('Found %d interfaces on %s for user %s', len(ifaces), device.id, device.zCommandUsername)
+            LOG.info('Found %d INTERFACES on %s for user %s', len(ifaces), device.id, device.zCommandUsername)
         else:
-            LOG.info('No interface found on %s for user %s', device.id, device.zCommandUsername)
+            LOG.info('No INTERFACE found on %s for user %s', device.id, device.zCommandUsername)
 
         maps = []
 
