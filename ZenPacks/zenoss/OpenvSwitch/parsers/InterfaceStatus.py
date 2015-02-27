@@ -42,12 +42,13 @@ class InterfaceStatus(CommandParser):
         summary = ''
         iface_stat = [stat for stat in iface_stats if stat['_uuid'] == iface_id]
         if iface_stat[0]['admin_state'] == 'up' and iface_stat[0]['link_state'] == 'up':
-            return
+            summary = 'Interface admin state: UP; Interface link state: UP'
+            severity = 0
         elif iface_stat[0]['admin_state'] == 'down' and iface_stat[0]['link_state'] == 'down':
             summary = 'Interface admin state: DOWN; Interface link state: DOWN'
             severity = 2
         elif iface_stat[0]['link_state'] == 'down' and iface_stat[0]['admin_state'] == 'up':
-            summary = 'Interface admin state: UP; Interface link state: DOWN'
+            summary = 'Interface link state: DOWN'
             severity = 4
 
 
