@@ -11,9 +11,13 @@
       <items>
         <item resourceId="JoinTree_1.dim_open_vswitch.device_name" dimensionOrMeasure="Dimension" id="dim_open_vswitch_device_name" label="Device Name"/>
         <item resourceId="JoinTree_1.dim_open_vswitch.device_manage_ip" dimensionOrMeasure="Dimension" id="dim_open_vswitch_device_manage_ip" label="Management IP Address"/>
-        <item resourceId="JoinTree_1.dim_open_vswitch.device_hw_manufacturer" dimensionOrMeasure="Dimension" id="dim_open_vswitch_device_hw_manufacturer" label="Hardware Manufacturer"/>
-        <item resourceId="JoinTree_1.dim_open_vswitch.device_hw_product" dimensionOrMeasure="Dimension" id="dim_open_vswitch_device_hw_product" label="Hardware Model"/>
-        <item resourceId="JoinTree_1.dim_open_vswitch.device_hw_serial_number" dimensionOrMeasure="Dimension" id="dim_open_vswitch_device_hw_serial_number" label="Hardware Serial Number"/>
+        <item resourceId="JoinTree_1.dim_open_vswitch.ovsVersion" dimensionOrMeasure="Dimension" id="dim_open_vswitch_ovsVersion" label="Open vSwitch Version"/>
+        <item resourceId="JoinTree_1.dim_open_vswitch.ovsDBVersion" dimensionOrMeasure="Dimension" id="dim_open_vswitch_ovsDBVersion" label="Open vSwitch DB Version"/>
+        <item resourceId="JoinTree_1.dim_open_vswitch.ovsTitle" dimensionOrMeasure="Dimension" id="dim_open_vswitch_ovsTitle" label="Open vSwitch DB Name"/>
+        <item resourceId="JoinTree_1.dim_open_vswitch.numberBridges" dimensionOrMeasure="Dimension" id="dim_open_vswitch_numberBridges" label="Number of Bridges"/>
+        <item resourceId="JoinTree_1.dim_open_vswitch.numberPorts" dimensionOrMeasure="Dimension" id="dim_open_vswitch_numberPorts" label="Number of Ports"/>
+        <item resourceId="JoinTree_1.dim_open_vswitch.numberFlows" dimensionOrMeasure="Dimension" id="dim_open_vswitch_numberFlows" label="Number of Flows"/>
+        <item resourceId="JoinTree_1.dim_open_vswitch.numberInterfaces" dimensionOrMeasure="Dimension" id="dim_open_vswitch_numberInterfaces" label="Number of Interfaces"/>
       </items>
     </itemGroup>
     <itemGroup resourceId="JoinTree_1" label="Bridges" id="set_openvswitch_bridge" description="">
@@ -270,6 +274,13 @@
         <field type="java.lang.String" id="device_sys_name"/>
         <field type="java.lang.String" id="device_sys_location"/>
         <field type="java.lang.Boolean" id="device_is_monitored"/>
+        <field type="java.lang.String" id="ovsVersion"/>
+        <field type="java.lang.String" id="ovsDBVersion"/>
+        <field type="java.lang.String" id="ovsTitle"/>
+        <field type="java.lang.String" id="numberBridges"/>
+        <field type="java.lang.String" id="numberPorts"/>
+        <field type="java.lang.String" id="numberFlows"/>
+        <field type="java.lang.String" id="numberInterfaces"/>
       </fieldList>
     </jdbcTable>
     <jdbcTable tableName="dim_date" datasourceId="zenoss_reporting" id="dim_date">
@@ -753,6 +764,13 @@
         <field type="java.lang.String" id="dim_open_vswitch.device_sys_name"/>
         <field type="java.lang.String" id="dim_open_vswitch.device_sys_location"/>
         <field type="java.lang.Boolean" id="dim_open_vswitch.device_is_monitored"/>
+        <field type="java.lang.String" id="dim_open_vswitch.ovsVersion"/>
+        <field type="java.lang.String" id="dim_open_vswitch.ovsDBVersion"/>
+        <field type="java.lang.String" id="dim_open_vswitch.ovsTitle"/>
+        <field type="java.lang.String" id="dim_open_vswitch.numberBridges"/>
+        <field type="java.lang.String" id="dim_open_vswitch.numberPorts"/>
+        <field type="java.lang.String" id="dim_open_vswitch.numberFlows"/>
+        <field type="java.lang.String" id="dim_open_vswitch.numberInterfaces"/>
         <field type="java.lang.Integer" id="dim_openvswitch_bridge.openvswitch_bridge_key"/>
         <field type="openvswitch_bridge_deleted_at" id="dim_openvswitch_bridge.openvswitch_bridge_deleted_at" dataSetExpression="if(dim_openvswitch_bridge.openvswitch_bridge_deleted_at,null,0,1)"/>
         <field type="java.lang.String" id="dim_openvswitch_bridge.openvswitch_bridge_name"/>
