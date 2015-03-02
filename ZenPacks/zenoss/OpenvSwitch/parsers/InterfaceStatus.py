@@ -54,9 +54,10 @@ class InterfaceStatus(CommandParser):
 
         event = dict(
             summary=summary,
+            device= cmd.deviceConfig.device,
             component=cmd.component,
             eventClass=cmd.eventClass,
-            eventKey=self.eventKey,
+            eventClassKey=self.eventClassKey,
             severity=severity
             )
 
