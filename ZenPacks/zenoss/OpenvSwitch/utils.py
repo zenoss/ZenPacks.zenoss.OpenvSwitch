@@ -8,6 +8,8 @@
 ##############################################################################
 
 import os
+import datetime
+import calendar
 import uuid
 
 import logging
@@ -265,3 +267,54 @@ def create_fuid(bridgename, flowdict):
         funame += str(flowdict['actions'])
 
     return str(uuid.uuid5(uuid.NAMESPACE_OID, funame))
+
+def get_ovsdb_records(logs, component, cycleTime):
+    # get unique records in terms of summary
+    def in_records(summary, records):
+        return len([record for record in records if summary in record.values()]) > 0
+
+    records = []
+    rcrd_index = len(logs)
+    while rcrd_index > 0:
+
+        item = {}
+        rcrd_title = 'record ' + str(rcrd_index)
+        rcrd = logs[rcrd_title]
+        rcrd_index -= 1
+
+        marker = len(rcrd)
+        if marker < 20:
+            # timestamp only, nothing else
+            continue
+
+        # component: bridge name
+        if component not in rcrd:
+            # this record has nothing to do with this bridge
+            continue
+
+        if '"ovs-vsctl:' in rcrd:
+            marker = min(rcrd.index('"ovs-vsctl:') - 1, len(rcrd))
+        timestr = rcrd[:marker]
+
+        summary = ''
+        if 'add-br' in rcrd:
+            name = rcrd[rcrd.index('add-') + len('add-br '):]
+            summary = 'add bridge: ' + name
+        elif 'del-br' in rcrd:
+            name = rcrd[rcrd.index('del-') + len('del-br '):]
+            summary = 'del bridge: ' + name
+        elif 'add-port' in rcrd:
+            name = rcrd[rcrd.index('add-') + len('add-port '):]
+            summary = 'add port: ' + name
+        elif 'del-port' in rcrd:
+            name = rcrd[rcrd.index('del-') + len('del-port '):]
+            summary = 'del port: ' + name
+
+        # have we seen this summary before?
+        if summary and not in_records(summary, records):
+            item['name'] = name
+            item['summary'] = summary
+            item['time'] = timestr
+            records.append(item)
+
+    return records

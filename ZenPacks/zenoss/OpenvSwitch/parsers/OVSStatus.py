@@ -69,6 +69,7 @@ class OVSStatus(CommandParser):
 
         event = dict(
             summary=summary,
+            device= cmd.deviceConfig.device,
             eventClass=cmd.eventClass,
             eventKey=self.eventKey,
             severity=cmd.severity
