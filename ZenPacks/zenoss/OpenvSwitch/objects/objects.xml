@@ -1190,7 +1190,7 @@ AVERAGE
 <object id='OpenvSwitch Interface Status' module='Products.ZenEvents.EventClassInst' class='EventClassInst'>
 <property type="text" id="transform" mode="w" >
 from ZenPacks.zenoss.OpenvSwitch.events import updateIface
-updateIface(evt, device, dmd, txnCommit)
+updateIface(evt, device, component)
 </property>
 <property type="string" id="eventClassKey" mode="w" >
 OpenvSwitch_interface_status

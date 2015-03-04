@@ -5,21 +5,11 @@
 
 from Products.DataCollector.plugins.DataMaps import ObjectMap
 from Products.DataCollector.ApplyDataMap import ApplyDataMap
-from Products.ZenUtils.Utils import prepId
 
 import logging
 log = logging.getLogger('zen.OpenvSwitch.events')
 
-def getObject(device, dmd, componentId):
-    # given interface component ID, return the corresponding object
-    # for use by apply datamap
-    components = device.getDeviceComponents(type='OpenvSwitchInterface')
-    for component in components:
-        if componentId in component.getPrimaryParent().objectIds():
-            return component.getPrimaryParent()._getOb(componentId)
-    return None
-
-def updateIface(evt, device, dmd, txnCommit):
+def updateIface(evt, device, component):
     """
         incremental modeling based on events sent
     """
@@ -28,7 +18,6 @@ def updateIface(evt, device, dmd, txnCommit):
         return 0
 
     log.info("event: %s", str(evt))
-    datamaps = []
     astate = 'UP'
     lstate = 'UP'
     if 'admin state: DOWN' in evt.summary:
@@ -36,11 +25,7 @@ def updateIface(evt, device, dmd, txnCommit):
     if 'link state: DOWN' in evt.summary:
         lstate = 'DOWN'
 
-    obj = getObject(device, dmd, evt.component)
-    if not obj:
-        return 0
-
-    datamaps.append(ObjectMap(
+    objmap = ObjectMap(
         modname='ZenPacks.zenoss.OpenvSwitch.Interface',
         compname='',
         data={
@@ -48,8 +33,8 @@ def updateIface(evt, device, dmd, txnCommit):
             'lstate':  lstate,
             'astate':  astate,
         },
-    ))
+    )
     adm = ApplyDataMap(device)
-    adm.applyDataMap(obj, datamaps[0])
+    adm.applyDataMap(component, objmap)
 
-    return len(datamaps)
+    return 1
