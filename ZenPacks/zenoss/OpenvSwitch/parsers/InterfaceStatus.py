@@ -18,7 +18,6 @@ from Products.ZenRRD.CommandParser import CommandParser
 from ZenPacks.zenoss.OpenvSwitch.utils import str_to_dict
 
 class InterfaceStatus(CommandParser):
-
     eventKey = eventClassKey = 'OpenvSwitch_interface_status'
 
     def processResults(self, cmd, result):
@@ -41,22 +40,24 @@ class InterfaceStatus(CommandParser):
         # interface link_state: UP or DOWN
         summary = ''
         iface_stat = [stat for stat in iface_stats if stat['_uuid'] == iface_id]
+        if len(iface_stat) == 0:
+            return
+
         if iface_stat[0]['admin_state'] == 'up' and iface_stat[0]['link_state'] == 'up':
             summary = 'Interface admin state: UP; Interface link state: UP'
-            severity = 0
+            severity = 0           # send clear event
         elif iface_stat[0]['admin_state'] == 'down' and iface_stat[0]['link_state'] == 'down':
             summary = 'Interface admin state: DOWN; Interface link state: DOWN'
-            severity = 2
+            severity = 3
         elif iface_stat[0]['link_state'] == 'down' and iface_stat[0]['admin_state'] == 'up':
             summary = 'Interface link state: DOWN'
             severity = 4
 
-
+        # do not use eventClass, so that we can dedup based on summary
         event = dict(
             summary=summary,
             device= cmd.deviceConfig.device,
             component=cmd.component,
-            eventClass=cmd.eventClass,
             eventClassKey=self.eventClassKey,
             severity=severity
             )

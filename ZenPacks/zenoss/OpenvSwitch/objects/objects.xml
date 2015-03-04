@@ -37,7 +37,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name,_uuid list bridge; for txt in $$(/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name list bridge); do if [ $$txt != 'name' ] &amp;&amp; [ $$txt != ':' ] ; then echo $$txt; /usr/bin/sudo /usr/bin/ovs-ofctl dump-aggregate $$txt; fi; done;
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name,_uuid list bridge; for txt in $$(/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name list bridge); do if [ $$txt != 'name' ] &amp;&amp; [ $$txt != ':' ] ; then txt=$(echo $$txt | tr -d \'"\' ); echo $$txt; /usr/bin/sudo /usr/bin/ovs-ofctl dump-aggregate $$txt; fi; done;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -1182,5 +1182,27 @@ AVERAGE
 </tomanycont>
 </object>
 </tomanycont>
+</object>
+<!-- ('', 'zport', 'dmd', 'Events', 'OpenvSwitch') -->
+<object id='/zport/dmd/Events/OpenvSwitch' module='Products.ZenEvents.EventClass' class='EventClass'>
+<object id='Interface' module='Products.ZenEvents.EventClass' class='EventClass'>
+<tomanycont id='instances'>
+<object id='OpenvSwitch Interface Status' module='Products.ZenEvents.EventClassInst' class='EventClassInst'>
+<property type="text" id="transform" mode="w" >
+from ZenPacks.zenoss.OpenvSwitch.events import updateIface
+updateIface(evt, device, component)
+</property>
+<property type="string" id="eventClassKey" mode="w" >
+OpenvSwitch_interface_status
+</property>
+<property type="int" id="sequence" mode="w" >
+7
+</property>
+<property type="text" id="explanation" mode="w" >
+Update interface model date based on interface events
+</property>
+</object>
+</tomanycont>
+</object>
 </object>
 </objects>
