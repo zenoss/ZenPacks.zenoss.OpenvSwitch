@@ -245,7 +245,7 @@
       severity: Info
 
     bridgeFlowCount:
-      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=name,_uuid list bridge; for txt in $$(/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name list bridge); do if [ $$txt != 'name' ] && [ $$txt != ':' ] ; then txt=$(echo $$txt | tr -d \'"\' ); echo $$txt; /usr/bin/sudo /usr/bin/ovs-ofctl dump-aggregate $$txt; fi; done;
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=name,_uuid list bridge; for txt in $$(/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name list bridge); do if [ $$txt != 'name' ] && [ $$txt != ':' ] ; then txt=$$(echo $$txt | tr -d \'\"\' ); echo $$txt; /usr/bin/sudo /usr/bin/ovs-ofctl dump-aggregate $$txt; fi; done;
       cycletime: 300
 
       datapoints:
