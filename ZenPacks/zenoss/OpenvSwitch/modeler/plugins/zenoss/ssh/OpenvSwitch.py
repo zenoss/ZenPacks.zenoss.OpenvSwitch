@@ -35,6 +35,8 @@ class OpenvSwitch(CommandPlugin):
         ')'
     )
 
+    bad_ifaces = 0
+
     def process(self, device, results, unused):
         LOG.info('Processing plugin results on %s', device.id)
 
@@ -85,11 +87,6 @@ class OpenvSwitch(CommandPlugin):
         else:
             LOG.info('No FLOW found on %s for user %s', device.id, device.zCommandUsername)
 
-        if len(ifaces) > 0:
-            LOG.info('Found %d INTERFACES on %s for user %s', len(ifaces), device.id, device.zCommandUsername)
-        else:
-            LOG.info('No INTERFACE found on %s for user %s', device.id, device.zCommandUsername)
-
         maps = []
 
         if 'name' in ovsdata:
@@ -103,7 +100,7 @@ class OpenvSwitch(CommandPlugin):
             'ovsVersion':        ovsdata['ovs_version'],
             'numberBridges':     len(brdgs),
             'numberPorts':       len(prts),
-            'numberFlows':       len(flws),
+            'numberFlows':       flowcount,
             'numberInterfaces':  len(ifaces),
             })
 
@@ -137,11 +134,32 @@ class OpenvSwitch(CommandPlugin):
             if flows and len(flows.maps) > 0:
                 rel_maps.append(flows)
 
+        if len(ifaces) - self.bad_ifaces > 0:
+            LOG.info('Found %d INTERFACES on %s for user %s',
+                      len(ifaces) - self.bad_ifaces,
+                      device.id,
+                      device.zCommandUsername)
+        else:
+            LOG.info('No INTERFACE found on %s for user %s',
+                      device.id,
+                      device.zCommandUsername)
+
         maps.append(RelationshipMap(
             relname=classname,
             modname='ZenPacks.zenoss.OpenvSwitch.Bridge',
             objmaps=bridges))
         maps.extend(rel_maps)
+
+        # in case we have bad interfaces
+        # we need to adjust the values displayed on device overview page
+        if self.bad_ifaces > 0:
+            modifiedOvsObjMap = self.objectMap({
+                'ovsTitle':          ovs_name,
+                'ovsId':             ovsdata['_uuid'],
+                'numberInterfaces':  len(ifaces) - self.bad_ifaces,
+            })
+
+            maps.append(modifiedOvsObjMap)
 
         return maps
 
@@ -230,6 +248,17 @@ class OpenvSwitch(CommandPlugin):
         classname = 'interfaces'
         for iface in ifaces:
             if iface['_uuid'] not in pinterfaces:
+                continue
+
+            # taking care of possible very bad items
+            if iface['link_state'] == 'up' and not iface['mac_in_use']:
+                self.bad_ifaces += 1
+                continue
+            if  not iface['link_state'] and \
+                not iface['admin_state'] and \
+                not iface['mac_in_use'] and \
+                iface['ofport'] == '-1':
+                self.bad_ifaces += 1
                 continue
 
             if iface['link_speed'] == 10000000000:
