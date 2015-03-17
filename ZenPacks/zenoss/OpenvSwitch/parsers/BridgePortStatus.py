@@ -35,6 +35,9 @@ class BridgePortStatus(CommandParser):
         if len(cmd.result.output) == 0:
             return
 
+        if len(cmd.result.output.split('SPLIT')) < 3:
+            return
+
         # epoch time difference between zenoss and ovs host
         # resolution in seconds
         ovsepoch = cmd.result.output.split('SPLIT')[0].strip()
