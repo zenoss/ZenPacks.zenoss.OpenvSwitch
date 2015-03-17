@@ -18,6 +18,9 @@ from Products.ZenRRD.CommandParser import CommandParser
 from ZenPacks.zenoss.OpenvSwitch.utils import str_to_dict
 
 class InterfaceStatus(CommandParser):
+
+    createDefaultEventUsingExitCode = False
+
     eventKey = eventClassKey = 'OpenvSwitch_interface_status'
 
     def processResults(self, cmd, result):

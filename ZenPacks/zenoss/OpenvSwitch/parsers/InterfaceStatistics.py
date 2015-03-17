@@ -20,6 +20,9 @@ from ZenPacks.zenoss.OpenvSwitch.utils import str_to_dict
 
 
 class InterfaceStatistics(CommandParser):
+
+    createDefaultEventUsingExitCode = False
+
     def processResults(self, cmd, result):
         if len(cmd.result.output) == 0:
             return
