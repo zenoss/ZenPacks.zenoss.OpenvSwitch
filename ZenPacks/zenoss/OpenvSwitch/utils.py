@@ -8,8 +8,8 @@
 ##############################################################################
 
 import os
-import datetime
-import calendar
+import time
+from datetime import datetime
 import uuid
 
 import logging
@@ -268,10 +268,15 @@ def create_fuid(bridgename, flowdict):
 
     return str(uuid.uuid5(uuid.NAMESPACE_OID, funame))
 
-def get_ovsdb_records(logs, component, cycleTime):
+def get_ovsdb_records(logs, component, cycleTime, timedelta):
     # get unique records in terms of summary
     def in_records(summary, records):
         return len([record for record in records if summary in record.values()]) > 0
+
+    utcoffset = datetime.utcnow() - datetime.now()
+    zenossepoch = int(time.time()) + int(round(utcoffset.total_seconds()))
+    recordpattern1 = '%Y-%m-%d %H:%M:%S'           # for '2015-03-10 08:35:31'
+    recordpattern2 = '%Y-%m-%d %H:%M:%S.%f'        # for '2015-03-10 08:35:31.xxx'
 
     records = []
     rcrd_index = len(logs)
@@ -283,7 +288,7 @@ def get_ovsdb_records(logs, component, cycleTime):
         rcrd_index -= 1
 
         marker = len(rcrd)
-        if marker < 20:
+        if marker < 25:
             # timestamp only, nothing else
             continue
 
@@ -294,7 +299,17 @@ def get_ovsdb_records(logs, component, cycleTime):
 
         if '"ovs-vsctl:' in rcrd:
             marker = min(rcrd.index('"ovs-vsctl:') - 1, len(rcrd))
+
+        # record time is always UTC time
         timestr = rcrd[:marker]
+        try:
+            recordepoch = int(time.mktime(time.strptime(timestr, recordpattern1)))
+        except ValueError:
+            recordepoch = int(time.mktime(time.strptime(timestr, recordpattern2)))
+
+        # we only consider records within cycletime
+        if zenossepoch - cycleTime > (recordepoch + timedelta):
+            continue
 
         summary = ''
         if 'add-br' in rcrd:
@@ -305,6 +320,8 @@ def get_ovsdb_records(logs, component, cycleTime):
             summary = 'del bridge: ' + name
         elif 'add-port' in rcrd:
             name = rcrd[rcrd.index('add-') + len('add-port '):]
+            if ' -- set Interface' in name:
+                name = name[:name.index(' -- set Interface')]
             summary = 'add port: ' + name
         elif 'del-port' in rcrd:
             name = rcrd[rcrd.index('del-') + len('del-port '):]

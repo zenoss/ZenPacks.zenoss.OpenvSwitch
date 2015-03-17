@@ -19,6 +19,8 @@ from Products.ZenRRD.CommandParser import CommandParser
 
 class OVSStatus(CommandParser):
 
+    createDefaultEventUsingExitCode = False
+
     eventKey = eventClassKey = 'OpenvSwitch_OVS_status'
 
     def processResults(self, cmd, result):
