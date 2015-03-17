@@ -107,7 +107,7 @@ bridge_port_status
 2
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/ovs-vsctl list bridge ; echo "SPLIT" ; /usr/bin/sudo /usr/bin/ovsdb-tool show-log;
+/bin/date -u +%s; echo "SPLIT" ; /usr/bin/ovs-vsctl list bridge ; echo "SPLIT" ; /usr/bin/sudo /usr/bin/ovsdb-tool show-log;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
