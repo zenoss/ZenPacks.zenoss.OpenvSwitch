@@ -254,10 +254,6 @@
         <field type="java.lang.String" id="device_production_state_name"/>
         <field type="java.lang.String" id="device_class"/>
         <field type="java.lang.String" id="device_collector"/>
-        <field type="java.lang.String" id="device_hw_manufacturer"/>
-        <field type="java.lang.String" id="device_hw_product"/>
-        <field type="java.lang.String" id="device_hw_serial_number"/>
-        <field type="java.lang.String" id="device_hw_asset_tag"/>
         <field type="java.lang.Double" id="device_total_swap"/>
         <field type="java.lang.Double" id="device_total_memory"/>
         <field type="java.lang.String" id="device_os_manufacturer"/>
@@ -744,10 +740,6 @@
         <field type="java.lang.String" id="dim_open_vswitch.device_production_state_name"/>
         <field type="java.lang.String" id="dim_open_vswitch.device_class"/>
         <field type="java.lang.String" id="dim_open_vswitch.device_collector"/>
-        <field type="java.lang.String" id="dim_open_vswitch.device_hw_manufacturer"/>
-        <field type="java.lang.String" id="dim_open_vswitch.device_hw_product"/>
-        <field type="java.lang.String" id="dim_open_vswitch.device_hw_serial_number"/>
-        <field type="java.lang.String" id="dim_open_vswitch.device_hw_asset_tag"/>
         <field type="java.lang.Double" id="dim_open_vswitch.device_total_swap"/>
         <field type="java.lang.Double" id="dim_open_vswitch.device_total_memory"/>
         <field type="java.lang.String" id="dim_open_vswitch.device_os_manufacturer"/>

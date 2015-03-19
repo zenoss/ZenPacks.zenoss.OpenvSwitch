@@ -28,7 +28,7 @@ from .OpenvSwitch import OpenvSwitch
 from .ManagedObject import ManagedObject
 
 
-class OpenvSwitchReportableFactory(DeviceReportableFactory):
+class OVSDeviceReportableFactory(DeviceReportableFactory):
 
     """Reportable factory for OpenvSwitch.
 
@@ -39,7 +39,7 @@ class OpenvSwitchReportableFactory(DeviceReportableFactory):
     dim_Open_vSwitch. This avoids the need to always join on
     dim_device.
 
-    This works by making IReportable(OpenvSwitch) find the OpenvSwitchReportable
+    This works by making IReportable(OpenvSwitch) find the OVSDeviceReportable
     adapter, then having this factory explicitly yield
     DeviceReportable(OpenvSwitch).
 
@@ -50,13 +50,13 @@ class OpenvSwitchReportableFactory(DeviceReportableFactory):
 
     def exports(self):
         """Generate IReportable adapters."""
-        for reportable in super(OpenvSwitchReportableFactory, self).exports():
+        for reportable in super(OVSDeviceReportableFactory, self).exports():
             yield reportable
 
         yield DeviceReportable(self.context)
 
 
-class OpenvSwitchReportable(DeviceReportable):
+class OVSDeviceReportable(DeviceReportable):
 
     """Reportable adapter for OpenvSwitch."""
 
@@ -65,6 +65,37 @@ class OpenvSwitchReportable(DeviceReportable):
 
     entity_class_name = 'open_vswitch'
 
+    def reportProperties(self):
+        properties = super(OVSDeviceReportable, self).reportProperties()
+
+        str_properties = (
+            'ovsTitle',
+            'ovsDBVersion',
+            'ovsVersion',
+        )
+
+        int_properties = (
+            'numberBridges',
+            'numberPorts',
+            'numberFlows',
+            'numberInterfaces',
+        )
+
+        for str_property in str_properties:
+            properties.append((
+                str_property,
+                'string',
+                getattr(self.context, str_property, None),
+                DEFAULT_STRING_LENGTH))
+
+        for int_property in int_properties:
+            properties.append((
+                int_property,
+                'int',
+                getattr(self.context, int_property, None),
+                MARKER_LENGTH))
+
+        return properties
 
 class ManagedObjectReportable(BaseReportable):
 

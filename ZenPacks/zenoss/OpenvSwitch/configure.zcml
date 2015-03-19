@@ -63,13 +63,13 @@
         <adapter
             provides="Products.Zuul.interfaces.IReportableFactory"
             for=".OpenvSwitch.OpenvSwitch"
-            factory=".analytics.OpenvSwitchReportableFactory"
+            factory=".analytics.OVSDeviceReportableFactory"
             />
 
         <adapter
             provides="Products.Zuul.interfaces.IReportable"
             for=".OpenvSwitch.OpenvSwitch"
-            factory=".analytics.OpenvSwitchReportable"
+            factory=".analytics.OVSDeviceReportable"
             />
 
         <adapter
