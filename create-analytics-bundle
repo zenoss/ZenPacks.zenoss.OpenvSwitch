@@ -445,6 +445,13 @@ def update_schema(schema, obj):
         'device_manage_ip': {'label': 'Management IP Address'},
         }, **{x['id']: x for x in obj._properties})
 
+    removeProperties = [
+        ('device_hw_manufacturer', 'string', '', 255),
+        ('device_hw_product', 'string', '', 255),
+        ('device_hw_serial_number', 'string', '', 255),
+        ('device_hw_asset_tag', 'string', '', 255),
+    ]
+    removepids = [p[0] for p in removeProperties]
     addProperties = [
         ('ovsVersion', 'string', '', ''),
         ('ovsDBVersion', 'string', '', ''),
@@ -474,6 +481,9 @@ def update_schema(schema, obj):
 
     for pid, ptype, _, _ in reportable.reportProperties() + addProperties:
         if pid in addpids and dim_table.id != 'dim_open_vswitch':
+            continue
+
+        if pid in removepids and dim_table.id == 'dim_open_vswitch':
             continue
 
         field = dim_table.add_field(
