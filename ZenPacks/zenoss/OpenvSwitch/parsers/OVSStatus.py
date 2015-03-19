@@ -11,7 +11,6 @@
 #
 ###########################################################################
 
-import re
 import logging
 logger = logging.getLogger('zen.OpenvSwitch.Parser')
 
@@ -27,8 +26,9 @@ class OVSStatus(CommandParser):
         # Since during 1.1.0, we only use
         # Red Hat versions of OpenStack testing targets
         # we are not ready to test Ubuntu hosts for OpenvSwitch yet
+
         if '/sbin/service openvswitch status' not in cmd.command or \
-           '/usr/bin/systemctl status openvswitch.service' not in cmd.command :
+           '/usr/bin/systemctl status openvswitch-nonetwork.service' not in cmd.command :
             return
 
         if len(cmd.result.output) == 0:
@@ -45,30 +45,39 @@ class OVSStatus(CommandParser):
             # should not happen
             return
 
-        match_centos_6_1 = re.search(r'ovsdb-server is running', stats[0])
-        match_centos_6_2 = re.search(r'ovs-vswitchd is running', stats[1])
-        if match_centos_6_1 and match_centos_6_2:
-            return
-
-        match_centos_6_3 = re.search(r'ovsdb-server is not running', stats[0])
-        match_centos_6_4 = re.search(r'ovs-vswitchd is not running', stats[1])
-        if match_centos_6_3 or match_centos_6_4:
-            summary = stats[0] + '; ' + stats[1]
-
-        if len(summary) == 0:
-            # centos 7
-            if len(stats) < 4:
-                # should not happen
+        if len(stats) == 2:
+            # for centos 6.x hosts
+            ovsdb_server_is_running = len([stat for stat in stats \
+                                    if 'ovsdb-server is running' in stat]) > 0
+            ovs_vswitchd_is_running = len([stat for stat in stats \
+                                    if 'ovs-vswitchd is running' in stat]) > 0
+            if ovsdb_server_is_running and ovs_vswitchd_is_running:
                 return
+            elif ovsdb_server_is_running and not ovs_vswitchd_is_running:
+                summary = 'ovs-vswitchd is not running.'
+            elif not ovsdb_server_is_running and ovs_vswitchd_is_running:
+                summary = 'ovsdb-server is not running.'
+            else:
+                summary = 'ovsdb-server is not running; ovs-vswitchd is not running.'
 
-            match_centos_7_1 = re.search(r'Active: active', stats[2])
-            if match_centos_7_1:
+        # for centos 7 host, we are looking for something like:
+        # 22842 ovsdb-server: monitoring pid 22843 (healthy)
+        # 22853 ovs-vswitchd: monitoring pid 22854 (healthy)
+        # and there should be two healthy daemons: ovsdb-server and ovs-vswitchd
+        if len(summary) == 0 and len(stats) > 2:
+            stats = [stat.strip() for stat in stats if '(healthy)' in stat]
+            if len(stats) == 2:          # all healthy
                 return
+            elif len(stats) == 1:
+                if 'ovsdb-server' in stats[0]:
+                    summary = 'ovs-vswitchd is not running.'
+                else:
+                    summary = 'ovsdb-server is not running.'
+            elif len(stats) == 0:
+                summary = 'ovsdb-server is not running; ovs-vswitchd is not running.'
 
-            match_centos_7_2 = re.search(r'Active: inactive', stats[2])
-            if match_centos_7_2:
-                summary = 'openvswitch.service: ' + stats[2]
-
+        # if we ever reach here, then summary != ''
+        # some daemon is not running
         event = dict(
             summary=summary,
             device= cmd.deviceConfig.device,

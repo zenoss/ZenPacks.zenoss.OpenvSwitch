@@ -136,7 +136,7 @@ ovs_status
 5
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/bin/echo 'BEGIN' ; /sbin/service openvswitch status 2&gt; /dev/null ; echo "SPLIT" ; /usr/bin/systemctl status openvswitch.service 2&gt; /dev/null ; echo "SPLIT" ; /usr/bin/sudo service openvswitch-switch status 2&gt; /dev/null ; echo "END"
+/bin/echo 'BEGIN' ; /sbin/service openvswitch status 2&gt; /dev/null ; echo "SPLIT" ; /usr/bin/systemctl status openvswitch-nonetwork.service 2&gt; /dev/null ; echo "SPLIT" ; /usr/bin/sudo service openvswitch-switch status 2&gt; /dev/null ; echo "END"
 </property>
 <property type="int" id="cycletime" mode="w" >
 300

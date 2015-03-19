@@ -41,6 +41,7 @@ class InterfaceStatus(CommandParser):
 
         # interface admin_state: UP or DOWN
         # interface link_state: UP or DOWN
+        severity = 0
         summary = ''
         iface_stat = [stat for stat in iface_stats if stat['_uuid'] == iface_id]
         if len(iface_stat) == 0:
