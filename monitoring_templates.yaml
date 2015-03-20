@@ -222,7 +222,7 @@
 
   datasources:
     openvswitchStatus:
-      commandTemplate: /bin/echo 'BEGIN' ; /sbin/service openvswitch status 2> /dev/null ; echo "SPLIT" ; /usr/bin/systemctl status openvswitch.service 2> /dev/null ; echo "SPLIT" ; /usr/bin/sudo service openvswitch-switch status 2> /dev/null ; echo "END"
+      commandTemplate: /bin/echo 'BEGIN' ; /sbin/service openvswitch status 2> /dev/null ; echo "SPLIT" ; /usr/bin/systemctl status openvswitch-nonetwork.service 2> /dev/null ; echo "SPLIT" ; /usr/bin/sudo service openvswitch-switch status 2> /dev/null ; echo "END"
       cycletime: 300
 
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.OVSStatus
