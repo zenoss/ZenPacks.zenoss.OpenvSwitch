@@ -64,7 +64,6 @@ class BridgePortStatus(CommandParser):
                 summary=evt['summary'],
                 device= cmd.deviceConfig.device,
                 component=cmd.component,
-                eventClass=cmd.eventClass,
                 eventClassKey=self.eventClassKey,
                 severity=severity
             )
