@@ -1185,6 +1185,25 @@ AVERAGE
 </object>
 <!-- ('', 'zport', 'dmd', 'Events', 'OpenvSwitch') -->
 <object id='/zport/dmd/Events/OpenvSwitch' module='Products.ZenEvents.EventClass' class='EventClass'>
+<object id='Bridge' module='Products.ZenEvents.EventClass' class='EventClass'>
+<tomanycont id='instances'>
+<object id='OpenvSwitch Bridge Status' module='Products.ZenEvents.EventClassInst' class='EventClassInst'>
+<property type="text" id="transform" mode="w" >
+from ZenPacks.zenoss.OpenvSwitch.events import updateBridgePort
+updateBridgePort(evt, device, component)
+</property>
+<property type="string" id="eventClassKey" mode="w" >
+OpenvSwitch_bridge_port_status
+</property>
+<property type="int" id="sequence" mode="w" >
+7
+</property>
+<property type="text" id="explanation" mode="w" >
+Update bridge model data based on bridge events
+</property>
+</object>
+</tomanycont>
+</object>
 <object id='Interface' module='Products.ZenEvents.EventClass' class='EventClass'>
 <tomanycont id='instances'>
 <object id='OpenvSwitch Interface Status' module='Products.ZenEvents.EventClassInst' class='EventClassInst'>
