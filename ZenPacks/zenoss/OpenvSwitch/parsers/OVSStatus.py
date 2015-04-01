@@ -28,13 +28,12 @@ class OVSStatus(CommandParser):
         # we are not ready to test Ubuntu hosts for OpenvSwitch yet
 
         if '/sbin/service openvswitch status' not in cmd.command or \
-           '/usr/bin/systemctl status openvswitch-nonetwork.service' not in cmd.command :
+                '/usr/bin/systemctl status openvswitch-nonetwork.service' not in cmd.command :
             return
 
         if len(cmd.result.output) == 0:
             return
 
-        summary = ''
         stats = cmd.result.output.split('\n')
         for word in ('BEGIN', 'SPLIT', 'END', ''):
             while word in stats:
@@ -45,14 +44,17 @@ class OVSStatus(CommandParser):
             # should not happen
             return
 
+        summary = ''
+        severity = cmd.severity
         if len(stats) == 2:
             # for centos 6.x hosts
             ovsdb_server_is_running = len([stat for stat in stats \
-                                    if 'ovsdb-server is running' in stat]) > 0
+                                           if 'ovsdb-server is running' in stat]) > 0
             ovs_vswitchd_is_running = len([stat for stat in stats \
-                                    if 'ovs-vswitchd is running' in stat]) > 0
+                                           if 'ovs-vswitchd is running' in stat]) > 0
             if ovsdb_server_is_running and ovs_vswitchd_is_running:
-                return
+                summary = 'ovsdb-server is running; ovs-vswitchd is running.'
+                severity = 0
             elif ovsdb_server_is_running and not ovs_vswitchd_is_running:
                 summary = 'ovs-vswitchd is not running.'
             elif not ovsdb_server_is_running and ovs_vswitchd_is_running:
@@ -67,7 +69,8 @@ class OVSStatus(CommandParser):
         if len(summary) == 0 and len(stats) > 2:
             stats = [stat.strip() for stat in stats if '(healthy)' in stat]
             if len(stats) == 2:          # all healthy
-                return
+                summary = 'ovsdb-server is running; ovs-vswitchd is running.'
+                severity = 0
             elif len(stats) == 1:
                 if 'ovsdb-server' in stats[0]:
                     summary = 'ovs-vswitchd is not running.'
@@ -83,9 +86,8 @@ class OVSStatus(CommandParser):
             device= cmd.deviceConfig.device,
             eventClass=cmd.eventClass,
             eventKey=self.eventKey,
-            severity=cmd.severity
+            severity=severity
         )
 
         result.events.append(event)
-
 

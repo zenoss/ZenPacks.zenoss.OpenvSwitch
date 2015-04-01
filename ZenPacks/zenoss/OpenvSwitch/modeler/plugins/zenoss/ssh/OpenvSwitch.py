@@ -254,10 +254,11 @@ class OpenvSwitch(CommandPlugin):
             if iface['link_state'] == 'up' and not iface['mac_in_use']:
                 self.bad_ifaces += 1
                 continue
+
             if  not iface['link_state'] and \
-                not iface['admin_state'] and \
-                not iface['mac_in_use'] and \
-                iface['ofport'] == '-1':
+                    not iface['admin_state'] and \
+                    not iface['mac_in_use'] and \
+                    iface['ofport'] == '-1':
                 self.bad_ifaces += 1
                 continue
 
@@ -275,21 +276,28 @@ class OpenvSwitch(CommandPlugin):
             amac = ''
             if 'attached-mac' in iface['external_ids']:
                 amac = iface['external_ids']['attached-mac'].upper()
+            astate = 'UNKNOWN'
+            if iface['admin_state']:
+                astate = iface['admin_state'].upper()
+            lstate = 'UNKNOWN'
+            if iface['link_state']:
+                lstate = iface['link_state'].upper()
+
             interfaces.append(ObjectMap(
                 data={
-                'id':          'interface-{0}'.format(iface['_uuid']),
-                'title':       'Interface-' + iface['name'],
-                'interfaceId': iface['_uuid'],
-                'type_':       iface['type'],
-                'mac':         imac,
-                'amac':        amac,
-                'ofport':      iface['ofport'],
-                'lstate':      iface['link_state'].upper(),
-                'astate':      iface['admin_state'].upper(),
-                'lspeed':      lspd,
-                'mtu':         iface['mtu'],
-                'duplex':      iface['duplex'],
-                }))
+                    'id':          'interface-{0}'.format(iface['_uuid']),
+                    'title':       'Interface-' + iface['name'],
+                    'interfaceId': iface['_uuid'],
+                    'type_':       iface['type'],
+                    'mac':         imac,
+                    'amac':        amac,
+                    'ofport':      iface['ofport'],
+                    'lstate':      lstate,
+                    'astate':      astate,
+                    'lspeed':      lspd,
+                    'mtu':         iface['mtu'],
+                    'duplex':      iface['duplex'],
+                    }))
 
 
         return RelationshipMap(
