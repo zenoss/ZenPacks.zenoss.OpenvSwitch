@@ -60,4 +60,26 @@ Ext.onReady(function() {
                       fieldLabel: _t('Number of Interfaces'),
                       xtype: 'displayfield'});
     });
+
+    /* Hide Software component, as it always empty */
+    var DEVICE_ELEMENTS = "subselecttreepaneldeviceDetailNav"
+    Ext.ComponentMgr.onAvailable(DEVICE_ELEMENTS, function(){
+        var DEVICE_PANEL = Ext.getCmp(DEVICE_ELEMENTS);
+        Ext.apply(DEVICE_PANEL, {
+            listeners: {
+                afterrender: function() {
+                    var tree = Ext.getCmp(DEVICE_PANEL.items.items[0].id);
+                    var items = tree.store.data.items;
+                    for (i in items){
+                        if (items[i].data.id.match(/software*/)){
+                            try {
+                                tree.store.remove(items[i]);
+                                tree.store.sync();
+                            } catch(err){}
+                        }
+                    }
+                }
+            }
+        })
+    })
 });
