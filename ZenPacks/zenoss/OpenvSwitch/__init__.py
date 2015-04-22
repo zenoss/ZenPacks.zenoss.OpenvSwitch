@@ -197,6 +197,28 @@ CFG.create()
 # patches
 from Products.ZenUtils.Utils import unused
 
+from . import schema
+
+
+class ZenPack(schema.ZenPack):
+    def remove(self, dmd, leaveObjects=False):
+        # since this ZP added addition eventClasses, and zencatalogservice,
+        # if is running, indexed them, the event catalog needs to be
+        # cleaned up at removal
+        from ZODB.transact import transact
+        brains = dmd.Events.eventClassSearch()
+        for brain in brains:
+            try:
+                test_reference = brain.getObject()
+                test_reference._p_deactivate()
+            except Exception:
+                object_path_string = brain.getPath()
+                try:
+                    transact(dmd.Events.eventClassSearch.uncatalog_object)(
+                        object_path_string)
+                except Exception as e:
+                    pass
+
 # Patch last to avoid import recursion problems.
 from ZenPacks.zenoss.OpenvSwitch import patches
 unused(patches)

@@ -80,6 +80,14 @@
 
     </configure>
 
+    <!-- ML2 integration -->
+    <configure zcml:condition="installed ZenPacks.zenoss.OpenStackInfrastructure">
+        <utility
+            name="ml2.openvswitch"
+            factory=".openstack_neutron.OpenvSwitchNeutronImplementationPlugin"
+            provides="ZenPacks.zenoss.OpenStackInfrastructure.interfaces.INeutronImplementationPlugin"
+            />
+    </configure>
 
 </configure>
 
