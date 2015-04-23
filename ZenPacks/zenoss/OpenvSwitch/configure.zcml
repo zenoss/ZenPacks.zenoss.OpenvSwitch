@@ -80,6 +80,9 @@
 
     </configure>
 
-
+    <!-- Layer2 -->
+    <include file="layer2.zcml"
+        xmlns:zcml="http://namespaces.zope.org/zcml"
+        zcml:condition="installed ZenPacks.zenoss.Layer2.connections_provider" />
 </configure>
 
