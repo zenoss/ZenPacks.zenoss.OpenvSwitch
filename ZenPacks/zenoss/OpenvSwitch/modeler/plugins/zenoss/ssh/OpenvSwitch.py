@@ -23,15 +23,15 @@ add_local_lib_path()
 class OpenvSwitch(CommandPlugin):
     command = (
         '('
-        '/usr/bin/sudo ovs-vsctl --columns=_uuid,statistics,external_ids,db_version,ovs_version,bridges list Open_vSwitch ; '
+        '/usr/bin/sudo ovs-vsctl --columns=_uuid,statistics,external_ids,db_version,ovs_version,bridges list Open_vSwitch 2>&1; '
         'echo "__COMMAND__" ; '
-        '/usr/bin/sudo ovs-vsctl --columns=_uuid,name,external_ids,ports,datapath_id,datapath_type,flood_vlans,flow_tables,status list bridge ; '
+        '/usr/bin/sudo ovs-vsctl --columns=_uuid,name,external_ids,ports,datapath_id,datapath_type,flood_vlans,flow_tables,status list bridge 2>&1; '
         'echo "__COMMAND__" ; '
-        '/usr/bin/sudo ovs-vsctl --columns=_uuid,name,mac,lacp,external_ids,interfaces,tag,trunks,vlan_mode,status,statistics list port ; '
+        '/usr/bin/sudo ovs-vsctl --columns=_uuid,name,mac,lacp,external_ids,interfaces,tag,trunks,vlan_mode,status,statistics list port 2>&1; '
         'echo "__COMMAND__" ; '
-        'for x in $(/usr/bin/sudo ovs-vsctl --columns=name list bridge); do if [ $x != \'name\' ] && [ $x != \':\' ] ; then x=$(echo $x | tr -d \'"\' ); echo $x; /usr/bin/sudo ovs-ofctl dump-flows $x; fi; done ; '
+        'for x in $(/usr/bin/sudo ovs-vsctl --columns=name list bridge); do if [ $x != \'name\' ] && [ $x != \':\' ] ; then x=$(echo $x | tr -d \'"\' ); echo $x; /usr/bin/sudo ovs-ofctl dump-flows $x; fi; done 2>&1; '
         'echo "__COMMAND__" ; '
-        '/usr/bin/sudo ovs-vsctl list interface ; '
+        '/usr/bin/sudo ovs-vsctl list interface 2>&1; '
         ')'
     )
 
@@ -46,7 +46,7 @@ class OpenvSwitch(CommandPlugin):
 
         if  results.find('database connection failed') > -1 and \
             results.find('No such file or directory') > -1:
-            LOG.error('service openvswitch not running on %s', device.id)
+            LOG.info('service openvswitch not running on %s', device.id)
             return None
 
         command_strings = results.split('__COMMAND__')
