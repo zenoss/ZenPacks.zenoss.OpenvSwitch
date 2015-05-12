@@ -43,11 +43,6 @@ class Port(schema.Port):
                                         '|'.join(keyvalues))
         keys.append('ml2.openvswitch:' + '|'.join(keyvalues))
 
-        # keyvalues = (self.device().manageIp, 'port', self.id)
-        # log.info("Integration key: %s", 'ml2.openvswitch:' + \
-        #                                 '|'.join(keyvalues))
-        # keys.append('ml2.openvswitch:' + '|'.join(keyvalues))
-
         return keys
 
     def index_object(self, idxs=None):

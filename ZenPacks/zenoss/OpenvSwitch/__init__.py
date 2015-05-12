@@ -19,7 +19,7 @@ $ZENHOME/ZenPacks/easy-install.pth.
 """
 
 from . import zenpacklib
-
+from .ML2Integration import ML2Integration
 
 # Useful to avoid making literal string references to module and class names
 # throughout the rest of the ZenPack.
@@ -94,6 +94,7 @@ CFG = zenpacklib.ZenPackSpec(
         },
 
         'Port': {
+            'base': [ML2Integration, 'ManagedObject'],
             'meta_type': 'OpenvSwitchPort',
             'label': 'Port',
             'plural_label': 'Ports',
@@ -102,8 +103,15 @@ CFG = zenpacklib.ZenPackSpec(
                 'portId':      {'grid_display': False,
                                 'label': 'Port ID'},
                 'tag_':        {'label': 'VLAN Tag'},
+                'openstack_core_components': {
+                    'label': 'ML2 Integration',
+                    'grid_display': False,
+                    'type_': 'entity',
+                    'api_only': True,
+                    'api_backendtype': 'method'
+                },
             },
-            'impacts': ['interfaces'],
+            'impacts': ['interfaces', 'openstack_core_components'],
             'impacted_by': ['bridge'],
         },
 
@@ -142,6 +150,7 @@ CFG = zenpacklib.ZenPackSpec(
         },
 
         'Interface': {
+            'base': [ML2Integration, 'ManagedObject'],
             'meta_type': 'OpenvSwitchInterface',
             'label': 'Interface',
             'plural_label': 'Interfaces',
@@ -182,7 +191,15 @@ CFG = zenpacklib.ZenPackSpec(
                 'duplex':      {'grid_display': False,
                                 'label': 'Duplex',
                                 'order': 4.9},
+                'openstack_core_components': {
+                    'label': 'ML2 Integration',
+                    'grid_display': False,
+                    'type_': 'entity',
+                    'api_only': True,
+                    'api_backendtype': 'method'
+                }
             },
+            'impacts': ['openstack_core_components'],
             'impacted_by': ['port'],
         },
 
