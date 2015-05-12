@@ -37,7 +37,6 @@ class OpenvSwitchNeutronImplementationPlugin(BaseNeutronImplementationPlugin):
         return value
 
     def getPortIntegrationKeys(self, osi_port):
-        #import pdb;pdb.set_trace()
         keys = []
         # Use short name from OSI port ID as a clue to find the port on
         # OVS side. Use that OVS port to determine the OVS host IP
