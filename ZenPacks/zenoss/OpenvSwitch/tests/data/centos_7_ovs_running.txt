@@ -1,8 +1,21 @@
-openvswitch.service - Open vSwitch
-   Loaded: loaded (/usr/lib/systemd/system/openvswitch.service; enabled)
-   Active: active (exited) since Fri 2015-02-06 05:31:24 CST; 1h 33min ago
-  Process: 17839 ExecStop=/bin/true (code=exited, status=0/SUCCESS)
-  Process: 18889 ExecStart=/bin/true (code=exited, status=0/SUCCESS)
- Main PID: 18889 (code=exited, status=0/SUCCESS)
+openvswitch-nonetwork.service - Open vSwitch Internal Unit
+   Loaded: loaded (/usr/lib/systemd/system/openvswitch-nonetwork.service; static)
+   Active: active (exited) since Thu 2015-05-07 16:44:39 CDT; 6 days ago
+  Process: 606 ExecStart=/usr/share/openvswitch/scripts/ovs-ctl start --system-id=random $OPTIONS (code=exited, status=0/SUCCESS)
+ Main PID: 606 (code=exited, status=0/SUCCESS)
+   CGroup: /system.slice/openvswitch-nonetwork.service
+           ├─684 ovsdb-server: monitoring pid 685 (healthy)
+           ├─685 ovsdb-server /etc/openvswitch/conf.db -vconsole:emer -vsyslog:err -vfile:info --remote=punix:/var/run/openvswitch/db.sock --private-key=db:Open_vSwitch,SSL,private_key --certif...
+           ├─803 ovs-vswitchd: monitoring pid 804 (healthy)
+           └─804 ovs-vswitchd unix:/var/run/openvswitch/db.sock -vconsole:emer -vsyslog:err -vfile:info --mlockall --no-chdir --log-file=/var/log/openvswitch/ovs-vswitchd.log --pidfile=/var/run...
 
-Feb 06 05:31:24 solutions-juno.zenoss.loc systemd[1]: Started Open vSwitch.
+May 07 16:44:38 network ovs-ctl[606]: Starting ovsdb-server [  OK  ]
+May 07 16:44:38 network ovs-vsctl[686]: ovs|00001|vsctl|INFO|Called as ovs-vsctl --no-wait -- init -- set Open_vSwitch . db-version=7.4.0
+May 07 16:44:39 network ovs-vsctl[715]: ovs|00001|vsctl|INFO|Called as ovs-vsctl --no-wait set Open_vSwitch . ovs-version=2.1.3 "external-ids:system-id=\"ef5b3c91-18a9-4227-87b2-9e...=\"unknown\""
+May 07 16:44:39 network ovs-ctl[606]: Configuring Open vSwitch system IDs [  OK  ]
+May 07 16:44:39 network ovs-ctl[606]: Inserting openvswitch module [  OK  ]
+May 07 16:44:39 network ovs-ctl[606]: Starting ovs-vswitchd [  OK  ]
+May 07 16:44:39 network ovs-ctl[606]: Enabling remote OVSDB managers [  OK  ]
+May 07 16:44:39 network systemd[1]: Started Open vSwitch Internal Unit.
+Hint: Some lines were ellipsized, use -l to show in full.
+

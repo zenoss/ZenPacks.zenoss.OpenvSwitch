@@ -53,6 +53,11 @@ class TestParser(BaseTestCase):
         cmd.eventKey = 'interfaceIncomingBytes'
         cmd.result = FakeCmdResult(exitCode, loadData(filename))
         cmd.points = points
+        # Since we only consider the OVS records within cycleTime for event
+        # processing, we need to do something so that records for unittests
+        # will always be processed. This is achieved by
+        # setting a huge value for cycleTime
+        cmd.cycleTime = 1430000000
 
         return cmd
 
@@ -135,7 +140,7 @@ class TestParser(BaseTestCase):
 
         cmd = self._getCmd(
             '',
-            '/bin/echo "BEGIN" ; /sbin/service openvswitch status 2> /dev/null ; echo "SPLIT" ; /usr/bin/systemctl status openvswitch.service 2> /dev/null ; echo "SPLIT" ; echo "END"',
+            '/bin/echo "BEGIN" ; /sbin/service openvswitch status 2> /dev/null ; echo "SPLIT" ; /usr/bin/systemctl status openvswitch-nonetwork.service 2> /dev/null ; echo "SPLIT" ; /usr/bin/sudo service openvswitch-switch status 2> /dev/null ; echo "END"',
             exitCode, filename, points)
 
         return cmd
@@ -158,7 +163,7 @@ class TestParser(BaseTestCase):
             results)
 
         self.assertEquals(len(results.values), 0)
-        self.assertEquals(len(results.events), 0)
+        self.assertEquals(len(results.events), 1)
 
     def testCentOS7NotRunning(self):
         parser = OVSStatusParser()
@@ -178,7 +183,7 @@ class TestParser(BaseTestCase):
             results)
 
         self.assertEquals(len(results.values), 0)
-        self.assertEquals(len(results.events), 0)
+        self.assertEquals(len(results.events), 1)
 
     def _getBridgePortStatusCmd(self, exitCode, filename):
         points = []
@@ -198,7 +203,7 @@ class TestParser(BaseTestCase):
             results)
 
         self.assertEquals(len(results.values), 0)
-        self.assertEquals(len(results.events), 5)
+        self.assertEquals(len(results.events), 4)
 
     def _getInterfaceStatusCmd(self, id, exitCode, filename):
         points = []
@@ -219,7 +224,7 @@ class TestParser(BaseTestCase):
             results)
 
         self.assertEquals(len(results.values), 0)
-        self.assertEquals(len(results.events), 0)
+        self.assertEquals(len(results.events), 1)
 
     def testInterfaceStatusAUPIDOWN(self):
         parser = IFStatusParser()
