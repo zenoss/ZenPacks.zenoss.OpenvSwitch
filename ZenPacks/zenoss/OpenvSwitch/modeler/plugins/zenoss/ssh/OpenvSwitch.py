@@ -59,6 +59,18 @@ class OpenvSwitch(CommandPlugin):
 
         # OVS as device. there should be only one OVS DB entry per ovs host
         ovsdata = str_to_dict(command_strings[0])[0]
+
+        # this happens on CentOS 7 if Zenoss user is not allowed
+        # to run SSH remotely
+        if 'sudo' in ovsdata and 'sorry, you must have a tty to run sudo' in \
+                ovsdata['sudo']:
+            LOG.error(
+                'Zenoss user (%s) could not run SSH commands for the' + \
+                ' device (%s) at (%s)' + \
+                ' remotely. Please consult Zenoss Wiki page for OpenvSwitch ZenPack',
+                device.zCommandUsername, device.id, device.manageIp)
+            return None
+
         brdgs = str_to_dict(command_strings[1])
         prts = str_to_dict(command_strings[2])
         flws = bridge_flow_data_to_dict(command_strings[3].split('\n')[1:-1])
