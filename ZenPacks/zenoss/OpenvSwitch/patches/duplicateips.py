@@ -302,4 +302,8 @@ def remote_getDeviceConfig(self, names, checkStatus=False):
         result.append(self.createDeviceProxy(device, skipModelMsg))
     return result
 
+@monkeypatch('Products.ZenModel.PerformanceConf.PerformanceConf')
+def findDevice(self, deviceName):
+    return self.dmd.Devices.findDeviceByIdExact(deviceName)
+
 
