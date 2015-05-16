@@ -37,7 +37,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name,_uuid list bridge; for txt in $$(/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name list bridge); do if [ $$txt != 'name' ] &amp;&amp; [ $$txt != ':' ] ; then txt=$$(echo $$txt | tr -d \'\"\' ); echo $$txt; /usr/bin/sudo /usr/bin/ovs-ofctl dump-aggregate $$txt; fi; done;
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name,_uuid list bridge 2&gt;&amp;1; for txt in $$(/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name list bridge); do if [ $$txt != 'name' ] &amp;&amp; [ $$txt != ':' ] ; then txt=$$(echo $$txt | tr -d \'\"\' ); echo $$txt; /usr/bin/sudo /usr/bin/ovs-ofctl dump-aggregate $$txt; fi; done;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
