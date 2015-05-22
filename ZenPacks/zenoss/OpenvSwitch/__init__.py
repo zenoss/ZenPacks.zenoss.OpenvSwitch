@@ -59,6 +59,7 @@ CFG = zenpacklib.ZenPackSpec(
             'base': zenpacklib.Device,
             'meta_type': 'OpenvSwitch',
             'filter_display': False,
+            'plural_short_label': 'OpenvSwitches',
             'properties': {
                 'ovsTitle':          {'grid_display': False},
                 'ovsId':             {'grid_display': False},
@@ -69,7 +70,10 @@ CFG = zenpacklib.ZenPackSpec(
                 'numberFlows':       {'grid_display': False},
                 'numberInterfaces':  {'grid_display': False},
             },
-            'impacts': ['bridges'],
+            'dynamicview_group': 'Devices',
+            'dynamicview_relations': {
+                'impacts': ['bridges'],
+            }
         },
 
         # Component Base Types #######################################
@@ -87,10 +91,10 @@ CFG = zenpacklib.ZenPackSpec(
                 'bridgeId':    {'grid_display': False,
                                 'label': 'Bridge ID'},
             },
-            'impacts': ['ports',
-                        'flows',
-                       ],
-            'impacted_by': ['openvSwitch'],
+            'dynamicview_relations': {
+                'impacts': ['ports', 'flows'],
+                'impacted_by': ['openvSwitch'],
+            }
         },
 
         'Port': {
@@ -103,8 +107,11 @@ CFG = zenpacklib.ZenPackSpec(
                                 'label': 'Port ID'},
                 'tag_':        {'label': 'VLAN Tag'},
             },
-            'impacts': ['interfaces'],
-            'impacted_by': ['bridge'],
+            'dynamicview_relations': {
+                'impacts': ['interfaces'],
+                'impacted_by': ['bridge'],
+            }
+
         },
 
         'Flow': {
@@ -138,7 +145,10 @@ CFG = zenpacklib.ZenPackSpec(
                 'action':       {'label': 'Action',
                                  'order': 3.7},
             },
-            'impacted_by': ['bridge'],
+            # Note: Flows too dynamic. We should consider removal of below.
+            'dynamicview_relations': {
+                'impacted_by': ['bridge'],
+            }
         },
 
         'Interface': {
@@ -183,7 +193,9 @@ CFG = zenpacklib.ZenPackSpec(
                                 'label': 'Duplex',
                                 'order': 4.9},
             },
-            'impacted_by': ['port'],
+            'dynamicview_relations': {
+                'impacted_by': ['port'],
+            }
         },
 
 
