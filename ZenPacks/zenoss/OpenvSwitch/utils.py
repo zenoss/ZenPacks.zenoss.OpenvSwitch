@@ -292,10 +292,15 @@ def get_ovsdb_records(logs, component, cycleTime, timedelta):
             # timestamp only, nothing else
             continue
 
+        # by not match records with components, we are able to
+        # display events for newly created bridges, ports
+        # the downside is that we display the same event multiple times.
+        # we have to pick a less bad choice.
+
         # component: bridge name
-        if component not in rcrd:
-            # this record has nothing to do with this bridge
-            continue
+        # if component not in rcrd:
+        #     # this record has nothing to do with this bridge
+        #     continue
 
         if '"ovs-vsctl:' in rcrd:
             marker = min(rcrd.index('"ovs-vsctl:') - 1, len(rcrd))

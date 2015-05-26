@@ -60,10 +60,30 @@ class BridgePortStatus(CommandParser):
             if 'del' in evt['summary']:
                 severity = 3
 
+            # the component being added/deleted might not be modeled
+            # yet. In that case, set event component to an empty string
+            component = cmd.component
+            if 'add bridge:' in evt['summary']:
+                bridge_name = evt['summary'][len('add bridge:'):].strip()
+                if bridge_name != component:
+                    component = ''
+            elif 'del bridge:' in evt['summary']:
+                bridge_name = evt['summary'][len('del bridge:'):].strip()
+                if bridge_name != component:
+                    component = ''
+            elif 'add port:' in evt['summary']:
+                port_name = evt['summary'][len('add port:'):].strip()
+                if port_name != component:
+                    component = ''
+            elif 'del port:' in evt['summary']:
+                port_name = evt['summary'][len('del port:'):].strip()
+                if port_name != component:
+                    component = ''
+
             event = dict(
                 summary=evt['summary'],
                 device= cmd.deviceConfig.device,
-                component=cmd.component,
+                component=component,
                 eventClassKey=self.eventClassKey,
                 severity=severity
             )
