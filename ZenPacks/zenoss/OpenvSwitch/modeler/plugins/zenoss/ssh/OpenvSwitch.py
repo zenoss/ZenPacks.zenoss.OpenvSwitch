@@ -44,9 +44,10 @@ class OpenvSwitch(CommandPlugin):
             LOG.error('ovs-vsctl not found on %s', device.id)
             return None
 
-        if  results.find('database connection failed') > -1 and \
-            results.find('No such file or directory') > -1:
-            LOG.info('service openvswitch not running on %s', device.id)
+        if  'database connection failed' in results or \
+                'No such file or directory' in results or \
+                    'connection attempt failed (Connection refused)' in results:
+            LOG.info('service openvswitch or one of its daemons not running on %s', device.id)
             return None
 
         command_strings = results.split('__COMMAND__')
