@@ -46,7 +46,8 @@ CFG = zenpacklib.ZenPackSpec(
             'zProperties': {
                 'zCollectorPlugins': [
                     'zenoss.ssh.OpenvSwitch',
-                ]
+                ],
+                'zDeviceTemplates':    [],
             }
         }
     },
