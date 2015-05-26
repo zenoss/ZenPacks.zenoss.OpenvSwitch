@@ -62,8 +62,9 @@ class OpenvSwitch(CommandPlugin):
 
         # this happens on CentOS 7 if Zenoss user is not allowed
         # to run SSH remotely
-        if 'sudo' in ovsdata and 'sorry, you must have a tty to run sudo' in \
-                ovsdata['sudo']:
+        if 'sudo' in ovsdata and \
+                ('sorry, you must have a tty to run sudo' in ovsdata['sudo'] or \
+                         'no tty present and no askpass program specified' in ovsdata['sudo']):
             LOG.error(
                 'Zenoss user (%s) could not run SSH commands for the' + \
                 ' device (%s) at (%s)' + \
