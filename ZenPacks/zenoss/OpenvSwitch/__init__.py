@@ -107,9 +107,16 @@ CFG = zenpacklib.ZenPackSpec(
                 'portId':      {'grid_display': False,
                                 'label': 'Port ID'},
                 'tag_':        {'label': 'VLAN Tag'},
+                'openstack_core_components': {
+                    'label': 'ML2 Integration',
+                    'grid_display': False,
+                    'type_': 'entity',
+                    'api_only': True,
+                    'api_backendtype': 'method'
+                },
             },
             'dynamicview_relations': {
-                'impacts': ['interfaces'],
+                'impacts': ['interfaces', 'openstack_core_components'],
                 'impacted_by': ['bridge'],
             }
 
@@ -193,8 +200,16 @@ CFG = zenpacklib.ZenPackSpec(
                 'duplex':      {'grid_display': False,
                                 'label': 'Duplex',
                                 'order': 4.9},
+                'openstack_core_components': {
+                    'label': 'ML2 Integration',
+                    'grid_display': False,
+                    'type_': 'entity',
+                    'api_only': True,
+                    'api_backendtype': 'method'
+                },
             },
             'dynamicview_relations': {
+                'impacts': ['openstack_core_components'],
                 'impacted_by': ['port'],
             }
         },
@@ -209,6 +224,38 @@ CFG.create()
 
 # patches
 from Products.ZenUtils.Utils import unused
+
+from . import schema
+
+
+class ZenPack(schema.ZenPack):
+    def install(self, app):
+        super(ZenPack, self).install(app)
+
+        try:
+            from ZenPacks.zenoss.OpenStackInfrastructure.neutron_integration \
+                import reindex_core_components
+            reindex_core_components(self.dmd)
+        except ImportError:
+            pass
+
+    def remove(self, dmd, leaveObjects=False):
+        # since this ZP added addition eventClasses, and zencatalogservice,
+        # if is running, indexed them, the event catalog needs to be
+        # cleaned up at removal
+        from ZODB.transact import transact
+        brains = dmd.Events.eventClassSearch()
+        for brain in brains:
+            try:
+                test_reference = brain.getObject()
+                test_reference._p_deactivate()
+            except Exception:
+                object_path_string = brain.getPath()
+                try:
+                    transact(dmd.Events.eventClassSearch.uncatalog_object)(
+                        object_path_string)
+                except Exception as e:
+                    pass
 
 # Patch last to avoid import recursion problems.
 from ZenPacks.zenoss.OpenvSwitch import patches
