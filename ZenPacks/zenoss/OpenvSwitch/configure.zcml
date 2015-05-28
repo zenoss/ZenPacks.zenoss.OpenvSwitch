@@ -86,6 +86,12 @@
             factory=".openstack_neutron.OpenvSwitchNeutronImplementationPlugin"
             provides="ZenPacks.zenoss.OpenStackInfrastructure.interfaces.INeutronImplementationPlugin"
             />
+
+        <subscriber
+        for="ZenPacks.zenoss.OpenStackInfrastructure.Host.Host
+             zope.container.interfaces.IObjectMovedEvent"
+        handler=".openstack_neutron.onOpenStackHostAdded"
+        />
     </configure>
 
 

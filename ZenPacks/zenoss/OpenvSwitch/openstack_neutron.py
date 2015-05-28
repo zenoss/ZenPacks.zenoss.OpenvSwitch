@@ -7,8 +7,12 @@
 #
 ##############################################################################
 
+import logging
+log = logging.getLogger('zen.OpenvSwitch.ml2')
+
 from zope.interface import implements
 from zope.event import notify
+from zope.container.interfaces import IObjectRemovedEvent
 
 from Products.Zuul.catalog.events import IndexingEvent
 from Products.Zuul.interfaces import ICatalogTool
@@ -16,7 +20,7 @@ from Products.Zuul.interfaces import ICatalogTool
 from ZenPacks.zenoss.OpenStackInfrastructure.interfaces \
     import INeutronImplementationPlugin
 from ZenPacks.zenoss.OpenStackInfrastructure.neutron_integration \
-    import BaseNeutronImplementationPlugin, split_list
+    import BaseNeutronImplementationPlugin, split_list, reindex_core_components
 
 
 class OpenvSwitchNeutronImplementationPlugin(BaseNeutronImplementationPlugin):
@@ -68,3 +72,28 @@ class OpenvSwitchNeutronImplementationPlugin(BaseNeutronImplementationPlugin):
             obj = brain.getObject()
             obj.index_object()
             notify(IndexingEvent(obj))
+
+
+def onOpenStackHostAdded(obj, event):
+    if not IObjectRemovedEvent.providedBy(event):
+        # If a host is added to the system, we need to reindex the openstack
+        # ports, since a portion of their integration key is based on the hosts'
+        # manageIps.
+        endpoint = obj.endpoint()
+
+        log.info("A new host (%s) has been added to openstack endpoint %s - reindexing port components",
+                 obj.titleOrId(), endpoint.titleOrId())
+
+        results = ICatalogTool(endpoint).search(('ZenPacks.zenoss.OpenStackInfrastructure.Port.Port',))
+        for brain in results:
+            try:
+                port = brain.getObject()
+            except Exception, e:
+                log.error("Error loading port %s: %s", brain, e)
+                continue
+
+            try:
+                port.index_object()
+                notify(IndexingEvent(port))
+            except Exception, e:
+                log.error("Error reindexing port %s: %s", port, e)
