@@ -8,15 +8,15 @@
 ##############################################################################
 
 from zope.interface import implements
+from zope.event import notify
 
+from Products.Zuul.catalog.events import IndexingEvent
 from Products.Zuul.interfaces import ICatalogTool
+
 from ZenPacks.zenoss.OpenStackInfrastructure.interfaces \
     import INeutronImplementationPlugin
 from ZenPacks.zenoss.OpenStackInfrastructure.neutron_integration \
     import BaseNeutronImplementationPlugin, split_list
-
-from ZenPacks.zenoss.OpenvSwitch.Port import Port
-from ZenPacks.zenoss.OpenvSwitch.Interface import Interface
 
 
 class OpenvSwitchNeutronImplementationPlugin(BaseNeutronImplementationPlugin):
@@ -37,59 +37,22 @@ class OpenvSwitchNeutronImplementationPlugin(BaseNeutronImplementationPlugin):
         return value
 
     def getPortIntegrationKeys(self, osi_port):
-        #import pdb;pdb.set_trace()
-        keys = []
         # Use short name from OSI port ID as a clue to find the port on
         # OVS side. Use that OVS port to determine the OVS host IP
         short_osi_port_id = osi_port.id[5:16]
 
-        # there could be multiple OVS devices, and we don't yet know
-        # which device has the port corresponding to osi_port
-        # loop thru all ovs devices
-        device_class = osi_port.dmd.Devices.getOrganizer(
-                '/Network/OpenvSwitch')
-        for ovs_device in device_class.devices():
-            ovs_bridges = ovs_device.getDeviceComponents(
-                type='OpenvSwitchBridge')
-            ovs_ports = ovs_device.getDeviceComponents(
-                type='OpenvSwitchPort')
-            ovs_ifaces = ovs_device.getDeviceComponents(
-                type='OpenvSwitchInterface')
+        # Get a list of all IPs of all hosts in the openstack environment
+        manageIps = set()
+        for host in osi_port.endpoint().getDeviceComponents(type='OpenStackInfrastructureHost'):
+            manageIps.add(host.proxy_device().manageIp)
 
-            for port in ovs_ports:
-                if short_osi_port_id not in port.name():
-                    continue
+        keys = []
+        for manageIp in manageIps:
+            keyvalues = (manageIp, 'port', short_osi_port_id)
+            keys.append('ml2.openvswitch:' + '|'.join(keyvalues))
 
-                keyvalues = (port.device().manageIp, 'port', port.getPrimaryId())
-                keys.append('ml2.openvswitch:' + '|'.join(keyvalues))
-
-                port_keys = port.getNeutronIntegrationKeys()
-                keys.extend(port_keys)
-
-                # port's immediate parent is ports. ports' parent is bridge
-                bridge_for_port = port.getPrimaryParent().getPrimaryParent()
-                for bridge in ovs_bridges:
-                    if bridge.id == bridge_for_port.id:
-                        bridge_keys = bridge.getNeutronIntegrationKeys()
-                        keys.extend(bridge_keys)
-                        break
-
-                # if we reach here, then osi_port is taken care of
-                break
-
-            for iface in ovs_ifaces:
-                # not all ports have mac address
-                if not hasattr(osi_port, 'mac_address') or \
-                        not osi_port.mac_address or \
-                        osi_port.mac_address != iface.amac:
-                    continue
-
-                iface_keys = iface.getNeutronIntegrationKeys()
-                keys.extend(iface_keys)
-
-            # if keys populated then we can quit here
-            if keys:
-                break
+            keyvalues = (manageIp, 'interface', osi_port.mac_address)
+            keys.append('ml2.openvswitch:' + '|'.join(keyvalues))
 
         return keys
 
@@ -97,10 +60,11 @@ class OpenvSwitchNeutronImplementationPlugin(BaseNeutronImplementationPlugin):
     def reindex_implementation_components(cls, dmd):
         device_class = dmd.Devices.getOrganizer('/Network/OpenvSwitch')
         results = ICatalogTool(device_class).search(
-            ('ZenPacks.zenoss.OpenvSwitch.Bridge.Bridge',
-             'ZenPacks.zenoss.OpenvSwitch.Port.Port',
+            ('ZenPacks.zenoss.OpenvSwitch.Port.Port',
              'ZenPacks.zenoss.OpenvSwitch.Interface.Interface',)
         )
+
         for brain in results:
             obj = brain.getObject()
             obj.index_object()
+            notify(IndexingEvent(obj))

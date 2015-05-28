@@ -13,7 +13,6 @@ log = logging.getLogger('zen.OpenvSwitch.Interface')
 from zope.interface import implements
 
 try:
-    from ZenPacks.zenoss.OpenStackInfrastructure.neutron_integration import get_neutron_components
     OSI_INSTALLED = True
 except ImportError:
     OSI_INSTALLED = False
@@ -24,7 +23,7 @@ try:
     from ZenPacks.zenoss.OpenStackInfrastructure.interfaces \
         import INeutronImplementationComponent
     from ZenPacks.zenoss.OpenStackInfrastructure.neutron_integration \
-        import index_implementation_object, unindex_implementation_object
+        import index_implementation_object, unindex_implementation_object, get_neutron_components
     openstack = True
 except ImportError:
     openstack = False
@@ -40,19 +39,15 @@ class Interface(schema.Interface):
     # involve modeled properties, zProperties, and values from the neutron
     # configuration files on the openstack host.
     def getNeutronIntegrationKeys(self):
-        keyvalues = (self.device().manageIp, 'interface', self.amac)
-
-        log.debug("Integration key: %s", 'ml2.openvswitch:' + \
-                                        '|'.join(keyvalues))
-        return ['ml2.openvswitch:' + '|'.join(keyvalues)]
+        return ['ml2.openvswitch:%s|interface|%s' % (
+            self.device().manageIp,
+            self.amac
+        )]
 
     def index_object(self, idxs=None):
         super(Interface, self).index_object(idxs=idxs)
         if openstack:
             index_implementation_object(self)
-            osiport = self.get_osi_object(self.dmd, 'Port', self.name()[(len(self.name()) - 11):])
-            if osiport:
-                osiport.index_object(idxs)
 
     def unindex_object(self):
         super(Interface, self).unindex_object()
@@ -61,25 +56,7 @@ class Interface(schema.Interface):
 
     def openstack_core_components(self):
         # openstack infrastructure integration
-        #import pdb;pdb.set_trace()
-        if OSI_INSTALLED:
+        if openstack:
             return get_neutron_components(self)
         else:
             return []
-
-    def get_osi_object(self, dmd, type, ovs_obj_clue):
-        #import pdb;pdb.set_trace()
-        obj = None
-        ositype = 'OpenStackInfrastructure' + type.title()
-        osi_device_class = dmd.Devices.getOrganizer('/OpenStack/Infrastructure')
-        for osi_device in osi_device_class.devices():
-            osi_objs = osi_device.getDeviceComponents(type=ositype)
-            for osi_obj in osi_objs:
-                if ovs_obj_clue in osi_obj.id:
-                    obj = osi_obj
-                if obj:
-                    break
-            if obj:
-                break
-
-        return obj
