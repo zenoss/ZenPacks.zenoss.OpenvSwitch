@@ -1,9 +1,8 @@
+__TOC__
 This ZenPack provides support for monitoring [http://openvswitch.org/ OpenvSwitch].
 
 == Gallery ==
 <gallery widths=250px heights=127px>
-openvswitch_add_menu.png
-openvswitch_add_dialog.png
 openvswitch_OpenvSwitch.png
 openvswitch_bridge.png
 openvswitch_port.png
@@ -22,37 +21,26 @@ The features added by this ZenPack can be summarized as follows. They are each d
 * Service impact and root cause analysis. (Requires Zenoss Service Dynamics)
 * Reporting
 
+[[File:openvswitch_classes.png|thumb|120px|Model Diagram]]
 === Discovery ===
 
-The following components will be automatically discovered through the Open vSwitch host, username and password you provide.
+The following components will be automatically discovered through the Open
+vSwitch host, username and password you provide.
 
-[[File:openvswitch_model_yuml.png|thumb|320px|Model Diagram]]
-
-;Open-vSwitch
-
-;Bridge
-
-;Port
-
-;Flow
-
-;Interface
-
-<br clear=all>
+* '''Open-vSwitch'''
+* '''Bridge'''
+* '''Port'''
+* '''Flow'''
+* '''Interface'''
 
 === Performance Monitoring ===
 
 The following metrics will be collected every 5 minutes by default.
 
-[[File:openvswitch_bridge.png|thumb|320px|Pools]]
-
 ;Bridge
 * Total number of ports
 * Total number of flows
 * Total number of interfaces
-
-<br clear=all>
-[[File:openvswitch_interface.png|thumb|320px|Hosts]]
 
 ;Interface
 * Number of incoming bytes
@@ -68,7 +56,6 @@ The following metrics will be collected every 5 minutes by default.
 * Numbef of incoming frame errors
 * Numbef of incoming buffer overrun errors
 
-<br clear=all>
 
 == Usage ==
 
@@ -77,14 +64,24 @@ The following metrics will be collected every 5 minutes by default.
 Use the following steps to start monitoring Open vSwitch using the Zenoss web interface.
 
 # Navigate to the Infrastructure page. [[File:openvswitch_add_menu.png|thumb|320px|Add Menu Item]]
-# Choose ''Add a Single Device...'' from the add device button.<br clear=all>
+# Choose ''Add a Single Device...'' from the add device button.
 # Fill out the form. [[File:openvswitch_add_dialog.png|thumb|320px|Add Dialog]]
 #* ''Name or IP'' must be either the IP address for the Open vSwitch host, or a FQDN that can be resolved to the host IP address.
 #* ''Title'' can be anything you want.
 # Select ''/Network/OpenvSwitch'' from the dropdown list for Device Class
 # Click ''ADD''.
 
-<br clear=all>
+=== Adding an Open vSwitch Endpoint with Zenbatchload ===
+
+You can add an OVS endpoint by using the zenbatchload command:
+
+ [zenoss@zenoss.com]: zenbatchload ovs.txt
+
+where the file ovs.txt should contain:
+
+ /Devices/Network/OpenvSwitch
+ ovs41 setManageIp='192.168.1.7', zCommandUsername='zenoss', zCommandPassword='zenoss'
+
 
 ----
 
@@ -109,15 +106,35 @@ Installing this ZenPack will add the following items to your Zenoss system.
 * ZenPacks.zenoss.OpenvSwitch.parsers.BridgeStatistics
 * ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
 
-To start monitoring your Open vSwitch server you will need to setup SSH access so that your Zenoss collector server will be able to SSH into your Open vSwitch server(s) as a user who has permission to run the ovs-vsctl command, and /var/run/openvswitch/db.sock without TTY. This almost always means the root user. In addition, TTY must not be required for the user. See the Using a Root User section below for instructions on relieving root users from having to use TYY. See the Using a Non-Root User section below for instructions on allowing non-root users to run Open vSwitch.
-zCommandUsername
-zCommandPassword
-zKeyPath
-The zCommandUsername property must be set. To use public key authentication you must verify that the public portion of the key referenced in zKeyPath is installed in the `~/.ssh/authorized_keys` file for the appropriate user on the Open vSwitch server. If this key has a passphrase you should set it in the zCommandPassword property. If you'd rather use password authentication than setup keys, simply put the user's password in the zCommandPassword property.
-You should then add the zenoss.ssh.OpenvSwitch modeler plugin to the device, or device class containing your Open vSwitch servers and remodel the device(s).
+To start monitoring your Open vSwitch server you will need to setup SSH access
+so that your Zenoss collector server will be able to SSH into your Open vSwitch
+server(s) as a user who has permission to run the ovs-vsctl command, and
+/var/run/openvswitch/db.sock without TTY. This almost always means the root
+user. In addition, TTY must not be required for the user. See the Using a Root
+User section below for instructions on relieving root users from having to use
+TYY. See the Using a Non-Root User section below for instructions on allowing
+non-root users to run Open vSwitch.
+
+;zProperties
+
+* zCommandUsername
+* zCommandPassword
+* zKeyPath
+
+The zCommandUsername property must be set. To use public key authentication you
+must verify that the public portion of the key referenced in zKeyPath is
+installed in the `~/.ssh/authorized_keys` file for the appropriate user on the
+Open vSwitch server. If this key has a passphrase you should set it in the
+zCommandPassword property. If you'd rather use password authentication than
+setup keys, simply put the user's password in the zCommandPassword property.
+You should then add the zenoss.ssh.OpenvSwitch modeler plugin to the device, or
+device class containing your Open vSwitch servers and remodel the device(s).
 
 === Using a Root User ===
-This ZenPack requires the ability to run the ''ovs-vsctl'' command and ''ovs-ofctl'' command remotely on your Open vSwitch server(s) using SSH. By default, these commands are only allowed to be run locally. To remotely run theses commands, the root use must not be required to use TTY.
+This ZenPack requires the ability to run the ''ovs-vsctl'' command and
+''ovs-ofctl'' command remotely on your Open vSwitch server(s) using SSH. By
+default, these commands are only allowed to be run locally. To remotely run
+theses commands, the root use must not be required to use TTY.
 
 # Install the '''sudo''' package on your server.
 # Allow root user to execute commands via ssh without a TTY.
@@ -129,9 +146,15 @@ This ZenPack requires the ability to run the ''ovs-vsctl'' command and ''ovs-ofc
 
 
 === Using a Non-Root User ===
-This ZenPack requires the ability to run the ''ovs-vsctl'' command and ''ovs-ofctl'' command remotely on your Open vSwitch server(s) using SSH. By default, these commands are only allowed to be run by the '''root''' user. Furthermore, this ZenPack expects these commands be in the user's path. Normally this is only true for the root user.
+This ZenPack requires the ability to run the ''ovs-vsctl'' command and
+''ovs-ofctl'' command remotely on your Open vSwitch server(s) using SSH. By
+default, these commands are only allowed to be run by the '''root''' user.
+Furthermore, this ZenPack expects these commands be in the user's path.
+Normally this is only true for the root user.
 
-Assuming that you've created a user named '''zenmonitor''' on your Open vSwitch servers for monitoring purposes, you can follow these steps to allow the '''zenmonitor''' user to run ''ovs-vsctl'' command and ''ovs-ofctl'' command.
+Assuming that you've created a user named '''zenmonitor''' on your Open vSwitch
+servers for monitoring purposes, you can follow these steps to allow the
+'''zenmonitor''' user to run ''ovs-vsctl'' command and ''ovs-ofctl'' command.
 
 # Install the '''sudo''' package on your server.
 # Allow the *zenmonitor* user to run ovs-vsctl, ovs-ofctl.
@@ -170,7 +193,8 @@ after installing the ZenPack.
 ## Click ''Import''.
 ## Click Close to close Import page
 
-You can now navigate back to the ''OpenvSwitch ZenPack'' folder in the repository to see the following resources added by the bundle.
+You can now navigate back to the ''OpenvSwitch ZenPack'' folder in the
+repository to see the following resources added by the bundle.
 
 ;Domains
 * OpenvSwitch Domain
@@ -182,7 +206,30 @@ Domains can be used to create ad hoc views using the following steps.
 # Expand ''Public'' then ''OpenvSwitch ZenPack''.
 # Choose the ''OpenvSwitch Domain'' domain.
 
-== Changes ==
+== Service Impact and Root Cause Analysis ==
 
-;1.0.0
-* Initial release.
+When combined with the Zenoss Service Dynamics product, this ZenPack adds       
+built-in service impact and root cause analysis capabilities.
+The service impact relationships are automatically added. These will be
+included in any services that contain one or more of the explicitly mentioned
+components.
+
+Since the class structure of Open vSwitch is simple, its Impact structure is
+nearly identical to the class structure shown above.
+
+===Recommended Impact Setup=== 
+
+Since most components will be related to Interfaces we recommend:       
+                                                                                
+* Navigate to Services (Impact)                                                 
+* Add a Dynamic Service to your Services tab                                    
+* Add all Interfaces to the Dynamic Service                                        
+* Optionally add all Flows to the Dynamic Service    
+
+===Impact Relations===                                                          
+                                                                                
+Component failures will affect Impact as follows:                               
+                                                                                
+* OpenvSwitch endpoint impacts associated Bridges
+* Bridge impacts associated Ports and Flows
+* Port impacts associated Interfaces
