@@ -1,9 +1,9 @@
-__TOC__
 This ZenPack provides support for monitoring [http://openvswitch.org/ OpenvSwitch].
 
 == Gallery ==
+__TOC__
 <gallery widths=250px heights=127px>
-openvswitch_OpenvSwitch.png
+openvswitch_overview.png
 openvswitch_bridge.png
 openvswitch_port.png
 openvswitch_flow.png
@@ -75,13 +75,17 @@ Use the following steps to start monitoring Open vSwitch using the Zenoss web in
 
 You can add an OVS endpoint by using the zenbatchload command:
 
- [zenoss@zenoss.com]: zenbatchload ovs.txt
+<syntaxhighlight lang="bash">batchload <filename></syntaxhighlight>
 
-where the file ovs.txt should contain:
+where the file ''<filename>''  should have the format:
 
- /Devices/Network/OpenvSwitch
- ovs41 setManageIp='192.168.1.7', zCommandUsername='zenoss', zCommandPassword='zenoss'
+<syntaxhighlight lang="text">/Devices/Network/OpenvSwitch
+<device name> setManageIp='<ip address>', zCommandUsername='<username>', zCommandPassword='<password>'</syntaxhighlight>
 
+For example:
+
+<syntaxhighlight lang="text">/Devices/Network/OpenvSwitch
+net.ovs setManageIp='10.4.1.21', zCommandUsername='zenoss', zCommandPassword='secret_pass'</syntaxhighlight>
 
 ----
 
@@ -233,3 +237,4 @@ Component failures will affect Impact as follows:
 * OpenvSwitch endpoint impacts associated Bridges
 * Bridge impacts associated Ports and Flows
 * Port impacts associated Interfaces
+
