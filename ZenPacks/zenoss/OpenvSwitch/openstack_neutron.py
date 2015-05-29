@@ -27,10 +27,6 @@ class OpenvSwitchNeutronImplementationPlugin(BaseNeutronImplementationPlugin):
     implements(INeutronImplementationPlugin)
 
     @classmethod
-    def ini_required(cls):
-        return []
-
-    @classmethod
     def ini_process(cls, filename, section_name, option_name, value):
         # The management server IPs are specified as a comma-separated list.
         # we transform this to an actual list so that we can refer to it that
@@ -52,7 +48,6 @@ class OpenvSwitchNeutronImplementationPlugin(BaseNeutronImplementationPlugin):
 
         keys = []
         for manageIp in manageIps:
-            #import pdb;pdb.set_trace()
             keyvalues = (manageIp, 'port', short_osi_port_id)
             keys.append('ml2.openvswitch:' + '|'.join(keyvalues))
 
