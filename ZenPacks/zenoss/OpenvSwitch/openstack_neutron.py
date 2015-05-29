@@ -26,16 +26,6 @@ from ZenPacks.zenoss.OpenStackInfrastructure.neutron_integration \
 class OpenvSwitchNeutronImplementationPlugin(BaseNeutronImplementationPlugin):
     implements(INeutronImplementationPlugin)
 
-    @classmethod
-    def ini_process(cls, filename, section_name, option_name, value):
-        # The management server IPs are specified as a comma-separated list.
-        # we transform this to an actual list so that we can refer to it that
-        # way elsewhere.
-        if option_name == 'management_server_ips':
-            return split_list(value)
-
-        return value
-
     def getPortIntegrationKeys(self, osi_port):
         # Use short name from OSI port ID as a clue to find the port on
         # OVS side. Use that OVS port to determine the OVS host IP
