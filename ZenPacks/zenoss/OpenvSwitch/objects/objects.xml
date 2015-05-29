@@ -5,6 +5,9 @@
 <property visible="True" type="lines" id="zCollectorPlugins" >
 ['zenoss.ssh.OpenvSwitch']
 </property>
+<property visible="True" type="lines" id="zDeviceTemplates" >
+[]
+</property>
 <property visible="True" type="string" id="zPythonClass" >
 ZenPacks.zenoss.OpenvSwitch.OpenvSwitch
 </property>
@@ -37,7 +40,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name,_uuid list bridge 2&gt;&amp;1; for txt in $$(/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name list bridge); do if [ $$txt != 'name' ] &amp;&amp; [ $$txt != ':' ] ; then txt=$$(echo $$txt | tr -d \'\"\' ); echo $$txt; /usr/bin/sudo /usr/bin/ovs-ofctl dump-aggregate $$txt; fi; done;
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name,_uuid list bridge 2&gt;&amp;1; for txt in $$(/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name list bridge 2&gt;&amp;1); do if [ $$txt != 'name' ] &amp;&amp; [ $$txt != ':' ] ; then txt=$$(echo $$txt | tr -d \'\"\' ); echo $$txt; /usr/bin/sudo /usr/bin/ovs-ofctl dump-aggregate $$txt 2&gt;&amp;1; fi; done;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -107,7 +110,7 @@ bridge_port_status
 2
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/bin/date -u +%s; echo "SPLIT" ; /usr/bin/ovs-vsctl list bridge 2&gt;&amp;1; echo "SPLIT" ; /usr/bin/sudo /usr/bin/ovsdb-tool show-log;
+/bin/date -u +%s 2&gt; /dev/null ; echo "SPLIT" ; /usr/bin/ovs-vsctl list bridge 2&gt;&amp;1; echo "SPLIT" ; /usr/bin/sudo /usr/bin/ovsdb-tool show-log;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -136,7 +139,7 @@ ovs_status
 5
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/bin/echo 'BEGIN' ; /sbin/service openvswitch status 2&gt; /dev/null ; echo "SPLIT" ; /usr/bin/systemctl status openvswitch-nonetwork.service 2&gt; /dev/null ; echo "SPLIT" ; /usr/bin/sudo service openvswitch-switch status 2&gt; /dev/null ; echo "END"
+/bin/echo 'BEGIN' 2&gt; /dev/null ; /sbin/service openvswitch status 2&gt;&amp;1; echo "SPLIT" ; /usr/bin/systemctl status openvswitch-nonetwork.service 2&gt;&amp;1; echo "SPLIT" ; /usr/bin/sudo service openvswitch-switch status 2&gt;&amp;1; echo "END"
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -360,7 +363,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 &gt;&amp;1;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -427,7 +430,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 &gt;&amp;1;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -518,7 +521,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 &gt;&amp;1;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -561,7 +564,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 &gt;&amp;1;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -604,7 +607,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 &gt;&amp;1;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -647,7 +650,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 &gt;&amp;1;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -693,7 +696,7 @@ interface_status
 4
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,admin_state,link_state list interface;
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,admin_state,link_state list interface 2 &gt;&amp;1;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -1185,25 +1188,6 @@ AVERAGE
 </object>
 <!-- ('', 'zport', 'dmd', 'Events', 'OpenvSwitch') -->
 <object id='/zport/dmd/Events/OpenvSwitch' module='Products.ZenEvents.EventClass' class='EventClass'>
-<object id='Bridge' module='Products.ZenEvents.EventClass' class='EventClass'>
-<tomanycont id='instances'>
-<object id='OpenvSwitch Bridge Status' module='Products.ZenEvents.EventClassInst' class='EventClassInst'>
-<property type="text" id="transform" mode="w" >
-from ZenPacks.zenoss.OpenvSwitch.events import updateBridgePort
-updateBridgePort(evt, device, component)
-</property>
-<property type="string" id="eventClassKey" mode="w" >
-OpenvSwitch_bridge_port_status
-</property>
-<property type="int" id="sequence" mode="w" >
-7
-</property>
-<property type="text" id="explanation" mode="w" >
-Update bridge model data based on bridge events
-</property>
-</object>
-</tomanycont>
-</object>
 <object id='Interface' module='Products.ZenEvents.EventClass' class='EventClass'>
 <tomanycont id='instances'>
 <object id='OpenvSwitch Interface Status' module='Products.ZenEvents.EventClassInst' class='EventClassInst'>
@@ -1219,6 +1203,25 @@ OpenvSwitch_interface_status
 </property>
 <property type="text" id="explanation" mode="w" >
 Update interface model date based on interface events
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Bridge' module='Products.ZenEvents.EventClass' class='EventClass'>
+<tomanycont id='instances'>
+<object id='OpenvSwitch Bridge Status' module='Products.ZenEvents.EventClassInst' class='EventClassInst'>
+<property type="text" id="transform" mode="w" >
+from ZenPacks.zenoss.OpenvSwitch.events import updateBridgePort
+updateBridgePort(evt, device, component)
+</property>
+<property type="string" id="eventClassKey" mode="w" >
+OpenvSwitch_bridge_port_status
+</property>
+<property type="int" id="sequence" mode="w" >
+7
+</property>
+<property type="text" id="explanation" mode="w" >
+Update bridge model data based on bridge events
 </property>
 </object>
 </tomanycont>
