@@ -4,7 +4,7 @@
 
   datasources:
     interfaceStatus:
-      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,admin_state,link_state list interface;
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,admin_state,link_state list interface 2 >&1;
       cycletime: 300
 
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatus
@@ -16,7 +16,7 @@
       severity: Error
 
     interfaceIncomingByteRate:
-      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 >&1;
       cycletime: 300
 
       datapoints:
@@ -32,7 +32,7 @@
       usessh: true
 
     interfaceOutgoingByteRate:
-      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 >&1;
       cycletime: 300
 
       datapoints:
@@ -48,7 +48,7 @@
       usessh: true
 
     interfaceIncomingPacketRate:
-      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 >&1;
       cycletime: 300
 
       datapoints:
@@ -64,7 +64,7 @@
       usessh: true
 
     interfaceOutgoingPacketRate:
-      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 >&1;
       cycletime: 300
 
       datapoints:
@@ -80,7 +80,7 @@
       usessh: true
 
     collisions_dropped:
-      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 >&1;
       cycletime: 300
 
       datapoints:
@@ -108,7 +108,7 @@
       usessh: true
 
     errors:
-      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 >&1;
       cycletime: 300
 
       datapoints:
@@ -222,7 +222,7 @@
 
   datasources:
     openvswitchStatus:
-      commandTemplate: /bin/echo 'BEGIN' ; /sbin/service openvswitch status 2> /dev/null ; echo "SPLIT" ; /usr/bin/systemctl status openvswitch-nonetwork.service 2> /dev/null ; echo "SPLIT" ; /usr/bin/sudo service openvswitch-switch status 2> /dev/null ; echo "END"
+      commandTemplate: /bin/echo 'BEGIN' 2> /dev/null ; /sbin/service openvswitch status 2>&1; echo "SPLIT" ; /usr/bin/systemctl status openvswitch-nonetwork.service 2>&1; echo "SPLIT" ; /usr/bin/sudo service openvswitch-switch status 2>&1; echo "END"
       cycletime: 300
 
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.OVSStatus
@@ -233,7 +233,7 @@
       severity: Critical
 
     bridgePortStatus:
-      commandTemplate: /bin/date -u +%s; echo "SPLIT" ; /usr/bin/ovs-vsctl list bridge 2>&1; echo "SPLIT" ; /usr/bin/sudo /usr/bin/ovsdb-tool show-log;
+      commandTemplate: /bin/date -u +%s 2> /dev/null ; echo "SPLIT" ; /usr/bin/ovs-vsctl list bridge 2>&1; echo "SPLIT" ; /usr/bin/sudo /usr/bin/ovsdb-tool show-log;
       cycletime: 300
 
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.BridgePortStatus
@@ -245,7 +245,7 @@
       severity: Info
 
     bridgeFlowCount:
-      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=name,_uuid list bridge 2>&1; for txt in $$(/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name list bridge); do if [ $$txt != 'name' ] && [ $$txt != ':' ] ; then txt=$$(echo $$txt | tr -d \'\"\' ); echo $$txt; /usr/bin/sudo /usr/bin/ovs-ofctl dump-aggregate $$txt; fi; done;
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=name,_uuid list bridge 2>&1; for txt in $$(/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name list bridge 2>&1); do if [ $$txt != 'name' ] && [ $$txt != ':' ] ; then txt=$$(echo $$txt | tr -d \'\"\' ); echo $$txt; /usr/bin/sudo /usr/bin/ovs-ofctl dump-aggregate $$txt 2>&1; fi; done;
       cycletime: 300
 
       datapoints:
