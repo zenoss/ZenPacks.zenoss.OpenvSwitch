@@ -135,10 +135,11 @@ You should then add the zenoss.ssh.OpenvSwitch modeler plugin to the device, or
 device class containing your Open vSwitch servers and remodel the device(s).
 
 === Using a Root User ===
-This ZenPack requires the ability to run the ''ovs-vsctl'' command and
-''ovs-ofctl'' command remotely on your Open vSwitch server(s) using SSH. By
-default, these commands are only allowed to be run locally. To remotely run
-theses commands, the root use must not be required to use TTY.
+This ZenPack requires the ability to run the ''ovs-vsctl'' command,
+''ovs-ofctl'' command,  and ''ovsdb-tool'' command remotely on your Open
+vSwitch server(s) using SSH. By default, these commands are only allowed to be
+run locally. To remotely run theses commands, the root use must not be
+required to use TTY.
 
 # Install the '''sudo''' package on your server.
 # Allow root user to execute commands via ssh without a TTY.
@@ -150,15 +151,16 @@ theses commands, the root use must not be required to use TTY.
 
 
 === Using a Non-Root User ===
-This ZenPack requires the ability to run the ''ovs-vsctl'' command and
-''ovs-ofctl'' command remotely on your Open vSwitch server(s) using SSH. By
-default, these commands are only allowed to be run by the '''root''' user.
-Furthermore, this ZenPack expects these commands be in the user's path.
-Normally this is only true for the root user.
+This ZenPack requires the ability to run the ''ovs-vsctl'' command,
+''ovs-ofctl'' command,  and ''ovsdb-tool'' command remotely on your Open
+vSwitch server(s) using SSH. By default, these commands are only allowed to be
+run by the '''root''' user. Furthermore, this ZenPack expects these commands be
+in the user's path. Normally this is only true for the root user.
 
 Assuming that you've created a user named '''zenmonitor''' on your Open vSwitch
 servers for monitoring purposes, you can follow these steps to allow the
-'''zenmonitor''' user to run ''ovs-vsctl'' command and ''ovs-ofctl'' command.
+'''zenmonitor''' user to run ''ovs-vsctl'' command, ''ovs-ofctl'' command,  and
+''ovsdb-tool'' command.
 
 # Install the '''sudo''' package on your server.
 # Allow the *zenmonitor* user to run ovs-vsctl, ovs-ofctl.

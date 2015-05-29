@@ -233,7 +233,7 @@
       severity: Critical
 
     bridgePortStatus:
-      commandTemplate: /bin/date -u +%s; echo "SPLIT" ; /usr/bin/ovs-vsctl list bridge ; echo "SPLIT" ; /usr/bin/sudo /usr/bin/ovsdb-tool show-log;
+      commandTemplate: /bin/date -u +%s; echo "SPLIT" ; /usr/bin/ovs-vsctl list bridge 2>&1; echo "SPLIT" ; /usr/bin/sudo /usr/bin/ovsdb-tool show-log;
       cycletime: 300
 
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.BridgePortStatus
