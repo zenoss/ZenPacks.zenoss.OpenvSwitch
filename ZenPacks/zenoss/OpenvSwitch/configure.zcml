@@ -80,6 +80,21 @@
 
     </configure>
 
+    <configure zcml:condition="installed ZenPacks.zenoss.OpenStackInfrastructure">
+        <utility
+            name="ml2.openvswitch"
+            factory=".openstack_neutron.OpenvSwitchNeutronImplementationPlugin"
+            provides="ZenPacks.zenoss.OpenStackInfrastructure.interfaces.INeutronImplementationPlugin"
+            />
+
+        <subscriber
+            for="ZenPacks.zenoss.OpenStackInfrastructure.Host.Host
+                 zope.container.interfaces.IObjectMovedEvent"
+            handler=".openstack_neutron.onOpenStackHostAdded"
+            />
+    </configure>
+
+
     <!-- Layer2 -->
     <include file="layer2.zcml"
         xmlns:zcml="http://namespaces.zope.org/zcml"
