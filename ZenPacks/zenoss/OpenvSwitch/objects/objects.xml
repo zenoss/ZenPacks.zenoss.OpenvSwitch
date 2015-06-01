@@ -363,7 +363,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 &gt;&amp;1;
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2&gt;&amp;1;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -430,7 +430,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 &gt;&amp;1;
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2&gt;&amp;1;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -521,7 +521,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 &gt;&amp;1;
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2&gt;&amp;1;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -564,7 +564,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 &gt;&amp;1;
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2&gt;&amp;1;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -607,7 +607,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 &gt;&amp;1;
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2&gt;&amp;1;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -650,7 +650,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 &gt;&amp;1;
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2&gt;&amp;1;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -696,7 +696,7 @@ interface_status
 4
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,admin_state,link_state list interface 2 &gt;&amp;1;
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,admin_state,link_state list interface 2&gt;&amp;1;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
