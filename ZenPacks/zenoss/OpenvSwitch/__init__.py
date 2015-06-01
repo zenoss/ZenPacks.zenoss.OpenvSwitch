@@ -42,7 +42,7 @@ CFG = zenpacklib.ZenPackSpec(
     device_classes={
         '/Network/OpenvSwitch': {
             'create': True,
-            'remove': False,
+            'remove': True,
             'zProperties': {
                 'zCollectorPlugins': [
                     'zenoss.ssh.OpenvSwitch',
