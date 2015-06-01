@@ -4,7 +4,7 @@
 
   datasources:
     interfaceStatus:
-      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,admin_state,link_state list interface 2 >&1;
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,admin_state,link_state list interface 2>&1;
       cycletime: 300
 
       parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatus
@@ -16,7 +16,7 @@
       severity: Error
 
     interfaceIncomingByteRate:
-      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 >&1;
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 1>&1;
       cycletime: 300
 
       datapoints:
@@ -32,7 +32,7 @@
       usessh: true
 
     interfaceOutgoingByteRate:
-      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 >&1;
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2>&1;
       cycletime: 300
 
       datapoints:
@@ -48,7 +48,7 @@
       usessh: true
 
     interfaceIncomingPacketRate:
-      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 >&1;
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2>&1;
       cycletime: 300
 
       datapoints:
@@ -64,7 +64,7 @@
       usessh: true
 
     interfaceOutgoingPacketRate:
-      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 >&1;
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2>&1;
       cycletime: 300
 
       datapoints:
@@ -80,7 +80,7 @@
       usessh: true
 
     collisions_dropped:
-      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 >&1;
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2>&1;
       cycletime: 300
 
       datapoints:
@@ -108,7 +108,7 @@
       usessh: true
 
     errors:
-      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2 >&1;
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2>&1;
       cycletime: 300
 
       datapoints:
