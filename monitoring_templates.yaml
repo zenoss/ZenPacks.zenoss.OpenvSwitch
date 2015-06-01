@@ -13,7 +13,7 @@
       usessh: true
       eventClass: "/Status"
       eventKey: "interface_status"
-      severity: Error
+      severity: Warning
 
     interfaceIncomingByteRate:
       commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2>&1;
@@ -230,7 +230,7 @@
       usessh: true
       eventClass: "/Status"
       eventKey: "ovs_status"
-      severity: Critical
+      severity: Warning
 
     bridgePortStatus:
       commandTemplate: /bin/date -u +%s 2> /dev/null ; echo "SPLIT" ; /usr/bin/ovs-vsctl list bridge 2>&1; echo "SPLIT" ; /usr/bin/sudo /usr/bin/ovsdb-tool show-log;
@@ -242,7 +242,7 @@
       usessh: true
       eventClass: "/Status"
       eventKey: "bridge_port_status"
-      severity: Info
+      severity: Warning
 
     bridgeFlowCount:
       commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=name,_uuid list bridge 2>&1; for txt in $$(/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name list bridge 2>&1); do if [ $$txt != 'name' ] && [ $$txt != ':' ] ; then txt=$$(echo $$txt | tr -d \'\"\' ); echo $$txt; /usr/bin/sudo /usr/bin/ovs-ofctl dump-aggregate $$txt 2>&1; fi; done;
