@@ -16,7 +16,7 @@
       severity: Error
 
     interfaceIncomingByteRate:
-      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 1>&1;
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2>&1;
       cycletime: 300
 
       datapoints:
