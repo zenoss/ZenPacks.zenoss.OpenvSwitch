@@ -194,7 +194,7 @@ def bridge_stats_data_to_dict(bridge_stats):
             continue
 
         elif bstat.find('name') > -1:              # bridge name
-            bridgename = bstat[bstat.index(':') + 1:].strip()
+            bridgename = bstat[bstat.index(':') + 1:].strip().strip('"')
             if bridgename not in flowstats_dct:    # a new bridge name
                 flowstats_dct[bridgename] = {}
                 name = bridgename                  # update bridge name
