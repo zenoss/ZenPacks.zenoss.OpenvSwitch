@@ -243,6 +243,8 @@ class ZenPack(schema.ZenPack):
         # since this ZP added addition eventClasses, and zencatalogservice,
         # if is running, indexed them, the event catalog needs to be
         # cleaned up at removal
+        super(ZenPack, self).remove(dmd, leaveObjects=leaveObjects)
+
         from ZODB.transact import transact
         brains = dmd.Events.eventClassSearch()
         for brain in brains:
