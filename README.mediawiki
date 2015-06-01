@@ -67,9 +67,18 @@ Use the following steps to start monitoring Open vSwitch using the Zenoss web in
 # Choose ''Add a Single Device...'' from the add device button.
 # Fill out the form. [[File:openvswitch_add_dialog.png|thumb|320px|Add Dialog]]
 #* ''Name or IP'' must be either the IP address for the Open vSwitch host, or a FQDN that can be resolved to the host IP address.
-#* ''Title'' can be anything you want.
+#* ''Title'' can be any unique Zenoss device name. See note below.
 # Select ''/Network/OpenvSwitch'' from the dropdown list for Device Class
 # Click ''ADD''.
+
+{{note}} The ''Title'' field should not be empty; it should be a unique device
+name within the Zenoss environment. The device's IP address or device's
+hostname should not be used as the title either. This is especially important
+if you are adding another device that share the same IP address or hostname
+that already exist on another device. Not doing this may result in devices
+with the same name conflicting with each other. (e.g. attempting to model
+device would show modeling results that belong to another device OR device
+would show relations that do not belong to that device)
 
 === Adding an Open vSwitch Endpoint with Zenbatchload ===
 
