@@ -249,3 +249,11 @@ Component failures will affect Impact as follows:
 * Bridge impacts associated Ports and Flows
 * Port impacts associated Interfaces
 
+== Changes ==
+
+;1.1.1
+* Upgrade ZenPackLib to 1.0.1
+* Change over to new ZenPackLib format for zenpack.yaml
+
+;1.1.0
+* Initial Release
