@@ -1,0 +1,406 @@
+name: ZenPacks.zenoss.OpenvSwitch
+class_relationships:
+- OpenvSwitch 1:MC Bridge
+- Bridge 1:MC Port
+- Bridge 1:MC Flow
+- Port 1:MC Interface
+device_classes: !ZenPackSpec
+  /Network/OpenvSwitch:
+    remove: true
+    zProperties:
+      zCollectorPlugins: [zenoss.ssh.OpenvSwitch]
+      zDeviceTemplates: []
+    templates:
+      Bridge:
+        description: 'OpenvSwitch: Bridge Monitoring'
+        targetPythonClass: ZenPacks.zenoss.OpenvSwitch.Bridge
+        datasources:
+          bridgeFlowCount:
+            type: COMMAND
+            component: ${here/id}
+            commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=name,_uuid
+              list bridge 2>&1; for txt in $$(/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name
+              list bridge 2>&1); do if [ $$txt != 'name' ] && [ $$txt != ':' ] ; then
+              txt=$$(echo $$txt | tr -d \'\"\' ); echo $$txt; /usr/bin/sudo /usr/bin/ovs-ofctl
+              dump-aggregate $$txt 2>&1; fi; done;
+            datapoints:
+              byte_count:
+                rrdtype: DERIVE
+                rrdmin: 0
+                aliases: {byte_count: ''}
+              flow_count:
+                rrdmin: 0
+                aliases: {flow_count: ''}
+              packet_count:
+                rrdtype: DERIVE
+                rrdmin: 0
+                aliases: {packet_count: ''}
+            usessh: true
+            parser: ZenPacks.zenoss.OpenvSwitch.parsers.BridgeStatistics
+          bridgePortStatus:
+            type: COMMAND
+            component: ${here/title}
+            eventClass: /Status
+            eventKey: bridge_port_status
+            commandTemplate: /bin/date -u +%s 2> /dev/null ; echo "SPLIT" ; /usr/bin/ovs-vsctl
+              list bridge 2>&1; echo "SPLIT" ; /usr/bin/sudo /usr/bin/ovsdb-tool show-log;
+            usessh: true
+            parser: ZenPacks.zenoss.OpenvSwitch.parsers.BridgePortStatus
+          openvswitchStatus:
+            type: COMMAND
+            eventClass: /Status
+            eventKey: ovs_status
+            commandTemplate: /bin/echo 'BEGIN' 2> /dev/null ; /sbin/service openvswitch
+              status 2>&1; echo "SPLIT" ; /usr/bin/systemctl status openvswitch-nonetwork.service
+              2>&1; echo "SPLIT" ; /usr/bin/sudo service openvswitch-switch status
+              2>&1; echo "END"
+            usessh: true
+            parser: ZenPacks.zenoss.OpenvSwitch.parsers.OVSStatus
+        graphs:
+          Flow:
+            units: count
+            miny: 0
+            graphpoints:
+              Flow count:
+                dpName: bridgeFlowCount_flow_count
+                format: '%7.0lf'
+          Packets:
+            units: packets/sec
+            miny: 0
+            graphpoints:
+              Bridge packet rate:
+                dpName: bridgeFlowCount_packet_count
+                format: '%7.2lf%s'
+          Throughput:
+            units: bits/sec
+            miny: 0
+            graphpoints:
+              Bridge throughput:
+                dpName: bridgeFlowCount_byte_count
+                format: '%7.2lf%s'
+      Interface:
+        description: 'OpenvSwitch: Interface Monitoring'
+        targetPythonClass: ZenPacks.zenoss.OpenvSwitch.Interface
+        datasources:
+          collisions_dropped:
+            type: COMMAND
+            component: ${here/id}
+            commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name
+              list interface 2>&1;
+            datapoints:
+              collisions:
+                rrdtype: DERIVE
+                rrdmin: 0
+                aliases: {collisions: ''}
+              rx_dropped:
+                rrdtype: DERIVE
+                rrdmin: 0
+                aliases: {incoming_packets_dropped: ''}
+              tx_dropped:
+                rrdtype: DERIVE
+                rrdmin: 0
+                aliases: {outgoing_packets_dropped: ''}
+            usessh: true
+            parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
+          errors:
+            type: COMMAND
+            component: ${here/id}
+            commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name
+              list interface 2>&1;
+            datapoints:
+              rx_crc_err:
+                rrdtype: DERIVE
+                rrdmin: 0
+                aliases: {incoming_packets_CRC_error: ''}
+              rx_errors:
+                rrdtype: DERIVE
+                rrdmin: 0
+                aliases: {incoming_packets_error: ''}
+              rx_frame_err:
+                rrdtype: DERIVE
+                rrdmin: 0
+                aliases: {incoming_frame_error: ''}
+              rx_over_err:
+                rrdtype: DERIVE
+                rrdmin: 0
+                aliases: {incoming_buffer_overrun_error: ''}
+              tx_errors:
+                rrdtype: DERIVE
+                rrdmin: 0
+                aliases: {outgoing_packets_error: ''}
+            usessh: true
+            parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
+          interfaceIncomingByteRate:
+            type: COMMAND
+            component: ${here/id}
+            commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name
+              list interface 2>&1;
+            datapoints:
+              rx_bytes:
+                rrdtype: DERIVE
+                rrdmin: 0
+                aliases: {incoming_bytes: ''}
+            usessh: true
+            parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
+          interfaceIncomingPacketRate:
+            type: COMMAND
+            component: ${here/id}
+            commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name
+              list interface 2>&1;
+            datapoints:
+              rx_packets:
+                rrdtype: DERIVE
+                rrdmin: 0
+                aliases: {incoming_packets: ''}
+            usessh: true
+            parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
+          interfaceOutgoingByteRate:
+            type: COMMAND
+            component: ${here/id}
+            commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name
+              list interface 2>&1;
+            datapoints:
+              tx_bytes:
+                rrdtype: DERIVE
+                rrdmin: 0
+                aliases: {outgoing_bytes: ''}
+            usessh: true
+            parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
+          interfaceOutgoingPacketRate:
+            type: COMMAND
+            component: ${here/id}
+            commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name
+              list interface 2>&1;
+            datapoints:
+              tx_packets:
+                rrdtype: DERIVE
+                rrdmin: 0
+                aliases: {outgoing_packets: ''}
+            usessh: true
+            parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
+          interfaceStatus:
+            type: COMMAND
+            component: ${here/id}
+            eventClass: /Status
+            eventKey: interface_status
+            commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,admin_state,link_state
+              list interface 2>&1;
+            usessh: true
+            parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatus
+        graphs:
+          Dropped Collisions:
+            units: drops/sec
+            miny: 0
+            graphpoints:
+              Collision Drops:
+                dpName: collisions_dropped_collisions
+                format: '%7.2lf%s'
+              Inbound Drops:
+                dpName: collisions_dropped_rx_dropped
+                format: '%7.2lf%s'
+              Outbound Drops:
+                dpName: collisions_dropped_tx_dropped
+                format: '%7.2lf%s'
+          Errors:
+            units: errors/sec
+            miny: 0
+            graphpoints:
+              Inbound Buffer Overrun Errors:
+                dpName: errors_rx_over_err
+                format: '%7.2lf%s'
+              Inbound Frame Errors:
+                dpName: errors_rx_frame_err
+                format: '%7.2lf%s'
+              Inbound Packet CRC Errors:
+                dpName: errors_rx_crc_err
+                format: '%7.2lf%s'
+              Inbound Packet Errors:
+                dpName: errors_rx_errors
+                format: '%7.2lf%s'
+              Outbound Packet Errors:
+                dpName: errors_tx_errors
+                format: '%7.2lf%s'
+          Packets:
+            units: packets/sec
+            miny: 0
+            graphpoints:
+              Inbound:
+                dpName: interfaceIncomingPacketRate_rx_packets
+                format: '%7.2lf%s'
+              Outbound:
+                dpName: interfaceOutgoingPacketRate_tx_packets
+                format: '%7.2lf%s'
+          Throughput:
+            units: bits/sec
+            miny: 0
+            graphpoints:
+              Inbound:
+                dpName: interfaceIncomingByteRate_rx_bytes
+                format: '%7.2lf%s'
+              Outbound:
+                dpName: interfaceOutgoingByteRate_tx_bytes
+                format: '%7.2lf%s'
+classes: !ZenPackSpec
+  DEFAULTS:
+    base: [ManagedObject]
+  Bridge:
+    meta_type: OpenvSwitchBridge
+    label: Bridge
+    plural_label: Bridges
+    order: 1
+    properties:
+      bridgeId:
+        label: Bridge ID
+        grid_display: false
+    dynamicview_relations:
+      impacted_by: [openvSwitch]
+      impacts: [ports, flows]
+  Flow:
+    meta_type: OpenvSwitchFlow
+    label: Flow
+    plural_label: Flows
+    order: 3
+    properties:
+      action:
+        label: Action
+        order: 3.7
+      flowId:
+        label: Flow ID
+        grid_display: false
+      inport:
+        label: In Port
+        label_width: 50
+        content_width: 50
+        order: 3.4
+      nwdst:
+        label: Destination
+        order: 3.6
+      nwsrc:
+        label: Source
+        order: 3.5
+      priority:
+        label: Priority
+        label_width: 50
+        content_width: 50
+        order: 3.2
+      protocol:
+        label: Protocol
+        label_width: 50
+        content_width: 50
+        order: 3.3
+      table:
+        label: Table
+        label_width: 50
+        content_width: 50
+        order: 3.1
+    dynamicview_relations:
+      impacted_by: [bridge]
+  Interface:
+    meta_type: OpenvSwitchInterface
+    label: Interface
+    plural_label: Interfaces
+    order: 4
+    properties:
+      amac:
+        label: Attached MAC
+        label_width: 100
+        content_width: 100
+        order: 4.3
+      astate:
+        label: Admin State
+        label_width: 60
+        content_width: 60
+        order: 4.5
+      duplex:
+        label: Duplex
+        grid_display: false
+        order: 4.9
+      interfaceId:
+        label: Interface ID
+        grid_display: false
+      lspeed:
+        label: Link Speed
+        grid_display: false
+        order: 4.7
+      lstate:
+        label: Link State
+        label_width: 60
+        content_width: 60
+        order: 4.6
+      mac:
+        label: MAC in use
+        label_width: 100
+        content_width: 100
+        order: 4.2
+      mtu:
+        label: MTU
+        grid_display: false
+        order: 4.8
+      ofport:
+        label: OF Port
+        label_width: 40
+        content_width: 40
+        order: 4.4
+      openstack_core_components:
+        type: entity
+        label: ML2 Integration
+        grid_display: false
+        api_only: true
+        api_backendtype: method
+      type_:
+        label: Type
+        label_width: 40
+        content_width: 40
+        order: 4.1
+    dynamicview_relations:
+      impacted_by: [port]
+      impacts: [openstack_core_components]
+  ManagedObject:
+    base: [zenpacklib.Component]
+    filter_display: false
+  OpenvSwitch:
+    base: [zenpacklib.Device]
+    meta_type: OpenvSwitch
+    plural_short_label: OpenvSwitches
+    properties:
+      numberBridges:
+        grid_display: false
+      numberFlows:
+        grid_display: false
+      numberInterfaces:
+        grid_display: false
+      numberPorts:
+        grid_display: false
+      ovsDBVersion:
+        grid_display: false
+      ovsId:
+        grid_display: false
+      ovsTitle:
+        grid_display: false
+      ovsVersion:
+        grid_display: false
+    filter_display: false
+    dynamicview_group: Devices
+    dynamicview_relations:
+      impacts: [bridges]
+  Port:
+    meta_type: OpenvSwitchPort
+    label: Port
+    plural_label: Ports
+    order: 2
+    properties:
+      openstack_core_components:
+        type: entity
+        label: ML2 Integration
+        grid_display: false
+        api_only: true
+        api_backendtype: method
+      portId:
+        label: Port ID
+        grid_display: false
+      tag_:
+        label: VLAN Tag
+    dynamicview_relations:
+      impacted_by: [bridge]
+      impacts: [interfaces, openstack_core_components]
+
