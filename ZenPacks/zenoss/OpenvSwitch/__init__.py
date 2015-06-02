@@ -28,12 +28,11 @@ CLASS_NAME = {}
 
 RELATIONSHIPS_YUML = """
 // containing
-[OpenvSwitchDevice]++components-ovsdevice1[OpenvSwitchComponent]
-[OVS]++-[Bridge]
+[OpenvSwitch]++-[Bridge]
 [Bridge]++-[Port]
 [Bridge]++-[Flow]
+[Port]++-[Interface]
 // non-containing 1:M
-[Port]1-.-*[Interface]
 // non-containing 1:1
 """
 
@@ -43,157 +42,176 @@ CFG = zenpacklib.ZenPackSpec(
     device_classes={
         '/Network/OpenvSwitch': {
             'create': True,
-            'remove': False,
+            'remove': True,
             'zProperties': {
                 'zCollectorPlugins': [
-                    'zenoss.ssh.OpenvSwitch'
-                ]
+                    'zenoss.ssh.OpenvSwitch',
+                ],
+                'zDeviceTemplates':    [],
             }
         }
     },
 
     classes={
+        'DEFAULTS': {'base': 'ManagedObject'},
+
         # Device Types ###############################################
-        'OpenvSwitchDevice': {
+        'OpenvSwitch': {
             'base': zenpacklib.Device,
-            'meta_type': 'OpenvSwitchDevice',
+            'meta_type': 'OpenvSwitch',
             'filter_display': False,
+            'plural_short_label': 'OpenvSwitches',
+            'properties': {
+                'ovsTitle':          {'grid_display': False},
+                'ovsId':             {'grid_display': False},
+                'ovsDBVersion':      {'grid_display': False},
+                'ovsVersion':        {'grid_display': False},
+                'numberBridges':     {'grid_display': False},
+                'numberPorts':       {'grid_display': False},
+                'numberFlows':       {'grid_display': False},
+                'numberInterfaces':  {'grid_display': False},
+            },
+            'dynamicview_group': 'Devices',
+            'dynamicview_relations': {
+                'impacts': ['bridges'],
+            }
         },
 
         # Component Base Types #######################################
-        'OpenvSwitchComponent': {
+        'ManagedObject': {
             'base': zenpacklib.Component,
             'filter_display': False,
         },
 
-        'OVS': {
-            'base': 'OpenvSwitchComponent',
-            'meta_type': 'OpenvSwitchOVS',
-            'label': 'Open vSwitch',
-            'plural_label': 'Open vSwitchs',
-            'order': 1,
-            'properties': {
-                'ovsId':       {'grid_display': False,
-                                'label': 'OpenvSwitch ID'},
-                'DB_version':  {'label': 'DB Version'},
-                'OVS_version': {'label': 'OVS Version'},
-            },
-            'impacts': ['bridges'],
-        },
-
         'Bridge': {
-            'base': 'OpenvSwitchComponent',
             'meta_type': 'OpenvSwitchBridge',
             'label': 'Bridge',
             'plural_label': 'Bridges',
-            'order': 2,
+            'order': 1,
             'properties': {
                 'bridgeId':    {'grid_display': False,
                                 'label': 'Bridge ID'},
             },
-            'impacts': ['ports',
-                        'flows',
-                       ],
-            'impacted_by': ['ovs'],
+            'dynamicview_relations': {
+                'impacts': ['ports', 'flows'],
+                'impacted_by': ['openvSwitch'],
+            }
         },
 
         'Port': {
-            'base': 'OpenvSwitchComponent',
             'meta_type': 'OpenvSwitchPort',
             'label': 'Port',
             'plural_label': 'Ports',
-            'order': 3,
+            'order': 2,
             'properties': {
                 'portId':      {'grid_display': False,
                                 'label': 'Port ID'},
                 'tag_':        {'label': 'VLAN Tag'},
+                'openstack_core_components': {
+                    'label': 'ML2 Integration',
+                    'grid_display': False,
+                    'type_': 'entity',
+                    'api_only': True,
+                    'api_backendtype': 'method'
+                },
             },
-            'impacts': ['interfaces'],
-            'impacted_by': ['bridge'],
+            'dynamicview_relations': {
+                'impacts': ['interfaces', 'openstack_core_components'],
+                'impacted_by': ['bridge'],
+            }
+
         },
 
         'Flow': {
-            'base': 'OpenvSwitchComponent',
             'meta_type': 'OpenvSwitchFlow',
             'label': 'Flow',
             'plural_label': 'Flows',
-            'order': 4,
+            'order': 3,
             'properties': {
                 'flowId':       {'grid_display': False,
                                 'label': 'Flow ID'},
                 'table':        {'label': 'Table',
-                                 'order': 4.1,
+                                 'order': 3.1,
                                  'label_width': 50,
                                  'content_width': 50},
                 'priority':     {'label': 'Priority',
-                                 'order': 4.2,
+                                 'order': 3.2,
                                  'label_width': 50,
                                  'content_width': 50},
                 'protocol':     {'label': 'Protocol',
-                                 'order': 4.3,
+                                 'order': 3.3,
                                  'label_width': 50,
                                  'content_width': 50},
                 'inport':       {'label': 'In Port',
-                                 'order': 4.4,
+                                 'order': 3.4,
                                  'label_width': 50,
                                  'content_width': 50},
                 'nwsrc':        {'label': 'Source',
-                                 'order': 4.5},
+                                 'order': 3.5},
                 'nwdst':        {'label': 'Destination',
-                                 'order': 4.6},
+                                 'order': 3.6},
                 'action':       {'label': 'Action',
-                                 'order': 4.7},
+                                 'order': 3.7},
             },
-            'impacted_by': ['bridge'],
+            # Note: Flows too dynamic. We should consider removal of below.
+            'dynamicview_relations': {
+                'impacted_by': ['bridge'],
+            }
         },
 
         'Interface': {
-            'base': 'OpenvSwitchComponent',
             'meta_type': 'OpenvSwitchInterface',
             'label': 'Interface',
             'plural_label': 'Interfaces',
-            'order': 5,
+            'order': 4,
             'properties': {
                 'interfaceId': {'grid_display': False,
                                 'label': 'Interface ID'},
                 'type_':       {'label': 'Type',
-                                'order': 5.1,
+                                'order': 4.1,
                                 'label_width': 40,
                                 'content_width': 40},
                 'mac':         {'label': 'MAC in use',
-                                'order': 5.2,
-                                'label_width': 90,
-                                'content_width': 90},
+                                'order': 4.2,
+                                'label_width': 100,
+                                'content_width': 100},
                 'amac':        {'label': 'Attached MAC',
-                                'order': 5.3,
-                                'label_width': 90,
-                                'content_width': 90},
+                                'order': 4.3,
+                                'label_width': 100,
+                                'content_width': 100},
                 'ofport':      {'label': 'OF Port',
-                                'order': 5.4,
-                                'label_width': 50,
-                                'content_width': 50},
-                'lspeed':      {'label': 'Link Speed',
-                                'order': 5.5,
-                                'label_width': 50,
-                                'content_width': 50},
-                'lstate':      {'label': 'Link State',
-                                'order': 5.6,
+                                'order': 4.4,
                                 'label_width': 40,
                                 'content_width': 40},
                 'astate':      {'label': 'Admin State',
-                                'order': 5.7,
-                                'label_width': 50,
-                                'content_width': 50},
-                'mtu':         {'label': 'MTU',
-                                'order': 5.8,
-                                'label_width': 25,
-                                'content_width': 25},
-                'duplex':      {'label': 'Duplex',
-                                'order': 5.9,
-                                'label_width': 35,
-                                'content_width': 35},
+                                'order': 4.5,
+                                'label_width': 60,
+                                'content_width': 60},
+                'lstate':      {'label': 'Link State',
+                                'order': 4.6,
+                                'label_width': 60,
+                                'content_width': 60},
+                'lspeed':      {'grid_display': False,
+                                'label': 'Link Speed',
+                                'order': 4.7},
+                'mtu':         {'grid_display': False,
+                                'label': 'MTU',
+                                'order': 4.8},
+                'duplex':      {'grid_display': False,
+                                'label': 'Duplex',
+                                'order': 4.9},
+                'openstack_core_components': {
+                    'label': 'ML2 Integration',
+                    'grid_display': False,
+                    'type_': 'entity',
+                    'api_only': True,
+                    'api_backendtype': 'method'
+                },
             },
-            'impacted_by': ['port'],
+            'dynamicview_relations': {
+                'impacts': ['openstack_core_components'],
+                'impacted_by': ['port'],
+            }
         },
 
 
@@ -206,6 +224,40 @@ CFG.create()
 
 # patches
 from Products.ZenUtils.Utils import unused
+
+from . import schema
+
+
+class ZenPack(schema.ZenPack):
+    def install(self, app):
+        super(ZenPack, self).install(app)
+
+        try:
+            from ZenPacks.zenoss.OpenStackInfrastructure.neutron_integration \
+                import reindex_core_components
+            reindex_core_components(self.dmd)
+        except ImportError:
+            pass
+
+    def remove(self, dmd, leaveObjects=False):
+        # since this ZP added addition eventClasses, and zencatalogservice,
+        # if is running, indexed them, the event catalog needs to be
+        # cleaned up at removal
+        super(ZenPack, self).remove(dmd, leaveObjects=leaveObjects)
+
+        from ZODB.transact import transact
+        brains = dmd.Events.eventClassSearch()
+        for brain in brains:
+            try:
+                test_reference = brain.getObject()
+                test_reference._p_deactivate()
+            except Exception:
+                object_path_string = brain.getPath()
+                try:
+                    transact(dmd.Events.eventClassSearch.uncatalog_object)(
+                        object_path_string)
+                except Exception as e:
+                    pass
 
 # Patch last to avoid import recursion problems.
 from ZenPacks.zenoss.OpenvSwitch import patches

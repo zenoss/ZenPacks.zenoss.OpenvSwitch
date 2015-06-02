@@ -20,6 +20,9 @@ from ZenPacks.zenoss.OpenvSwitch.utils import bridge_stats_data_to_dict
 
 
 class BridgeStatistics(CommandParser):
+
+    createDefaultEventUsingExitCode = False
+
     def processResults(self, cmd, result):
         if len(cmd.result.output) == 0:
             return
@@ -34,5 +37,10 @@ class BridgeStatistics(CommandParser):
             dp_map = dict([(dp.id, dp) for dp in cmd.points])
             for name, dp in dp_map.iteritems():
                 if name in v:
-                    result.values.append((dp, v[name]))
+                    if 'byte' in name:
+                        # for throughput, convert to bits from bytes
+                        val = v[name] * 8
+                    else:
+                        val = v[name]
+                    result.values.append((dp, val))
 

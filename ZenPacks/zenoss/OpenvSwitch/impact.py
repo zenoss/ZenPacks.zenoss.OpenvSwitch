@@ -16,7 +16,41 @@ from ZenPacks.zenoss.Impact.impactd.interfaces import IRelationshipDataProvider
 
 from Products.ZenModel.Device import Device
 
-ZENPACK_NAME = 'ZenPacks.zenoss.OpenvSwitch'
+from . import __name__ as ZENPACK_NAME
+from OpenvSwitch import OpenvSwitch
+from Bridge import Bridge
+from Port import Port
+
+# Lazy imports to make this module not require Impact.
+ImpactEdge = None
+Trigger = None
+
+# Constants to avoid typos.
+AVAILABILITY = 'AVAILABILITY'
+PERCENT = 'policyPercentageTrigger'
+THRESHOLD = 'policyThresholdTrigger'
+DOWN = 'DOWN'
+DEGRADED = 'DEGRADED'
+ATRISK = 'ATRISK'
+
+
+def guid(obj):
+    """Return GUID for obj."""
+    return IGlobalIdentifier(obj).getGUID()
+
+
+class BaseImpactAdapterFactory(object):
+
+    """Abstract base for Impact adapter factories."""
+
+    def __init__(self, adapted):
+        self.adapted = adapted
+
+    def guid(self):
+        if not hasattr(self, '_guid'):
+            self._guid = guid(self.adapted)
+
+        return self._guid
 
 
 class BaseRelationshipDataProvider(object):
@@ -79,31 +113,95 @@ class BaseRelationshipDataProvider(object):
             yield IGlobalIdentifier(r).getGUID()
 
 
+class BaseTriggers(BaseImpactAdapterFactory):
+
+    """Abstract base for INodeTriggers adapter factories."""
+
+    triggers = []
+
+    def get_triggers(self):
+        '''
+        Return list of triggers defined by subclass' triggers property.
+        '''
+        # Lazy import without incurring import overhead.
+        # http://wiki.python.org/moin/PythonSpeed/PerformanceTips#Import_Statement_Overhead
+        global Trigger
+        if not Trigger:
+            from ZenPacks.zenoss.Impact.impactd import Trigger
+
+        for trigger_args in self.triggers:
+            yield Trigger(self.guid(), *trigger_args)
+
+
+# OVS Impact Providers #################################################
+
+class OVSDeviceTriggers(BaseTriggers):
+
+    """Impact policy triggers for OVS device."""
+
+    triggers = [
+        ('DOWN when 100% device DOWN', PERCENT, AVAILABILITY, {
+            'dependentState': DOWN,
+            'threshold': '100',
+            'state': DOWN,
+            'metaTypes': [OpenvSwitch.meta_type],
+            }),
+        ]
+
+
+class BridgeTriggers(BaseTriggers):
+
+    """Impact policy triggers for bridge instances."""
+
+    triggers = [
+        ('DOWN when 100% device DOWN', PERCENT, AVAILABILITY, {
+            'dependentState': DOWN,
+            'threshold': '100',
+            'state': DOWN,
+            'metaTypes': [OpenvSwitch.meta_type],
+            }),
+        ]
+
+
+class InterfaceTriggers(BaseTriggers):
+
+    """Impact policy triggers for interface instances."""
+
+    triggers = [
+        ('DOWN when 100% port DOWN', PERCENT, AVAILABILITY, {
+            'dependentState': DOWN,
+            'threshold': '100',
+            'state': DOWN,
+            'metaTypes': [Port.meta_type],
+            }),
+
+        ('DOWN when 100% bridge DOWN', PERCENT, AVAILABILITY, {
+            'dependentState': DOWN,
+            'threshold': '100',
+            'state': DOWN,
+            'metaTypes': [Bridge.meta_type],
+            }),
+
+        ('DOWN when 100% device DOWN', THRESHOLD, AVAILABILITY, {
+            'dependentState': DOWN,
+            'threshold': '100',
+            'state': DOWN,
+            'metaTypes': [OpenvSwitch.meta_type],
+            }),
+        ]
+
 class OVSDeviceRelationsProvider(BaseRelationshipDataProvider):
     adapts(Device)
-
-#    impacts = ['openvSwitchBridge']
-
 
 class BridgeDeviceRelationsProvider(BaseRelationshipDataProvider):
     adapts(Device)
 
-#    impacted_by = ['openvSwitchOVS']
-#    impacts = ['openvSwitchPort', 'openvSwitchFlow']
-
 class PortDeviceRelationsProvider(BaseRelationshipDataProvider):
     adapts(Device)
-
-#    impacted_by = ['openvSwitchBridge']
-#    impacts = ['openvSwitchInterface']
 
 class FlowDeviceRelationsProvider(BaseRelationshipDataProvider):
     adapts(Device)
 
-#    impacted_by = ['openvSwitchBridge']
-
 class InterfaceDeviceRelationsProvider(BaseRelationshipDataProvider):
     adapts(Device)
-
-#    impacted_by = ['openvSwitchPort']
 

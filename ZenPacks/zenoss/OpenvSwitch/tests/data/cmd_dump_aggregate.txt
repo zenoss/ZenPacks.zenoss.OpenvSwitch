@@ -1,0 +1,14 @@
+name                : br-int
+_uuid               : 3fe10504-e059-4398-8b12-b7627e7b5b95
+
+name                : br-ex
+_uuid               : 73f8d08d-7385-4c69-b7c5-a7aec161b4cb
+
+name                : mybridge
+_uuid               : c25d747f-53d6-45a3-9411-37abfb13d8eb
+br-int
+NXST_AGGREGATE reply (xid=0x4): packet_count=45623525 byte_count=4323498235 flow_count=203
+br-ex
+NXST_AGGREGATE reply (xid=0x4): packet_count=14354546 byte_count=23424634352 flow_count=147
+mybridge
+NXST_AGGREGATE reply (xid=0x4): packet_count=342 byte_count=489231 flow_count=71

@@ -16,7 +16,7 @@ Example usage::
     ./create-analytics-bundle \
         --folder="OpenvSwitch ZenPack" \
         --domain="OpenvSwitch Domain" \
-        --device=192.168.56.122 ;\
+        --device=<OpenvSwitch device name> ;\
     pushd analytics ;\
     zip -r analytics-bundle.zip * ;\
     popd
@@ -443,12 +443,49 @@ def update_schema(schema, obj):
     cmf_property_map = dict({
         'device_name': {'label': 'Device Name'},
         'device_manage_ip': {'label': 'Management IP Address'},
-        'device_hw_manufacturer': {'label': 'Hardware Manufacturer'},
-        'device_hw_product': {'label': 'Hardware Model'},
-        'device_hw_serial_number': {'label': 'Hardware Serial Number'},
         }, **{x['id']: x for x in obj._properties})
 
-    for pid, ptype, _, _ in reportable.reportProperties():
+    removeProperties = [
+        ('device_hw_manufacturer', 'string', '', 255),
+        ('device_hw_product', 'string', '', 255),
+        ('device_hw_serial_number', 'string', '', 255),
+        ('device_hw_asset_tag', 'string', '', 255),
+    ]
+    removepids = [p[0] for p in removeProperties]
+    addProperties = [
+        ('ovsVersion', 'string', '', ''),
+        ('ovsDBVersion', 'string', '', ''),
+        ('ovsTitle', 'string', '', ''),
+        ('numberBridges', 'string', '', ''),
+        ('numberPorts', 'string', '', ''),
+        ('numberFlows', 'string', '', ''),
+        ('numberInterfaces', 'string', '', ''),
+    ]
+    addpids = [p[0] for p in addProperties]
+    for pid in addpids:
+        if pid in cmf_property_map:
+            if pid == 'ovsVersion':
+                cmf_property_map[pid]['label'] = 'Open vSwitch Version'
+            elif pid == 'ovsDBVersion':
+                cmf_property_map[pid]['label'] = 'Open vSwitch DB Version'
+            elif pid == 'ovsTitle':
+                cmf_property_map[pid]['label'] = 'Open vSwitch DB Name'
+            elif pid == 'numberBridges':
+                cmf_property_map[pid]['label'] = 'Number of Bridges'
+            elif pid == 'numberPorts':
+                cmf_property_map[pid]['label'] = 'Number of Ports'
+            elif pid == 'numberFlows':
+                cmf_property_map[pid]['label'] = 'Number of Flows'
+            elif pid == 'numberInterfaces':
+                cmf_property_map[pid]['label'] = 'Number of Interfaces'
+
+    for pid, ptype, _, _ in reportable.reportProperties() + addProperties:
+        if pid in addpids and dim_table.id != 'dim_open_vswitch':
+            continue
+
+        if pid in removepids and dim_table.id == 'dim_open_vswitch':
+            continue
+
         field = dim_table.add_field(
             Field(
                 id=pid,

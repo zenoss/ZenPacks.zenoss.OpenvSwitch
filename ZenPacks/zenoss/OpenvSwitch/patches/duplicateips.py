@@ -8,11 +8,11 @@
 ##############################################################################
 
 import itertools
+import inspect
 
 from Products.ZenModel.Exceptions import DeviceExistsError
 from Products.ZenUtils.Utils import monkeypatch
 from Products.Zuul.facades.devicefacade import DeviceFacade
-
 
 ALLOW_DUPLICATES_IN = [
     '/Network/OpenvSwitch'
@@ -178,34 +178,132 @@ def addDevice(self, *args, **kwargs):
     return r
 
 
+@monkeypatch('Products.Zuul.facades.devicefacade.DeviceFacade')
+def addDevice(self, deviceName, deviceClass, *args, **kwargs):
+    from Products.ZenModel.PerformanceConf import PerformanceConf
+    from Products.ZenUtils.IpUtil import isip
+
+    # y: kwargs; x: key; z: default
+    g = lambda x, y, z: y[x] if x in y else z
+
+    original_kwargs = inspect.getcallargs(original, self, deviceName, deviceClass, *args, **kwargs)
+
+    deviceName = g('deviceName', original_kwargs, '')
+    deviceClass = g('deviceClass', original_kwargs, '')
+    title = g('title', original_kwargs, '')
+    snmpCommunity = g('snmpCommunity', original_kwargs, '')
+    snmpPort = g('snmpPort', original_kwargs, 161)
+    manageIp = g('manageIp', original_kwargs, '')
+    model = g('model', original_kwargs, False)
+    collector = g('collector', original_kwargs, 'localhost')
+    rackSlot = g('rackSlot', original_kwargs, 0)
+    productionState = g('productionState', original_kwargs, 1000)
+    comments = g('comments', original_kwargs, '')
+    hwManufacturer = g('hwManufacturer', original_kwargs, '')
+    hwProductName = g('hwProductName', original_kwargs, '')
+    osManufacturer = g('osManufacturer', original_kwargs, '')
+    osProductName = g('osProductName', original_kwargs, '')
+    priority = g('priority', original_kwargs, 3)
+    tag = g('tag', original_kwargs, '')
+    serialNumber = g('serialNumber', original_kwargs, '')
+    locationPath = g('locationPath', original_kwargs, '')
+    zCommandUsername = g('zCommandUsername', original_kwargs, '')
+    zCommandPassword = g('zCommandPassword', original_kwargs, '')
+    zWinUser = g('zWinUser', original_kwargs, '')
+    zWinPassword = g('zWinPassword', original_kwargs, '')
+    systemPaths = g('systemPaths', original_kwargs, [])
+    groupPaths = g('groupPaths', original_kwargs, [])
+    zProperties = g('zProperties', original_kwargs, {})
+    cProperties = g('cProperties', original_kwargs, {})
+
+    # Make sure this patch only applies to OpenvSwitch device
+    if deviceClass != '/Network/OpenvSwitch':
+        return original(self, deviceName, deviceClass, *args, **kwargs)
+
+    # 5.x.x uses username, password, but 4.2.x does not
+    if  'zCommandUsername' in original_kwargs and \
+        'zCommandPassword' in original_kwargs and \
+        'zWinUser' in original_kwargs and \
+        'zWinPassword' in original_kwargs:
+        zProps = dict(  zSnmpCommunity=snmpCommunity,
+                        zSnmpPort=snmpPort,
+                        zCommandUsername=zCommandUsername,
+                        zCommandPassword=zCommandPassword,
+                        zWinUser=zWinUser,
+                        zWinPassword=zWinPassword,
+                    )
+    else:
+        zProps = dict(  zSnmpCommunity=snmpCommunity,
+                        zSnmpPort=snmpPort
+                    )
+
+    zProps.update(zProperties)
+    model = model and "Auto" or "none"
+    perfConf = self._dmd.Monitors.getPerformanceMonitor(collector)
+
+    # this is why we need this patch.
+    # we want device name to be the device title entered via GUI
+    # it would be the host IP address without patch
+    if title and isip(deviceName):
+        manageIp = deviceName
+        deviceName = title
+
+    new_kwargs = {}
+    new_kwargs['deviceName'] = deviceName
+    new_kwargs['devicePath'] = deviceClass
+    new_kwargs['performanceMonitor'] = collector
+    new_kwargs['discoverProto'] = model
+    new_kwargs['manageIp'] = manageIp
+    new_kwargs['zProperties'] = zProps
+    new_kwargs['rackSlot'] = rackSlot
+    new_kwargs['productionState'] = productionState
+    new_kwargs['comments'] = comments
+    new_kwargs['hwManufacturer'] = hwManufacturer
+    new_kwargs['hwProductName'] = hwProductName
+    new_kwargs['osManufacturer'] = osManufacturer
+    new_kwargs['osProductName'] = osProductName
+    new_kwargs['priority'] = priority
+    new_kwargs['tag'] = tag
+    new_kwargs['serialNumber'] = serialNumber
+    new_kwargs['locationPath'] = locationPath
+    new_kwargs['systemPaths'] = systemPaths
+    new_kwargs['groupPaths'] = groupPaths
+    new_kwargs['title'] = title
+
+    if 'cProperties' in inspect.getargspec(PerformanceConf.addDeviceCreationJob).args:
+        new_kwargs['cProperties'] = cProperties
+
+    return perfConf.addDeviceCreationJob(**new_kwargs)
+
+@monkeypatch('Products.ZenHub.services.ModelerService.ModelerService')
+def remote_getDeviceConfig(self, names, checkStatus=False):
+    import logging
+    log = logging.getLogger('zen.ModelerService')
+
+    result = []
+    for name in names:
+        device = self.dmd.Devices.findDeviceByIdExact(name)
+        if not device:
+            continue
+        device = device.primaryAq()
+        skipModelMsg = ''
+
+        if device.isLockedFromUpdates():
+            skipModelMsg = "device %s is locked, skipping modeling" % device.id
+        if checkStatus and (device.getPingStatus() > 0
+                            or device.getSnmpStatus() > 0):
+            skipModelMsg = "device %s is down skipping modeling" % device.id
+        if (device.productionState <
+                device.getProperty('zProdStateThreshold', 0)):
+            skipModelMsg = "device %s is below zProdStateThreshold" % device.id
+        if skipModelMsg:
+            log.info(skipModelMsg)
+
+        result.append(self.createDeviceProxy(device, skipModelMsg))
+    return result
 
 @monkeypatch('Products.ZenModel.PerformanceConf.PerformanceConf')
 def findDevice(self, deviceName):
-    """
-    Return the object given the name
+    return self.dmd.Devices.findDeviceByIdExact(deviceName)
 
-    @param deviceName: Name of a device
-    @type deviceName: string
-    @return: device corresponding to the name with 'Network' and 'OpenvSwitch' in its getPath()
-    @rtype: device object
-    """
 
-    # Make sure this patch only applies to OpenvSwitch device
-    zpname = None
-    device = self.dmd.Devices.findDevice(deviceName)
-
-    if device is None or not hasattr(device, 'zenpack_name'):
-        # original is injected by monkeypatch decorator.
-        return original(self, deviceName)
-
-    zpname = device.zenpack_name.split('.')[-1]
-    if zpname is None or zpname.find('OpenvSwitch') == -1:
-        return original(self, deviceName)
-
-    brains = self.dmd.Devices._findDevice(deviceName)
-    for brain in brains:
-        if  brain.getPath().find('Network') > -1 and \
-            brain.getPath().find('OpenvSwitch') > -1:
-            return brain.getObject()
-
-    return None

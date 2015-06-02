@@ -5,8 +5,11 @@
 <property visible="True" type="lines" id="zCollectorPlugins" >
 ['zenoss.ssh.OpenvSwitch']
 </property>
+<property visible="True" type="lines" id="zDeviceTemplates" >
+[]
+</property>
 <property visible="True" type="string" id="zPythonClass" >
-ZenPacks.zenoss.OpenvSwitch.OpenvSwitchDevice
+ZenPacks.zenoss.OpenvSwitch.OpenvSwitch
 </property>
 <tomanycont id='rrdTemplates'>
 <object id='Bridge' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
@@ -37,7 +40,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/ovs-vsctl --columns=name,_uuid list bridge; for txt in $$(/usr/bin/ovs-vsctl --columns=name list bridge); do if [ $$txt != 'name' ] &amp;&amp; [ $$txt != ':' ] ; then echo $$txt; /usr/bin/ovs-ofctl dump-aggregate $$txt; fi; done;
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name,_uuid list bridge 2&gt;&amp;1; for txt in $$(/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name list bridge 2&gt;&amp;1); do if [ $$txt != 'name' ] &amp;&amp; [ $$txt != ':' ] ; then txt=$$(echo $$txt | tr -d \'\"\' ); echo $$txt; /usr/bin/sudo /usr/bin/ovs-ofctl dump-aggregate $$txt 2&gt;&amp;1; fi; done;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -51,7 +54,7 @@ ZenPacks.zenoss.OpenvSwitch.parsers.BridgeStatistics
 <tomanycont id='datapoints'>
 <object id='byte_count' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -75,7 +78,7 @@ True
 </object>
 <object id='packet_count' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -87,9 +90,70 @@ True
 </object>
 </tomanycont>
 </object>
+<object id='bridgePortStatus' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
+<property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
+COMMAND
+</property>
+<property type="boolean" id="enabled" mode="w" >
+True
+</property>
+<property type="string" id="component" mode="w" >
+${here/title}
+</property>
+<property type="string" id="eventClass" mode="w" >
+/Status
+</property>
+<property type="string" id="eventKey" mode="w" >
+bridge_port_status
+</property>
+<property type="int" id="severity" mode="w" >
+3
+</property>
+<property type="string" id="commandTemplate" mode="w" >
+/bin/date -u +%s 2&gt; /dev/null ; echo "SPLIT" ; /usr/bin/ovs-vsctl list bridge 2&gt;&amp;1; echo "SPLIT" ; /usr/bin/sudo /usr/bin/ovsdb-tool show-log;
+</property>
+<property type="int" id="cycletime" mode="w" >
+300
+</property>
+<property type="boolean" id="usessh" mode="w" >
+True
+</property>
+<property type="string" id="parser" mode="w" >
+ZenPacks.zenoss.OpenvSwitch.parsers.BridgePortStatus
+</property>
+</object>
+<object id='openvswitchStatus' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
+<property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
+COMMAND
+</property>
+<property type="boolean" id="enabled" mode="w" >
+True
+</property>
+<property type="string" id="eventClass" mode="w" >
+/Status
+</property>
+<property type="string" id="eventKey" mode="w" >
+ovs_status
+</property>
+<property type="int" id="severity" mode="w" >
+3
+</property>
+<property type="string" id="commandTemplate" mode="w" >
+/bin/echo 'BEGIN' 2&gt; /dev/null ; /sbin/service openvswitch status 2&gt;&amp;1; echo "SPLIT" ; /usr/bin/systemctl status openvswitch-nonetwork.service 2&gt;&amp;1; echo "SPLIT" ; /usr/bin/sudo service openvswitch-switch status 2&gt;&amp;1; echo "END"
+</property>
+<property type="int" id="cycletime" mode="w" >
+300
+</property>
+<property type="boolean" id="usessh" mode="w" >
+True
+</property>
+<property type="string" id="parser" mode="w" >
+ZenPacks.zenoss.OpenvSwitch.parsers.OVSStatus
+</property>
+</object>
 </tomanycont>
 <tomanycont id='graphDefs'>
-<object id='Bridge Statistics' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<object id='Flow' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
 <property type="int" id="height" mode="w" >
 100
 </property>
@@ -106,7 +170,7 @@ False
 False
 </property>
 <property type="int" id="miny" mode="w" >
--1
+0
 </property>
 <property type="int" id="maxy" mode="w" >
 -1
@@ -118,36 +182,7 @@ True
 0
 </property>
 <tomanycont id='graphPoints'>
-<object id='byte_count' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
-<property type="long" id="sequence" mode="w" >
-1
-</property>
-<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
-LINE
-</property>
-<property type="long" id="lineWidth" mode="w" >
-1
-</property>
-<property type="boolean" id="stacked" mode="w" >
-False
-</property>
-<property type="string" id="format" mode="w" >
-%7.0lf
-</property>
-<property type="string" id="legend" mode="w" >
-${graphPoint/id}
-</property>
-<property type="long" id="limit" mode="w" >
--1
-</property>
-<property type="string" id="dpName" mode="w" >
-bridgeFlowCount_byte_count
-</property>
-<property type="string" id="cFunc" mode="w" >
-AVERAGE
-</property>
-</object>
-<object id='flow_count' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='Flow count' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 0
 </property>
@@ -176,9 +211,40 @@ bridgeFlowCount_flow_count
 AVERAGE
 </property>
 </object>
-<object id='packet_count' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+</tomanycont>
+</object>
+<object id='Packets' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="string" id="units" mode="w" >
+packets/sec
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+0
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
 <property type="long" id="sequence" mode="w" >
 2
+</property>
+<tomanycont id='graphPoints'>
+<object id='Bridge packet rate' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
 </property>
 <property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
 LINE
@@ -190,7 +256,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -200,6 +266,66 @@ ${graphPoint/id}
 </property>
 <property type="string" id="dpName" mode="w" >
 bridgeFlowCount_packet_count
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Throughput' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="string" id="units" mode="w" >
+bits/sec
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+0
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<tomanycont id='graphPoints'>
+<object id='Bridge throughput' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%7.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+bridgeFlowCount_byte_count
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -237,7 +363,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2&gt;&amp;1;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -251,7 +377,7 @@ ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
 <tomanycont id='datapoints'>
 <object id='collisions' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -263,7 +389,7 @@ True
 </object>
 <object id='rx_dropped' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -275,7 +401,7 @@ True
 </object>
 <object id='tx_dropped' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -304,7 +430,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2&gt;&amp;1;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -318,7 +444,7 @@ ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
 <tomanycont id='datapoints'>
 <object id='rx_crc_err' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -330,7 +456,7 @@ True
 </object>
 <object id='rx_errors' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -342,7 +468,7 @@ True
 </object>
 <object id='rx_frame_err' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -354,7 +480,7 @@ True
 </object>
 <object id='rx_over_err' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -366,7 +492,7 @@ True
 </object>
 <object id='tx_errors' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -378,7 +504,7 @@ True
 </object>
 </tomanycont>
 </object>
-<object id='interfaceIncomingBytes' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
+<object id='interfaceIncomingByteRate' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
 <property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
 COMMAND
 </property>
@@ -395,7 +521,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2&gt;&amp;1;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -409,7 +535,7 @@ ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
 <tomanycont id='datapoints'>
 <object id='rx_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -421,7 +547,7 @@ True
 </object>
 </tomanycont>
 </object>
-<object id='interfaceIncomingPackets' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
+<object id='interfaceIncomingPacketRate' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
 <property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
 COMMAND
 </property>
@@ -438,7 +564,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2&gt;&amp;1;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -452,7 +578,7 @@ ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
 <tomanycont id='datapoints'>
 <object id='rx_packets' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -464,7 +590,7 @@ True
 </object>
 </tomanycont>
 </object>
-<object id='interfaceOutgoingBytes' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
+<object id='interfaceOutgoingByteRate' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
 <property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
 COMMAND
 </property>
@@ -481,7 +607,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2&gt;&amp;1;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -495,7 +621,7 @@ ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
 <tomanycont id='datapoints'>
 <object id='tx_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -507,7 +633,7 @@ True
 </object>
 </tomanycont>
 </object>
-<object id='interfaceOutgoingPackets' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
+<object id='interfaceOutgoingPacketRate' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
 <property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
 COMMAND
 </property>
@@ -524,7 +650,7 @@ ${here/id}
 3
 </property>
 <property type="string" id="commandTemplate" mode="w" >
-/usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2&gt;&amp;1;
 </property>
 <property type="int" id="cycletime" mode="w" >
 300
@@ -538,7 +664,7 @@ ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
 <tomanycont id='datapoints'>
 <object id='tx_packets' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
+DERIVE
 </property>
 <property type="boolean" id="isrow" mode="w" >
 True
@@ -550,98 +676,41 @@ True
 </object>
 </tomanycont>
 </object>
-</tomanycont>
-<tomanycont id='graphDefs'>
-<object id='Interface Bytes' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
-<property type="int" id="height" mode="w" >
-100
+<object id='interfaceStatus' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
+<property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
+COMMAND
 </property>
-<property type="int" id="width" mode="w" >
-500
-</property>
-<property type="string" id="units" mode="w" >
-count
-</property>
-<property type="boolean" id="log" mode="w" >
-False
-</property>
-<property type="boolean" id="base" mode="w" >
-False
-</property>
-<property type="int" id="miny" mode="w" >
--1
-</property>
-<property type="int" id="maxy" mode="w" >
--1
-</property>
-<property type="boolean" id="hasSummary" mode="w" >
+<property type="boolean" id="enabled" mode="w" >
 True
 </property>
-<property type="long" id="sequence" mode="w" >
-0
+<property type="string" id="component" mode="w" >
+${here/id}
 </property>
-<tomanycont id='graphPoints'>
-<object id='rx_bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
-<property type="long" id="sequence" mode="w" >
-0
+<property type="string" id="eventClass" mode="w" >
+/Status
 </property>
-<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
-LINE
+<property type="string" id="eventKey" mode="w" >
+interface_status
 </property>
-<property type="long" id="lineWidth" mode="w" >
-1
+<property type="int" id="severity" mode="w" >
+3
 </property>
-<property type="boolean" id="stacked" mode="w" >
-False
+<property type="string" id="commandTemplate" mode="w" >
+/usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,admin_state,link_state list interface 2&gt;&amp;1;
 </property>
-<property type="string" id="format" mode="w" >
-%7.0lf
+<property type="int" id="cycletime" mode="w" >
+300
 </property>
-<property type="string" id="legend" mode="w" >
-${graphPoint/id}
+<property type="boolean" id="usessh" mode="w" >
+True
 </property>
-<property type="long" id="limit" mode="w" >
--1
-</property>
-<property type="string" id="dpName" mode="w" >
-interfaceIncomingBytes_rx_bytes
-</property>
-<property type="string" id="cFunc" mode="w" >
-AVERAGE
-</property>
-</object>
-<object id='tx_bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
-<property type="long" id="sequence" mode="w" >
-1
-</property>
-<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
-LINE
-</property>
-<property type="long" id="lineWidth" mode="w" >
-1
-</property>
-<property type="boolean" id="stacked" mode="w" >
-False
-</property>
-<property type="string" id="format" mode="w" >
-%7.0lf
-</property>
-<property type="string" id="legend" mode="w" >
-${graphPoint/id}
-</property>
-<property type="long" id="limit" mode="w" >
--1
-</property>
-<property type="string" id="dpName" mode="w" >
-interfaceOutgoingBytes_tx_bytes
-</property>
-<property type="string" id="cFunc" mode="w" >
-AVERAGE
+<property type="string" id="parser" mode="w" >
+ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatus
 </property>
 </object>
 </tomanycont>
-</object>
-<object id='Interface Collision Dropped' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<tomanycont id='graphDefs'>
+<object id='Dropped Collisions' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
 <property type="int" id="height" mode="w" >
 100
 </property>
@@ -649,7 +718,7 @@ AVERAGE
 500
 </property>
 <property type="string" id="units" mode="w" >
-count
+drops/sec
 </property>
 <property type="boolean" id="log" mode="w" >
 False
@@ -658,7 +727,7 @@ False
 False
 </property>
 <property type="int" id="miny" mode="w" >
--1
+0
 </property>
 <property type="int" id="maxy" mode="w" >
 -1
@@ -670,7 +739,7 @@ True
 2
 </property>
 <tomanycont id='graphPoints'>
-<object id='dropped_collisions' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='Collision Drops' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 2
 </property>
@@ -684,7 +753,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -699,7 +768,7 @@ collisions_dropped_collisions
 AVERAGE
 </property>
 </object>
-<object id='dropped_rx_dropped' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='Inbound Drops' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 0
 </property>
@@ -713,7 +782,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -728,7 +797,7 @@ collisions_dropped_rx_dropped
 AVERAGE
 </property>
 </object>
-<object id='dropped_tx_dropped' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='Outbound Drops' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 1
 </property>
@@ -742,7 +811,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -759,7 +828,7 @@ AVERAGE
 </object>
 </tomanycont>
 </object>
-<object id='Interface Errors' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<object id='Errors' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
 <property type="int" id="height" mode="w" >
 100
 </property>
@@ -767,7 +836,7 @@ AVERAGE
 500
 </property>
 <property type="string" id="units" mode="w" >
-count
+errors/sec
 </property>
 <property type="boolean" id="log" mode="w" >
 False
@@ -776,7 +845,7 @@ False
 False
 </property>
 <property type="int" id="miny" mode="w" >
--1
+0
 </property>
 <property type="int" id="maxy" mode="w" >
 -1
@@ -788,94 +857,7 @@ True
 3
 </property>
 <tomanycont id='graphPoints'>
-<object id='rx_crc_err' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
-<property type="long" id="sequence" mode="w" >
-2
-</property>
-<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
-LINE
-</property>
-<property type="long" id="lineWidth" mode="w" >
-1
-</property>
-<property type="boolean" id="stacked" mode="w" >
-False
-</property>
-<property type="string" id="format" mode="w" >
-%7.0lf
-</property>
-<property type="string" id="legend" mode="w" >
-${graphPoint/id}
-</property>
-<property type="long" id="limit" mode="w" >
--1
-</property>
-<property type="string" id="dpName" mode="w" >
-errors_rx_crc_err
-</property>
-<property type="string" id="cFunc" mode="w" >
-AVERAGE
-</property>
-</object>
-<object id='rx_errors' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
-<property type="long" id="sequence" mode="w" >
-0
-</property>
-<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
-LINE
-</property>
-<property type="long" id="lineWidth" mode="w" >
-1
-</property>
-<property type="boolean" id="stacked" mode="w" >
-False
-</property>
-<property type="string" id="format" mode="w" >
-%7.0lf
-</property>
-<property type="string" id="legend" mode="w" >
-${graphPoint/id}
-</property>
-<property type="long" id="limit" mode="w" >
--1
-</property>
-<property type="string" id="dpName" mode="w" >
-errors_rx_errors
-</property>
-<property type="string" id="cFunc" mode="w" >
-AVERAGE
-</property>
-</object>
-<object id='rx_frame_err' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
-<property type="long" id="sequence" mode="w" >
-3
-</property>
-<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
-LINE
-</property>
-<property type="long" id="lineWidth" mode="w" >
-1
-</property>
-<property type="boolean" id="stacked" mode="w" >
-False
-</property>
-<property type="string" id="format" mode="w" >
-%7.0lf
-</property>
-<property type="string" id="legend" mode="w" >
-${graphPoint/id}
-</property>
-<property type="long" id="limit" mode="w" >
--1
-</property>
-<property type="string" id="dpName" mode="w" >
-errors_rx_frame_err
-</property>
-<property type="string" id="cFunc" mode="w" >
-AVERAGE
-</property>
-</object>
-<object id='rx_over_err' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='Inbound Buffer Overrun Errors' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 4
 </property>
@@ -889,7 +871,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -904,7 +886,94 @@ errors_rx_over_err
 AVERAGE
 </property>
 </object>
-<object id='tx_errors' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='Inbound Frame Errors' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+3
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%7.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+errors_rx_frame_err
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='Inbound Packet CRC Errors' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+2
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%7.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+errors_rx_crc_err
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='Inbound Packet Errors' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%7.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+errors_rx_errors
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='Outbound Packet Errors' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 1
 </property>
@@ -918,7 +987,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -935,7 +1004,7 @@ AVERAGE
 </object>
 </tomanycont>
 </object>
-<object id='Interface Packets' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<object id='Packets' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
 <property type="int" id="height" mode="w" >
 100
 </property>
@@ -943,7 +1012,7 @@ AVERAGE
 500
 </property>
 <property type="string" id="units" mode="w" >
-count
+packets/sec
 </property>
 <property type="boolean" id="log" mode="w" >
 False
@@ -952,7 +1021,7 @@ False
 False
 </property>
 <property type="int" id="miny" mode="w" >
--1
+0
 </property>
 <property type="int" id="maxy" mode="w" >
 -1
@@ -964,7 +1033,7 @@ True
 1
 </property>
 <tomanycont id='graphPoints'>
-<object id='rx_packets' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='Inbound' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 0
 </property>
@@ -978,7 +1047,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -987,13 +1056,13 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-interfaceIncomingPackets_rx_packets
+interfaceIncomingPacketRate_rx_packets
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
 </property>
 </object>
-<object id='tx_packets' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='Outbound' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 1
 </property>
@@ -1007,7 +1076,7 @@ LINE
 False
 </property>
 <property type="string" id="format" mode="w" >
-%7.0lf
+%7.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
 ${graphPoint/id}
@@ -1016,7 +1085,96 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-interfaceOutgoingPackets_tx_packets
+interfaceOutgoingPacketRate_tx_packets
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Throughput' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="string" id="units" mode="w" >
+bits/sec
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+0
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<tomanycont id='graphPoints'>
+<object id='Inbound' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%7.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+interfaceIncomingByteRate_rx_bytes
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='Outbound' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%7.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+interfaceOutgoingByteRate_tx_bytes
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -1027,5 +1185,46 @@ AVERAGE
 </tomanycont>
 </object>
 </tomanycont>
+</object>
+<!-- ('', 'zport', 'dmd', 'Events', 'OpenvSwitch') -->
+<object id='/zport/dmd/Events/OpenvSwitch' module='Products.ZenEvents.EventClass' class='EventClass'>
+<object id='Interface' module='Products.ZenEvents.EventClass' class='EventClass'>
+<tomanycont id='instances'>
+<object id='OpenvSwitch Interface Status' module='Products.ZenEvents.EventClassInst' class='EventClassInst'>
+<property type="text" id="transform" mode="w" >
+from ZenPacks.zenoss.OpenvSwitch.events import updateIface
+updateIface(evt, device, component)
+</property>
+<property type="string" id="eventClassKey" mode="w" >
+OpenvSwitch_interface_status
+</property>
+<property type="int" id="sequence" mode="w" >
+7
+</property>
+<property type="text" id="explanation" mode="w" >
+Update interface model date based on interface events
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Bridge' module='Products.ZenEvents.EventClass' class='EventClass'>
+<tomanycont id='instances'>
+<object id='OpenvSwitch Bridge Status' module='Products.ZenEvents.EventClassInst' class='EventClassInst'>
+<property type="text" id="transform" mode="w" >
+from ZenPacks.zenoss.OpenvSwitch.events import updateBridgePort
+updateBridgePort(evt, device, component)
+</property>
+<property type="string" id="eventClassKey" mode="w" >
+OpenvSwitch_bridge_port_status
+</property>
+<property type="int" id="sequence" mode="w" >
+7
+</property>
+<property type="text" id="explanation" mode="w" >
+Update bridge model data based on bridge events
+</property>
+</object>
+</tomanycont>
+</object>
 </object>
 </objects>

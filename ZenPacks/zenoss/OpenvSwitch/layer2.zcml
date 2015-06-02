@@ -1,0 +1,13 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    >
+
+	<adapter
+        factory=".connections_provider.DeviceConnectionsProvider"
+        for=".OpenvSwitch.OpenvSwitch"
+        provides="ZenPacks.zenoss.Layer2.connections_provider.IConnectionsProvider"
+	    />
+
+</configure>

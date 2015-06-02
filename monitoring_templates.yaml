@@ -3,13 +3,26 @@
   targetPythonClass: ZenPacks.zenoss.OpenvSwitch.Interface
 
   datasources:
-    interfaceIncomingBytes:
-      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+    interfaceStatus:
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,admin_state,link_state list interface 2>&1;
+      cycletime: 300
+
+      parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatus
+      type: COMMAND
+      component: ${here/id}
+      usessh: true
+      eventClass: "/Status"
+      eventKey: "interface_status"
+      severity: Warning
+
+    interfaceIncomingByteRate:
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2>&1;
       cycletime: 300
 
       datapoints:
         rx_bytes:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             incoming_bytes: ""
 
@@ -18,13 +31,14 @@
       component: ${here/id}
       usessh: true
 
-    interfaceOutgoingBytes:
-      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+    interfaceOutgoingByteRate:
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2>&1;
       cycletime: 300
 
       datapoints:
         tx_bytes:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             outgoing_bytes: ""
 
@@ -33,13 +47,14 @@
       component: ${here/id}
       usessh: true
 
-    interfaceIncomingPackets:
-      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+    interfaceIncomingPacketRate:
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2>&1;
       cycletime: 300
 
       datapoints:
         rx_packets:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             incoming_packets: ""
 
@@ -48,13 +63,14 @@
       component: ${here/id}
       usessh: true
 
-    interfaceOutgoingPackets:
-      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+    interfaceOutgoingPacketRate:
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2>&1;
       cycletime: 300
 
       datapoints:
         tx_packets:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             outgoing_packets: ""
 
@@ -64,22 +80,25 @@
       usessh: true
 
     collisions_dropped:
-      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2>&1;
       cycletime: 300
 
       datapoints:
         collisions:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             collisions: ""
 
         rx_dropped:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             incoming_packets_dropped: ""
 
         tx_dropped:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             outgoing_packets_dropped: ""
 
@@ -89,32 +108,37 @@
       usessh: true
 
     errors:
-      commandTemplate: /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=_uuid,statistics,external_ids,mac_in_use,name list interface 2>&1;
       cycletime: 300
 
       datapoints:
         rx_crc_err:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             incoming_packets_CRC_error: ""
 
         rx_errors:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             incoming_packets_error: ""
 
         tx_errors:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             outgoing_packets_error: ""
 
         rx_frame_err:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             incoming_frame_error: ""
 
         rx_over_err:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             incoming_buffer_overrun_error: ""
 
@@ -124,77 +148,104 @@
       usessh: true
 
   graphs:
-    Interface Bytes:
-      units: count
+    Throughput:
+      units: bits/sec
       height: 100
       width: 500
+      miny: 0
 
       graphpoints:
-        rx_bytes:
-          dpName: interfaceIncomingBytes_rx_bytes
-          format: '%7.0lf'
-        tx_bytes:
-          dpName: interfaceOutgoingBytes_tx_bytes
-          format: '%7.0lf'
+        Inbound:
+          dpName: interfaceIncomingByteRate_rx_bytes
+          format: '%7.2lf%s'
+        Outbound:
+          dpName: interfaceOutgoingByteRate_tx_bytes
+          format: '%7.2lf%s'
 
-    Interface Packets:
-      units: count
+    Packets:
+      units: packets/sec
       height: 100
       width: 500
+      miny: 0
 
       graphpoints:
-        rx_packets:
-          dpName: interfaceIncomingPackets_rx_packets
-          format: '%7.0lf'
-        tx_packets:
-          dpName: interfaceOutgoingPackets_tx_packets
-          format: '%7.0lf'
+        Inbound:
+          dpName: interfaceIncomingPacketRate_rx_packets
+          format: '%7.2lf%s'
+        Outbound:
+          dpName: interfaceOutgoingPacketRate_tx_packets
+          format: '%7.2lf%s'
 
-    Interface Collision Dropped:
-      units: count
+    Dropped Collisions:
+      units: drops/sec
       height: 100
       width: 500
+      miny: 0
 
       graphpoints:
-        dropped_rx_dropped:
+        Inbound Drops:
           dpName: collisions_dropped_rx_dropped
-          format: '%7.0lf'
-        dropped_tx_dropped:
+          format: '%7.2lf%s'
+        Outbound Drops:
           dpName: collisions_dropped_tx_dropped
-          format: '%7.0lf'
-        dropped_collisions:
+          format: '%7.2lf%s'
+        Collision Drops:
           dpName: collisions_dropped_collisions
-          format: '%7.0lf'
+          format: '%7.2lf%s'
 
-    Interface Errors:
-      units: count
+    Errors:
+      units: errors/sec
       height: 100
       width: 500
+      miny: 0
 
       graphpoints:
-        rx_errors:
+        Inbound Packet Errors:
           dpName: errors_rx_errors
-          format: '%7.0lf'
-        tx_errors:
+          format: '%7.2lf%s'
+        Outbound Packet Errors:
           dpName: errors_tx_errors
-          format: '%7.0lf'
-        rx_crc_err:
+          format: '%7.2lf%s'
+        Inbound Packet CRC Errors:
           dpName: errors_rx_crc_err
-          format: '%7.0lf'
-        rx_frame_err:
+          format: '%7.2lf%s'
+        Inbound Frame Errors:
           dpName: errors_rx_frame_err
-          format: '%7.0lf'
-        rx_over_err:
+          format: '%7.2lf%s'
+        Inbound Buffer Overrun Errors:
           dpName: errors_rx_over_err
-          format: '%7.0lf'
+          format: '%7.2lf%s'
 
 /Network/OpenvSwitch/Bridge:
   description: "OpenvSwitch: Bridge Monitoring"
   targetPythonClass: ZenPacks.zenoss.OpenvSwitch.Bridge
 
   datasources:
+    openvswitchStatus:
+      commandTemplate: /bin/echo 'BEGIN' 2> /dev/null ; /sbin/service openvswitch status 2>&1; echo "SPLIT" ; /usr/bin/systemctl status openvswitch-nonetwork.service 2>&1; echo "SPLIT" ; /usr/bin/sudo service openvswitch-switch status 2>&1; echo "END"
+      cycletime: 300
+
+      parser: ZenPacks.zenoss.OpenvSwitch.parsers.OVSStatus
+      type: COMMAND
+      usessh: true
+      eventClass: "/Status"
+      eventKey: "ovs_status"
+      severity: Warning
+
+    bridgePortStatus:
+      commandTemplate: /bin/date -u +%s 2> /dev/null ; echo "SPLIT" ; /usr/bin/ovs-vsctl list bridge 2>&1; echo "SPLIT" ; /usr/bin/sudo /usr/bin/ovsdb-tool show-log;
+      cycletime: 300
+
+      parser: ZenPacks.zenoss.OpenvSwitch.parsers.BridgePortStatus
+      type: COMMAND
+      component: ${here/title}
+      usessh: true
+      eventClass: "/Status"
+      eventKey: "bridge_port_status"
+      severity: Warning
+
     bridgeFlowCount:
-      commandTemplate: /usr/bin/ovs-vsctl --columns=name,_uuid list bridge; for txt in $$(/usr/bin/ovs-vsctl --columns=name list bridge); do if [ $$txt != 'name' ] && [ $$txt != ':' ] ; then echo $$txt; /usr/bin/ovs-ofctl dump-aggregate $$txt; fi; done;
+      commandTemplate: /usr/bin/sudo /usr/bin/ovs-vsctl --columns=name,_uuid list bridge 2>&1; for txt in $$(/usr/bin/sudo /usr/bin/ovs-vsctl --columns=name list bridge 2>&1); do if [ $$txt != 'name' ] && [ $$txt != ':' ] ; then txt=$$(echo $$txt | tr -d \'\"\' ); echo $$txt; /usr/bin/sudo /usr/bin/ovs-ofctl dump-aggregate $$txt 2>&1; fi; done;
       cycletime: 300
 
       datapoints:
@@ -205,11 +256,13 @@
 
         byte_count:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             byte_count: ""
 
         packet_count:
           rrdmin: 0
+          rrdtype: DERIVE
           aliases:
             packet_count: ""
 
@@ -219,18 +272,35 @@
       usessh: true
 
   graphs:
-    Bridge Statistics:
+    Flow:
       units: count
       height: 100
       width: 500
+      miny: 0
 
       graphpoints:
-        flow_count:
+        Flow count:
           dpName: bridgeFlowCount_flow_count
           format: '%7.0lf'
-        byte_count:
+
+    Throughput:
+      units: bits/sec
+      height: 100
+      width: 500
+      miny: 0
+
+      graphpoints:
+        Bridge throughput:
           dpName: bridgeFlowCount_byte_count
-          format: '%7.0lf'
-        packet_count:
+          format: '%7.2lf%s'
+
+    Packets:
+      units: packets/sec
+      height: 100
+      width: 500
+      miny: 0
+
+      graphpoints:
+        Bridge packet rate:
           dpName: bridgeFlowCount_packet_count
-          format: '%7.0lf'
+          format: '%7.2lf%s'

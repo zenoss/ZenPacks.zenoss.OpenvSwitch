@@ -24,66 +24,96 @@ from ZenPacks.zenoss.ZenETL.reportable import (
     )
 
 # ZenPack Imports
-from .OpenvSwitchDevice import OpenvSwitchDevice
-from .OpenvSwitchComponent import OpenvSwitchComponent
+from .OpenvSwitch import OpenvSwitch
+from .ManagedObject import ManagedObject
 
 
-class OpenvSwitchDeviceReportableFactory(DeviceReportableFactory):
+class OVSDeviceReportableFactory(DeviceReportableFactory):
 
-    """Reportable factory for OpenvSwitchDevice.
+    """Reportable factory for OpenvSwitch.
 
-    This custom factory causes each OpenvSwitchDevice instance to be exported into
+    This custom factory causes each OpenvSwitch instance to be exported into
     dim_device and dim_Open_vSwitch. Standard device properties
     reported by DeviceReportable will be in dim_device. Those same
     properties plus OpenvSwitch-specific properties will be in
     dim_Open_vSwitch. This avoids the need to always join on
     dim_device.
 
-    This works by making IReportable(OpenvSwitchDevice) find the OpenvSwitchDeviceReportable
+    This works by making IReportable(OpenvSwitch) find the OVSDeviceReportable
     adapter, then having this factory explicitly yield
-    DeviceReportable(OpenvSwitchDevice).
+    DeviceReportable(OpenvSwitch).
 
     """
 
     implements(IReportableFactory)
-    adapts(OpenvSwitchDevice)
+    adapts(OpenvSwitch)
 
     def exports(self):
         """Generate IReportable adapters."""
-        for reportable in super(OpenvSwitchDeviceReportableFactory, self).exports():
+        for reportable in super(OVSDeviceReportableFactory, self).exports():
             yield reportable
 
         yield DeviceReportable(self.context)
 
 
-class OpenvSwitchDeviceReportable(DeviceReportable):
+class OVSDeviceReportable(DeviceReportable):
 
-    """Reportable adapter for OpenvSwitchDevice."""
+    """Reportable adapter for OpenvSwitch."""
 
     implements(IReportable)
-    adapts(OpenvSwitchDevice)
+    adapts(OpenvSwitch)
 
     entity_class_name = 'open_vswitch'
 
+    def reportProperties(self):
+        properties = super(OVSDeviceReportable, self).reportProperties()
 
-class OpenvSwitchComponentReportable(BaseReportable):
+        str_properties = (
+            'ovsTitle',
+            'ovsDBVersion',
+            'ovsVersion',
+        )
 
-    """Reportable adapter for OpenvSwitchComponent.
+        int_properties = (
+            'numberBridges',
+            'numberPorts',
+            'numberFlows',
+            'numberInterfaces',
+        )
 
-    Generic reportable for all OpenvSwitchComponent subclass instances. Extends
+        for str_property in str_properties:
+            properties.append((
+                str_property,
+                'string',
+                getattr(self.context, str_property, None),
+                DEFAULT_STRING_LENGTH))
+
+        for int_property in int_properties:
+            properties.append((
+                int_property,
+                'int',
+                getattr(self.context, int_property, None),
+                MARKER_LENGTH))
+
+        return properties
+
+class ManagedObjectReportable(BaseReportable):
+
+    """Reportable adapter for ManagedObject.
+
+    Generic reportable for all ManagedObject subclass instances. Extends
     BaseReportable so all properties and relationships are automatically
     captured.
 
     """
 
     implements(IReportable)
-    adapts(OpenvSwitchComponent)
+    adapts(ManagedObject)
 
     @property
     def entity_class_name(self):
         """Return entity class name for adapted object."""
         return 'openvswitch_{}'.format({
-            'OVS': 'ovs',
             'Bridge': 'bridge',
             'Port': 'port',
             'Flow': 'flow',
@@ -93,7 +123,7 @@ class OpenvSwitchComponentReportable(BaseReportable):
     def reportProperties(self):
         """Return report properties for adapted object."""
         properties = list(
-            super(OpenvSwitchComponentReportable, self).reportProperties())
+            super(ManagedObjectReportable, self).reportProperties())
 
         property_names = {p[0] for p in properties}
 

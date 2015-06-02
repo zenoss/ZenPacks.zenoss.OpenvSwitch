@@ -1773,15 +1773,15 @@ class ClassSpec(Spec):
         })
 
         for spec in self.containing_components:
-            attr = None
-            for rel,spec in self.relationships.items():
-                if spec.remote_classname == spec.name:
-                    attr = rel
-                    continue
-
-            if not attr:
-                attr = relname_from_classname(spec.name)
-
+#             attr = None
+#             for rel,spec in self.relationships.items():
+#                 if spec.remote_classname == spec.name:
+#                     attr = rel
+#                     continue
+# 
+#             if not attr:
+#                 attr = relname_from_classname(spec.name)
+            attr = relname_from_classname(spec.name)
             attributes[attr] = RelationshipInfoProperty(attr)
 
         for spec in self.inherited_properties().itervalues():

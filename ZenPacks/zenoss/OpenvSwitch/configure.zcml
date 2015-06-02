@@ -4,9 +4,27 @@
     xmlns:zcml="http://namespaces.zope.org/zcml">
 
 
-    <!-- Impact -->
+    <!-- OVS Impact -->
     <configure zcml:condition="installed ZenPacks.zenoss.Impact">
         <include package="ZenPacks.zenoss.Impact" file="meta.zcml"/>
+
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.INodeTriggers"
+            for=".OpenvSwitch.OpenvSwitch"
+            factory=".impact.OVSDeviceTriggers"
+            />
+
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.INodeTriggers"
+            for=".Bridge.Bridge"
+            factory=".impact.BridgeTriggers"
+            />
+
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.INodeTriggers"
+            for=".Interface.Interface"
+            factory=".impact.InterfaceTriggers"
+            />
 
         <subscriber
             provides="ZenPacks.zenoss.Impact.impactd.interfaces.IRelationshipDataProvider"
@@ -44,24 +62,42 @@
 
         <adapter
             provides="Products.Zuul.interfaces.IReportableFactory"
-            for=".OpenvSwitchDevice.OpenvSwitchDevice"
-            factory=".analytics.OpenvSwitchDeviceReportableFactory"
+            for=".OpenvSwitch.OpenvSwitch"
+            factory=".analytics.OVSDeviceReportableFactory"
             />
 
         <adapter
             provides="Products.Zuul.interfaces.IReportable"
-            for=".OpenvSwitchDevice.OpenvSwitchDevice"
-            factory=".analytics.OpenvSwitchDeviceReportable"
+            for=".OpenvSwitch.OpenvSwitch"
+            factory=".analytics.OVSDeviceReportable"
             />
 
         <adapter
             provides="Products.Zuul.interfaces.IReportable"
-            for=".OpenvSwitchComponent.OpenvSwitchComponent"
-            factory=".analytics.OpenvSwitchComponentReportable"
+            for=".ManagedObject.ManagedObject"
+            factory=".analytics.ManagedObjectReportable"
             />
 
     </configure>
 
+    <configure zcml:condition="installed ZenPacks.zenoss.OpenStackInfrastructure">
+        <utility
+            name="ml2.openvswitch"
+            factory=".openstack_neutron.OpenvSwitchNeutronImplementationPlugin"
+            provides="ZenPacks.zenoss.OpenStackInfrastructure.interfaces.INeutronImplementationPlugin"
+            />
 
+        <subscriber
+            for="ZenPacks.zenoss.OpenStackInfrastructure.Host.Host
+                 zope.container.interfaces.IObjectMovedEvent"
+            handler=".openstack_neutron.onOpenStackHostAdded"
+            />
+    </configure>
+
+
+    <!-- Layer2 -->
+    <include file="layer2.zcml"
+        xmlns:zcml="http://namespaces.zope.org/zcml"
+        zcml:condition="installed ZenPacks.zenoss.Layer2.connections_provider" />
 </configure>
 

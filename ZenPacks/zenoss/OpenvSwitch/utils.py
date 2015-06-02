@@ -8,32 +8,12 @@
 ##############################################################################
 
 import os
-import re
-
-from Products.AdvancedQuery import And, Eq
-from ZODB.transact import transact
-
-from Products.Zuul.interfaces import ICatalogTool
-
-from Products.ZenUtils.guid.interfaces import IGlobalIdentifier
-from collections import deque
-import dateutil
-import datetime
-import functools
-import importlib
-import pytz
 import time
-
-from twisted.internet import reactor
-from twisted.internet.error import ConnectionRefusedError, TimeoutError
-from twisted.internet.task import deferLater
+from datetime import datetime
+import uuid
 
 import logging
 LOG = logging.getLogger('zen.OpenvSwitch.utils')
-
-
-def zenpack_path(path):
-    return os.path.join(os.path.dirname(__file__), path)
 
 
 def zenpack_path(path):
@@ -61,8 +41,6 @@ def add_local_lib_path():
 add_local_lib_path()
 
 # The following methods are used to parse strings from SSH commands
-# If the code is confusing to you, here is FYI that the coder himself
-# is not exactly proud of it himself.
 def str_to_dict(original):
     original = original.split('\n')
     # remove '' from head and tail
@@ -216,7 +194,7 @@ def bridge_stats_data_to_dict(bridge_stats):
             continue
 
         elif bstat.find('name') > -1:              # bridge name
-            bridgename = bstat[bstat.index(':') + 1:].strip()
+            bridgename = bstat[bstat.index(':') + 1:].strip().strip('"')
             if bridgename not in flowstats_dct:    # a new bridge name
                 flowstats_dct[bridgename] = {}
                 name = bridgename                  # update bridge name
@@ -235,3 +213,130 @@ def bridge_stats_data_to_dict(bridge_stats):
             continue
 
     return flowstats_dct
+
+def create_fuid(bridgename, flowdict):
+    # flowdict in input parameter list is a dict
+    # by default, flow does not have a unique ID
+    # use info provided by flowdict to create a unique, static flow id
+    # but see this: http://lwn.net/Articles/629741/
+    # openvswitch: Introduce 128-bit unique flow identifiers.
+    # FUID coming soon, maybe?
+
+    if not bridgename:
+        return None
+
+    funame = bridgename
+
+    if 'priority' in flowdict:
+        funame += str(flowdict['priority'])
+    if 'table' in flowdict:
+        funame += str(flowdict['table'])
+    if 'proto' in flowdict:
+        funame += str(flowdict['proto'])
+    if 'in_port' in flowdict:
+        funame += str(flowdict['in_port'])
+    if 'nw_proto' in flowdict:
+        funame += str(flowdict['nw_proto'])
+    if 'nw_src' in flowdict:
+        funame += str(flowdict['nw_src'])
+    if 'nw_dst' in flowdict:
+        funame += str(flowdict['nw_dst'])
+    if 'ipv6_src' in flowdict:
+        funame += str(flowdict['ipv6_src'])
+    if 'ipv6_dst' in flowdict:
+        funame += str(flowdict['ipv6_dst'])
+    if 'dl_vlan' in flowdict:
+        funame += str(flowdict['dl_vlan'])               # data link layer VLAN
+    if 'dl_vlan_pcp' in flowdict:
+        funame += str(flowdict['dl_vlan_pcp'])           # data link layer VLAN Priority Code Point
+    if 'dl_src' in flowdict:
+        funame += str(flowdict['dl_src'])                # data link layer source
+    if 'dl_dst' in flowdict:
+        funame += str(flowdict['dl_dst'])                # data link layer destination
+    if 'dl_type' in flowdict:
+        funame += str(flowdict['dl_type'])               # data link layer type
+    if 'metadata' in flowdict:
+        funame += str(flowdict['metadata'])              # metadata
+    if 'vlan_tci' in flowdict:
+        funame += str(flowdict['vlan_tci'])              # VLAN TCI
+    if 'icmp_code' in flowdict:
+        funame += str(flowdict['icmp_code'])
+    if 'mpls_label' in flowdict:
+        funame += str(flowdict['mpls_label'])
+    if 'actions' in flowdict:
+        funame += str(flowdict['actions'])
+
+    return str(uuid.uuid5(uuid.NAMESPACE_OID, funame))
+
+def get_ovsdb_records(logs, component, cycleTime, timedelta):
+    # get unique records in terms of summary
+    def in_records(summary, records):
+        return len([record for record in records if summary in record.values()]) > 0
+
+    utcoffset = datetime.utcnow() - datetime.now()
+    zenossepoch = int(time.time()) + int(round(utcoffset.total_seconds()))
+    recordpattern1 = '%Y-%m-%d %H:%M:%S'           # for '2015-03-10 08:35:31'
+    recordpattern2 = '%Y-%m-%d %H:%M:%S.%f'        # for '2015-03-10 08:35:31.xxx'
+
+    records = []
+    rcrd_index = len(logs)
+    while rcrd_index > 0:
+
+        item = {}
+        rcrd_title = 'record ' + str(rcrd_index)
+        rcrd = logs[rcrd_title]
+        rcrd_index -= 1
+
+        marker = len(rcrd)
+        if marker < 25:
+            # timestamp only, nothing else
+            continue
+
+        # by not match records with components, we are able to
+        # display events for newly created bridges, ports
+        # the downside is that we display the same event multiple times.
+        # we have to pick a less bad choice.
+
+        # component: bridge name
+        # if component not in rcrd:
+        #     # this record has nothing to do with this bridge
+        #     continue
+
+        if '"ovs-vsctl:' in rcrd:
+            marker = min(rcrd.index('"ovs-vsctl:') - 1, len(rcrd))
+
+        # record time is always UTC time
+        timestr = rcrd[:marker]
+        try:
+            recordepoch = int(time.mktime(time.strptime(timestr, recordpattern1)))
+        except ValueError:
+            recordepoch = int(time.mktime(time.strptime(timestr, recordpattern2)))
+
+        # we only consider records within cycletime
+        if zenossepoch - cycleTime > (recordepoch + timedelta):
+            continue
+
+        summary = ''
+        if 'add-br' in rcrd:
+            name = rcrd[rcrd.index('add-') + len('add-br '):]
+            summary = 'add bridge: ' + name
+        elif 'del-br' in rcrd:
+            name = rcrd[rcrd.index('del-') + len('del-br '):]
+            summary = 'del bridge: ' + name
+        elif 'add-port' in rcrd:
+            name = rcrd[rcrd.index('add-') + len('add-port '):]
+            if ' -- set Interface' in name:
+                name = name[:name.index(' -- set Interface')]
+            summary = 'add port: ' + name
+        elif 'del-port' in rcrd:
+            name = rcrd[rcrd.index('del-') + len('del-port '):]
+            summary = 'del port: ' + name
+
+        # have we seen this summary before?
+        if summary and not in_records(summary, records):
+            item['name'] = name
+            item['summary'] = summary
+            item['time'] = timestr
+            records.append(item)
+
+    return records

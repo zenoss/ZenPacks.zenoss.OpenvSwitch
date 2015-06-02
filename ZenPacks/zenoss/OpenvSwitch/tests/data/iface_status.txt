@@ -1,0 +1,31 @@
+_uuid               : 57a416d0-1420-453a-9ac6-94359831d8ba
+admin_state         : up
+link_state          : up
+
+_uuid               : 35da03b8-1f47-4e82-b89a-d06a866d522f
+admin_state         : up
+link_state          : up
+
+_uuid               : fb498511-3c18-4483-85d3-c4b3103719ca
+admin_state         : down
+link_state          : down
+
+_uuid               : 818ef2e2-4910-47dd-bd84-39a4e69e9e2b
+admin_state         : up
+link_state          : up
+
+_uuid               : 23128125-cc93-492e-9afd-b75334ad1cc8
+admin_state         : up
+link_state          : down
+
+_uuid               : de9b338d-a8b7-4a2a-b8a1-91dd356d7d5c
+admin_state         : up
+link_state          : up
+
+_uuid               : fd6ca207-cbdf-45bb-be0d-4b9833dd69cb
+admin_state         : up
+link_state          : up
+
+_uuid               : b20191df-098a-420c-a017-375e048f2c5b
+admin_state         : up
+link_state          : up
