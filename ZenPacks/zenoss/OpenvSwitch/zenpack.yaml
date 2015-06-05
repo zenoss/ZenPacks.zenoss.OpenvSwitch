@@ -26,14 +26,13 @@ device_classes: !ZenPackSpec
             datapoints:
               byte_count:
                 rrdtype: DERIVE
-                rrdmin: 0
                 aliases: {byte_count: ''}
               flow_count:
+                rrdtype: GAUGE
                 rrdmin: 0
                 aliases: {flow_count: ''}
               packet_count:
                 rrdtype: DERIVE
-                rrdmin: 0
                 aliases: {packet_count: ''}
             usessh: true
             parser: ZenPacks.zenoss.OpenvSwitch.parsers.BridgeStatistics
@@ -90,15 +89,12 @@ device_classes: !ZenPackSpec
             datapoints:
               collisions:
                 rrdtype: DERIVE
-                rrdmin: 0
                 aliases: {collisions: ''}
               rx_dropped:
                 rrdtype: DERIVE
-                rrdmin: 0
                 aliases: {incoming_packets_dropped: ''}
               tx_dropped:
                 rrdtype: DERIVE
-                rrdmin: 0
                 aliases: {outgoing_packets_dropped: ''}
             usessh: true
             parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
@@ -110,23 +106,18 @@ device_classes: !ZenPackSpec
             datapoints:
               rx_crc_err:
                 rrdtype: DERIVE
-                rrdmin: 0
                 aliases: {incoming_packets_CRC_error: ''}
               rx_errors:
                 rrdtype: DERIVE
-                rrdmin: 0
                 aliases: {incoming_packets_error: ''}
               rx_frame_err:
                 rrdtype: DERIVE
-                rrdmin: 0
                 aliases: {incoming_frame_error: ''}
               rx_over_err:
                 rrdtype: DERIVE
-                rrdmin: 0
                 aliases: {incoming_buffer_overrun_error: ''}
               tx_errors:
                 rrdtype: DERIVE
-                rrdmin: 0
                 aliases: {outgoing_packets_error: ''}
             usessh: true
             parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
@@ -138,7 +129,6 @@ device_classes: !ZenPackSpec
             datapoints:
               rx_bytes:
                 rrdtype: DERIVE
-                rrdmin: 0
                 aliases: {incoming_bytes: ''}
             usessh: true
             parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
@@ -150,7 +140,6 @@ device_classes: !ZenPackSpec
             datapoints:
               rx_packets:
                 rrdtype: DERIVE
-                rrdmin: 0
                 aliases: {incoming_packets: ''}
             usessh: true
             parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
@@ -162,7 +151,6 @@ device_classes: !ZenPackSpec
             datapoints:
               tx_bytes:
                 rrdtype: DERIVE
-                rrdmin: 0
                 aliases: {outgoing_bytes: ''}
             usessh: true
             parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
@@ -174,7 +162,6 @@ device_classes: !ZenPackSpec
             datapoints:
               tx_packets:
                 rrdtype: DERIVE
-                rrdmin: 0
                 aliases: {outgoing_packets: ''}
             usessh: true
             parser: ZenPacks.zenoss.OpenvSwitch.parsers.InterfaceStatistics
