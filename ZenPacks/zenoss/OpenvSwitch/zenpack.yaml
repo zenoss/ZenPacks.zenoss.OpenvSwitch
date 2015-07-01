@@ -8,6 +8,7 @@ device_classes: !ZenPackSpec
   /Network/OpenvSwitch:
     remove: true
     zProperties:
+      zPythonClass: ZenPacks.zenoss.OpenvSwitch.OpenvSwitch
       zCollectorPlugins: [zenoss.ssh.OpenvSwitch]
       zDeviceTemplates: []
     templates:
