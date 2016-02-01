@@ -254,6 +254,8 @@ Component failures will affect Impact as follows:
 ;1.1.1
 * Upgrade ZenPackLib to 1.0.1
 * Change over to new ZenPackLib format for zenpack.yaml
+* Add OpenStack Integration (OSI 2.1.1)
+* Add configuration check for openstack_neutron_integration (OSI 2.1.1)
 
 ;1.1.0
 * Initial Release
