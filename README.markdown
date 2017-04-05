@@ -1,1 +1,1 @@
-Documentation can be found [on the Zenoss wiki](http://wiki.zenoss.org/ZenPack:OpenvSwitch).
+Documentation can be found in the [ZenPack Catalog](https://www.zenoss.com/product/zenpacks/openvswitch).
