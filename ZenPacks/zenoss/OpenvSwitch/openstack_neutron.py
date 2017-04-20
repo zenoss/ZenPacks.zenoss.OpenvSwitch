@@ -20,7 +20,7 @@ from Products.Zuul.interfaces import ICatalogTool
 from ZenPacks.zenoss.OpenStackInfrastructure.interfaces \
     import INeutronImplementationPlugin
 from ZenPacks.zenoss.OpenStackInfrastructure.neutron_integration \
-    import BaseNeutronImplementationPlugin, split_list, reindex_core_components
+    import BaseNeutronImplementationPlugin
 
 
 class OpenvSwitchNeutronImplementationPlugin(BaseNeutronImplementationPlugin):
@@ -52,7 +52,7 @@ class OpenvSwitchNeutronImplementationPlugin(BaseNeutronImplementationPlugin):
         device_class = dmd.Devices.getOrganizer('/Network/OpenvSwitch')
         results = ICatalogTool(device_class).search(
             ('ZenPacks.zenoss.OpenvSwitch.Port.Port',
-             'ZenPacks.zenoss.OpenvSwitch.Interface.Interface',)
+                'ZenPacks.zenoss.OpenvSwitch.Interface.Interface',)
         )
 
         for brain in results:

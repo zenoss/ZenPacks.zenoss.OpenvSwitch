@@ -10,8 +10,6 @@
 from ZenPacks.zenoss.Layer2.connections_provider import \
     Connection, BaseConnectionsProvider
 
-from ZenPacks.zenoss.Layer2.macs_catalog import CatalogAPI as MACsCatalogAPI
-
 
 class DeviceConnectionsProvider(BaseConnectionsProvider):
     """
@@ -20,7 +18,6 @@ class DeviceConnectionsProvider(BaseConnectionsProvider):
 
     def get_connections(self):
         device = self.context
-        cat = MACsCatalogAPI(device.dmd)
 
         # Connect OpenvSwitch to his network by IP
         net = device.dmd.Networks.getNet(device.manageIp)
@@ -36,12 +33,3 @@ class DeviceConnectionsProvider(BaseConnectionsProvider):
                         yield Connection(device, (mac, ), ['layer2', ])
                         yield Connection(mac, (device, ), ['layer2', ])
 
-                        # Add connections for upstream device(s)
-                        for upstream in cat.get_if_upstream_devices([mac]):
-                            yield Connection(upstream, (mac, ), ['layer2', ])
-                            yield Connection(mac, (upstream, ), ['layer2', ])
-
-                        # Add connections for clients
-                        for client in cat.get_if_client_devices([mac]):
-                            yield Connection(client, (mac, ), ['layer2', ])
-                            yield Connection(mac, (client, ), ['layer2', ])

@@ -80,18 +80,21 @@
 
     </configure>
 
-    <configure zcml:condition="installed ZenPacks.zenoss.OpenStackInfrastructure">
-        <utility
-            name="ml2.openvswitch"
-            factory=".openstack_neutron.OpenvSwitchNeutronImplementationPlugin"
-            provides="ZenPacks.zenoss.OpenStackInfrastructure.interfaces.INeutronImplementationPlugin"
-            />
+    <configure zcml:condition="installed ZenPacks.zenoss.OpenStackInfrastructure.interfaces">
+        <!-- Guard Against Older OSI that lacks Neutron -->
+        <configure zcml:condition="have openstack_neutron_integration">
+            <utility
+                name="ml2.openvswitch"
+                factory=".openstack_neutron.OpenvSwitchNeutronImplementationPlugin"
+                provides="ZenPacks.zenoss.OpenStackInfrastructure.interfaces.INeutronImplementationPlugin"
+                />
 
-        <subscriber
-            for="ZenPacks.zenoss.OpenStackInfrastructure.Host.Host
-                 zope.container.interfaces.IObjectMovedEvent"
-            handler=".openstack_neutron.onOpenStackHostAdded"
-            />
+            <subscriber
+                for="ZenPacks.zenoss.OpenStackInfrastructure.Host.Host
+                     zope.container.interfaces.IObjectMovedEvent"
+                handler=".openstack_neutron.onOpenStackHostAdded"
+                />
+        </configure>
     </configure>
 
 
