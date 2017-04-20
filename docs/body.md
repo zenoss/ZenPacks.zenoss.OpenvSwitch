@@ -303,7 +303,7 @@ Changes
 
 1.1.1
 
--   Upgrade ZenPackLib to 1.0.1
+-   Upgrade ZenPackLib to 1.2.0
 -   Change over to new ZenPackLib format for zenpack.yaml
 -   Add OpenStack Integration (OSI 2.1.1)
 -   Add configuration check for openstack\_neutron\_integration
