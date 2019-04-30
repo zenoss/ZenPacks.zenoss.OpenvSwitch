@@ -680,7 +680,7 @@ class DeviceBase(ModelBase):
             return None
 
         if statusclass is None:
-            statusclass = getattr(self, 'zStatusEventClass', '/Status')
+            statusclass = getattr(self, 'zStatusEventClass', '/Status/*')
 
         zep = Zuul.getFacade("zep", self.dmd)
         try:
