@@ -71,6 +71,25 @@ def str_to_dict(original):
     return rets
 
 
+def ovsdb_records_to_dict(raw_log):
+    split_output = raw_log.strip().split('\n')
+    # Format command output to following example
+    # Each line should look like: <record_number>: <record_epoch> "<record_content>"
+    cleared_output = []
+    for line in split_output:
+        if line.startswith('record'):
+            cleared_output.append(line)
+        else:
+            cleared_output[-1] = "{} {}".format(cleared_output[-1], line)
+
+    ovsdb_records_dict = {}
+    for record in cleared_output:
+        pair = record.split(':', 1)
+        ovsdb_records_dict[pair[0].strip()] = localparser(pair[1].strip())
+
+    return ovsdb_records_dict
+
+
 def localparser(text):
     text = text.strip()
 
@@ -287,8 +306,8 @@ def get_ovsdb_records(logs, component, cycleTime, timedelta):
     recordpattern2 = '%Y-%m-%d %H:%M:%S.%f'  # for '2015-03-10 08:35:31.xxx'
 
     records = []
-    rcrd_index = len(logs)
-    while rcrd_index > 0:
+    rcrd_index = len(logs) - 1
+    while rcrd_index >= 0:
 
         item = {}
         rcrd_title = 'record ' + str(rcrd_index)

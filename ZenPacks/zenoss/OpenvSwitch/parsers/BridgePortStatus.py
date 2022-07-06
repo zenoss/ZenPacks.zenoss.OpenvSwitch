@@ -20,7 +20,7 @@ import logging
 log = logging.getLogger('zen.OpenvSwitch.Parser')
 
 from Products.ZenRRD.CommandParser import CommandParser
-from ZenPacks.zenoss.OpenvSwitch.utils import str_to_dict, get_ovsdb_records
+from ZenPacks.zenoss.OpenvSwitch.utils import get_ovsdb_records, ovsdb_records_to_dict
 
 class BridgePortStatus(CommandParser):
 
@@ -44,7 +44,7 @@ class BridgePortStatus(CommandParser):
         localepoch = calendar.timegm(time.gmtime())
         timedelta = localepoch - int(ovsepoch)
 
-        logs = str_to_dict(cmd.result.output.split('SPLIT')[2])
+        logs = ovsdb_records_to_dict(cmd.result.output.split('SPLIT')[2])
         # logs[0] looks like:
         # {'record 0': 'Open_vSwitch" schema, version="7.4.0", cksum="951746691 20389'}
         # logs[1] is more interesting. Haven't seen logs[2] yet
@@ -54,7 +54,7 @@ class BridgePortStatus(CommandParser):
         # record time supposed to be UTC time
         # We assume the time string looks like: 2015-01-29 05:20:30.199
 
-        events = get_ovsdb_records(logs[1], cmd.component, cmd.cycleTime, timedelta)
+        events = get_ovsdb_records(logs, cmd.component, cmd.cycleTime, timedelta)
         for evt in events:
             severity = 2
             if 'del' in evt['summary']:
