@@ -203,7 +203,7 @@ class TestParser(BaseTestCase):
             results)
 
         self.assertEquals(len(results.values), 0)
-        self.assertEquals(len(results.events), 4)
+        self.assertEquals(len(results.events), 5)
 
     def _getInterfaceStatusCmd(self, id, exitCode, filename):
         points = []
