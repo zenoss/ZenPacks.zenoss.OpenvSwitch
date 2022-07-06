@@ -58,3 +58,8 @@ record 15: 2015-02-05 07:33:16.349 "ovs-vsctl: /bin/ovs-vsctl -- --if-exists del
 record 16: 2015-02-05 07:33:16.350
 record 17: 2015-02-05 07:33:19.284 "ovs-vsctl: /bin/ovs-vsctl --timeout=10 set Port tap9142c144-08 tag=1"
 record 18: 2015-02-05 07:33:19.284
+record 19: 2022-05-26 05:08:57.600 "ovs-vsctl (invoked by /usr/bin/python2): ovs-vsctl --timeout=120 -- --may-exist add-port br-int qvo9fd95ae8-20 -- set Interface qvo9fd95ae8-20 external-ids:iface-id=9fd95ae8-207b-4052-a9a9-5ac77be051bf external-ids:iface-status=active external-ids:attached-mac=fa:16:3e:43:f8:78 external-ids:vm-uuid=12dd1985-c9c4-4333-9ccb-cae2d5db4520"
+record 20: 2015-02-05 15:33:19.579
+record 21: 2020-04-16 14:00:15.094 "ovs-vsctl (invoked by /bin/bash): /usr/bin/ovs-vsctl --no-wait set Open_vSwitch . other_config:pmd-cpu-mask=0x600006"
+record 22: 2019-01-30 10:53:17.481 "ovs-vsctl (invoked by /bin/sh): ovs-vsctl --no-wait -- init -- set Open_vSwitch . db-version=7.15.1"
+record 23: 2015-02-05 07:45:19.579
