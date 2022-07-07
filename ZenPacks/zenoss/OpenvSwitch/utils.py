@@ -85,7 +85,8 @@ def ovsdb_records_to_dict(raw_log):
     ovsdb_records_dict = {}
     for record in cleared_output:
         pair = record.split(':', 1)
-        ovsdb_records_dict[pair[0].strip()] = localparser(pair[1].strip())
+        if len(pair) == 2:
+            ovsdb_records_dict[pair[0].strip()] = localparser(pair[1].strip())
 
     return ovsdb_records_dict
 
